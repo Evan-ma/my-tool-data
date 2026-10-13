@@ -1,0 +1,2330 @@
+{
+  "system": {
+    "teachers": [
+      {
+        "id": 1,
+        "name": "贾雨欣"
+      },
+      {
+        "id": 2,
+        "name": "潘子怡"
+      },
+      {
+        "id": 3,
+        "name": "纪少萌"
+      },
+      {
+        "id": 4,
+        "name": "齐佳英"
+      },
+      {
+        "id": 5,
+        "name": "张巧娜"
+      },
+      {
+        "id": 6,
+        "name": "孟凤霞"
+      },
+      {
+        "id": 7,
+        "name": "罗乔"
+      },
+      {
+        "id": 8,
+        "name": "刘泽坤"
+      },
+      {
+        "id": 9,
+        "name": "赵琪"
+      },
+      {
+        "id": 10,
+        "name": "祁佳轩"
+      },
+      {
+        "id": 11,
+        "name": "马文翠"
+      },
+      {
+        "id": 12,
+        "name": "王倩"
+      },
+      {
+        "id": 13,
+        "name": "徐鼎"
+      },
+      {
+        "id": 14,
+        "name": "王宇琪"
+      },
+      {
+        "id": 15,
+        "name": "赵艺菲"
+      },
+      {
+        "id": 16,
+        "name": "李珊珊"
+      },
+      {
+        "id": 17,
+        "name": "马敬涛"
+      },
+      {
+        "id": 18,
+        "name": "苏敬文"
+      },
+      {
+        "id": 19,
+        "name": "张森"
+      },
+      {
+        "id": 20,
+        "name": "张乾"
+      },
+      {
+        "id": 21,
+        "name": "张玉宁"
+      },
+      {
+        "id": 22,
+        "name": "柳金铭"
+      },
+      {
+        "id": 23,
+        "name": "武晶晶"
+      },
+      {
+        "id": 24,
+        "name": "陈晓"
+      }
+    ],
+    "courses": [
+      {
+        "id": 1,
+        "name": "计算机组成原理"
+      },
+      {
+        "id": 2,
+        "name": "Java程序设计"
+      },
+      {
+        "id": 3,
+        "name": "数据库技术及应用（mysql）"
+      },
+      {
+        "id": 4,
+        "name": "路由交换技术"
+      },
+      {
+        "id": 5,
+        "name": "计算机网络技术基础"
+      },
+      {
+        "id": 6,
+        "name": "Android移动应用开发"
+      },
+      {
+        "id": 7,
+        "name": "HTML+CSS"
+      },
+      {
+        "id": 8,
+        "name": "JavaScript"
+      },
+      {
+        "id": 9,
+        "name": "Python程序设计"
+      },
+      {
+        "id": 10,
+        "name": "AI"
+      },
+      {
+        "id": 11,
+        "name": "Windows Server操作系统"
+      },
+      {
+        "id": 12,
+        "name": "C语言程序设计"
+      },
+      {
+        "id": 13,
+        "name": "Photoshop平面设计"
+      },
+      {
+        "id": 14,
+        "name": "数据结构（上）"
+      },
+      {
+        "id": 15,
+        "name": "信息技术基础"
+      },
+      {
+        "id": 16,
+        "name": "计算机专业英语"
+      }
+    ],
+    "classes": [
+      {
+        "id": 1,
+        "name": "25计网",
+        "grade": "25"
+      },
+      {
+        "id": 2,
+        "name": "25计应1班",
+        "grade": "25"
+      },
+      {
+        "id": 3,
+        "name": "25计应2班",
+        "grade": "25"
+      },
+      {
+        "id": 4,
+        "name": "25计应3班",
+        "grade": "25"
+      },
+      {
+        "id": 5,
+        "name": "25移动互联1班",
+        "grade": "25"
+      },
+      {
+        "id": 6,
+        "name": "25移动互联2班",
+        "grade": "25"
+      },
+      {
+        "id": 7,
+        "name": "25移动互联3班",
+        "grade": "25"
+      },
+      {
+        "id": 8,
+        "name": "25移动互联4班",
+        "grade": "25"
+      },
+      {
+        "id": 9,
+        "name": "25软件技术",
+        "grade": "25"
+      },
+      {
+        "id": 10,
+        "name": "25大数据技术",
+        "grade": "25"
+      },
+      {
+        "id": 11,
+        "name": "25云计算技术应用",
+        "grade": "25"
+      },
+      {
+        "id": 12,
+        "name": "26计网1班",
+        "grade": "26"
+      },
+      {
+        "id": 13,
+        "name": "26计网2班",
+        "grade": "26"
+      },
+      {
+        "id": 14,
+        "name": "26计应1班",
+        "grade": "26"
+      },
+      {
+        "id": 15,
+        "name": "26计应2班",
+        "grade": "26"
+      },
+      {
+        "id": 17,
+        "name": "26电子信息工程技术",
+        "grade": "26"
+      },
+      {
+        "id": 18,
+        "name": "26移动互联1班",
+        "grade": "26"
+      },
+      {
+        "id": 19,
+        "name": "26移动互联2班",
+        "grade": "26"
+      },
+      {
+        "id": 20,
+        "name": "26大数据技术1班",
+        "grade": "26"
+      },
+      {
+        "id": 21,
+        "name": "26大数据技术2班",
+        "grade": "26"
+      },
+      {
+        "id": 23,
+        "name": "26云计算1班",
+        "grade": "26"
+      },
+      {
+        "id": 25,
+        "name": "26软件技术1班",
+        "grade": "26"
+      }
+    ],
+    "classrooms": [
+      {
+        "id": 1,
+        "name": "机房1",
+        "type": "机房"
+      },
+      {
+        "id": 2,
+        "name": "机房2",
+        "type": "机房"
+      },
+      {
+        "id": 3,
+        "name": "机房3",
+        "type": "机房"
+      },
+      {
+        "id": 4,
+        "name": "321",
+        "type": "教室"
+      },
+      {
+        "id": 5,
+        "name": "322",
+        "type": "教室"
+      },
+      {
+        "id": 6,
+        "name": "323",
+        "type": "教室"
+      },
+      {
+        "id": 7,
+        "name": "324",
+        "type": "教室"
+      },
+      {
+        "id": 8,
+        "name": "325",
+        "type": "教室"
+      },
+      {
+        "id": 9,
+        "name": "330",
+        "type": "教室"
+      },
+      {
+        "id": 10,
+        "name": "331",
+        "type": "教室"
+      },
+      {
+        "id": 11,
+        "name": "332",
+        "type": "教室"
+      },
+      {
+        "id": 12,
+        "name": "520",
+        "type": "教室"
+      },
+      {
+        "id": 13,
+        "name": "521",
+        "type": "教室"
+      },
+      {
+        "id": 14,
+        "name": "530",
+        "type": "教室"
+      }
+    ],
+    "combinedGroups": [
+      {
+        "id": 1,
+        "name": "25计应2班 3班",
+        "classIds": [
+          3,
+          4
+        ]
+      },
+      {
+        "id": 2,
+        "name": "25移动互联1班2班",
+        "classIds": [
+          5,
+          6
+        ]
+      },
+      {
+        "id": 3,
+        "name": "25移动互联3班4班",
+        "classIds": [
+          7,
+          8
+        ]
+      },
+      {
+        "id": 4,
+        "name": "25大数据 云计算",
+        "classIds": [
+          10,
+          11
+        ]
+      },
+      {
+        "id": 5,
+        "name": "26移动互联",
+        "classIds": [
+          18,
+          19
+        ]
+      }
+    ],
+    "schedule": {
+      "1": {
+        "1": {
+          "1": null,
+          "2": {
+            "courseId": 3,
+            "teacherId": 14,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 7,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": null,
+          "2": {
+            "courseId": 11,
+            "teacherId": 14,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 8,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": null,
+          "2": {
+            "courseId": 3,
+            "teacherId": 14,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "4": {
+          "1": {
+            "courseId": 4,
+            "teacherId": 8,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 8,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "5": {
+          "1": null,
+          "2": {
+            "courseId": 11,
+            "teacherId": 14,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 4,
+            "teacherId": 8,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "4": null
+        }
+      },
+      "2": {
+        "1": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 17,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 11,
+            "teacherId": 14,
+            "classroomId": 5,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 17,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": null
+        },
+        "5": {
+          "1": {
+            "courseId": 11,
+            "teacherId": 14,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 6,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "4": null
+        }
+      },
+      "3": {
+        "1": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 1
+          },
+          "2": null,
+          "3": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 7,
+            "combinedGroupId": 1
+          },
+          "4": {
+            "courseId": 5,
+            "teacherId": 17,
+            "classroomId": 10,
+            "combinedGroupId": 1
+          }
+        },
+        "2": {
+          "1": null,
+          "2": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 14,
+            "combinedGroupId": 1
+          },
+          "3": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 7,
+            "combinedGroupId": 1
+          },
+          "4": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 1,
+            "combinedGroupId": 1
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 1,
+            "combinedGroupId": 1
+          },
+          "2": {
+            "courseId": 5,
+            "teacherId": 17,
+            "classroomId": 10,
+            "combinedGroupId": 1
+          },
+          "3": null,
+          "4": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 1
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 1
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 8,
+            "combinedGroupId": 1
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 10,
+            "combinedGroupId": 1
+          },
+          "2": null,
+          "3": null,
+          "4": null
+        }
+      },
+      "4": {
+        "1": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 1
+          },
+          "2": null,
+          "3": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 7,
+            "combinedGroupId": 1
+          },
+          "4": {
+            "courseId": 5,
+            "teacherId": 17,
+            "classroomId": 10,
+            "combinedGroupId": 1
+          }
+        },
+        "2": {
+          "1": null,
+          "2": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 14,
+            "combinedGroupId": 1
+          },
+          "3": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 7,
+            "combinedGroupId": 1
+          },
+          "4": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 1,
+            "combinedGroupId": 1
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 1,
+            "combinedGroupId": 1
+          },
+          "2": {
+            "courseId": 5,
+            "teacherId": 17,
+            "classroomId": 10,
+            "combinedGroupId": 1
+          },
+          "3": null,
+          "4": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 1
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 1
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 8,
+            "combinedGroupId": 1
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 1,
+            "classroomId": 10,
+            "combinedGroupId": 1
+          },
+          "2": null,
+          "3": null,
+          "4": null
+        }
+      },
+      "5": {
+        "1": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": null
+        },
+        "2": {
+          "1": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 8,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 10,
+            "combinedGroupId": 2
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 2,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 8,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 7,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 7,
+            "combinedGroupId": 2
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 13,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 2,
+            "combinedGroupId": 2
+          }
+        }
+      },
+      "6": {
+        "1": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": null
+        },
+        "2": {
+          "1": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 8,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 10,
+            "combinedGroupId": 2
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 2,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 8,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 7,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 7,
+            "combinedGroupId": 2
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 1,
+            "combinedGroupId": 2
+          },
+          "2": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 13,
+            "combinedGroupId": 2
+          },
+          "3": null,
+          "4": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 2,
+            "combinedGroupId": 2
+          }
+        }
+      },
+      "7": {
+        "1": {
+          "1": null,
+          "2": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "3": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "4": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 1,
+            "combinedGroupId": 3
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 14,
+            "classroomId": 1,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 2,
+            "combinedGroupId": 3
+          },
+          "3": null,
+          "4": null
+        },
+        "3": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 3,
+            "combinedGroupId": 3
+          },
+          "3": null,
+          "4": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 11,
+            "combinedGroupId": 3
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 14,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 2,
+            "combinedGroupId": 3
+          },
+          "3": null,
+          "4": null
+        },
+        "5": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 11,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 2,
+            "combinedGroupId": 3
+          },
+          "3": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 7,
+            "combinedGroupId": 3
+          },
+          "4": null
+        }
+      },
+      "8": {
+        "1": {
+          "1": null,
+          "2": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "3": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "4": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 1,
+            "combinedGroupId": 3
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 14,
+            "classroomId": 1,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 2,
+            "combinedGroupId": 3
+          },
+          "3": null,
+          "4": null
+        },
+        "3": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 10,
+            "teacherId": 1,
+            "classroomId": 3,
+            "combinedGroupId": 3
+          },
+          "3": null,
+          "4": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 11,
+            "combinedGroupId": 3
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 14,
+            "classroomId": 8,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 2,
+            "combinedGroupId": 3
+          },
+          "3": null,
+          "4": null
+        },
+        "5": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 11,
+            "combinedGroupId": 3
+          },
+          "2": {
+            "courseId": 6,
+            "teacherId": 17,
+            "classroomId": 2,
+            "combinedGroupId": 3
+          },
+          "3": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 7,
+            "combinedGroupId": 3
+          },
+          "4": null
+        }
+      },
+      "9": {
+        "1": {
+          "1": {
+            "courseId": 11,
+            "teacherId": 14,
+            "classroomId": 8,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        },
+        "2": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 8,
+            "teacherId": 13,
+            "classroomId": 10,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 9,
+            "teacherId": 3,
+            "classroomId": 2,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 3,
+            "teacherId": 10,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 10,
+            "teacherId": 2,
+            "classroomId": 3,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 8,
+            "teacherId": 13,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 11,
+            "teacherId": 14,
+            "classroomId": 3,
+            "combinedGroupId": null
+          }
+        },
+        "5": {
+          "1": null,
+          "2": {
+            "courseId": 9,
+            "teacherId": 3,
+            "classroomId": 1,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 10,
+            "teacherId": 2,
+            "classroomId": 3,
+            "combinedGroupId": null
+          }
+        }
+      },
+      "10": {
+        "1": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 10,
+            "combinedGroupId": 4
+          },
+          "2": {
+            "courseId": 4,
+            "teacherId": 8,
+            "classroomId": 14,
+            "combinedGroupId": 4
+          },
+          "3": null,
+          "4": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 4
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 7,
+            "teacherId": 10,
+            "classroomId": 2,
+            "combinedGroupId": 4
+          },
+          "2": null,
+          "3": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 4,
+            "combinedGroupId": 4
+          },
+          "4": null
+        },
+        "3": {
+          "1": {
+            "courseId": 4,
+            "teacherId": 8,
+            "classroomId": 10,
+            "combinedGroupId": 4
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 4
+          }
+        },
+        "4": {
+          "1": null,
+          "2": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 13,
+            "combinedGroupId": 4
+          },
+          "3": {
+            "courseId": 7,
+            "teacherId": 10,
+            "classroomId": 1,
+            "combinedGroupId": 4
+          },
+          "4": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 10,
+            "combinedGroupId": 4
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 4
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 1,
+            "combinedGroupId": 4
+          }
+        }
+      },
+      "11": {
+        "1": {
+          "1": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 10,
+            "combinedGroupId": 4
+          },
+          "2": {
+            "courseId": 4,
+            "teacherId": 8,
+            "classroomId": 14,
+            "combinedGroupId": 4
+          },
+          "3": null,
+          "4": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 8,
+            "combinedGroupId": 4
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 7,
+            "teacherId": 10,
+            "classroomId": 2,
+            "combinedGroupId": 4
+          },
+          "2": null,
+          "3": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 4,
+            "combinedGroupId": 4
+          },
+          "4": null
+        },
+        "3": {
+          "1": {
+            "courseId": 4,
+            "teacherId": 8,
+            "classroomId": 10,
+            "combinedGroupId": 4
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 4
+          }
+        },
+        "4": {
+          "1": null,
+          "2": {
+            "courseId": 11,
+            "teacherId": 3,
+            "classroomId": 13,
+            "combinedGroupId": 4
+          },
+          "3": {
+            "courseId": 7,
+            "teacherId": 10,
+            "classroomId": 1,
+            "combinedGroupId": 4
+          },
+          "4": {
+            "courseId": 1,
+            "teacherId": 2,
+            "classroomId": 10,
+            "combinedGroupId": 4
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 10,
+            "teacherId": 18,
+            "classroomId": 2,
+            "combinedGroupId": 4
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 2,
+            "teacherId": 20,
+            "classroomId": 1,
+            "combinedGroupId": 4
+          }
+        }
+      },
+      "12": {
+        "1": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 13,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 13,
+            "teacherId": 19,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "3": {
+          "1": null,
+          "2": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "5": {
+          "1": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 9,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 13,
+            "teacherId": 19,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "4": null
+        }
+      },
+      "13": {
+        "1": {
+          "1": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "2": {
+          "1": {
+            "courseId": 13,
+            "teacherId": 19,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 11,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": null,
+          "2": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 13,
+            "teacherId": 19,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "5": {
+          "1": null,
+          "2": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        }
+      },
+      "14": {
+        "1": {
+          "1": null,
+          "2": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "2": {
+          "1": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 7,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": null,
+          "2": {
+            "courseId": 13,
+            "teacherId": 19,
+            "classroomId": 2,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 5,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 13,
+            "teacherId": 19,
+            "classroomId": 2,
+            "combinedGroupId": null
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        }
+      },
+      "15": {
+        "1": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 13,
+            "teacherId": 6,
+            "classroomId": 1,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 11,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "3": {
+          "1": null,
+          "2": {
+            "courseId": 13,
+            "teacherId": 6,
+            "classroomId": 1,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 10,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": null,
+          "2": {
+            "courseId": 12,
+            "teacherId": 13,
+            "classroomId": 10,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 4,
+            "combinedGroupId": null
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": null
+        }
+      },
+      "17": {
+        "1": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 8,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": null
+        },
+        "2": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 12,
+            "teacherId": 4,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 12,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 5,
+            "teacherId": 8,
+            "classroomId": 12,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": null,
+          "2": {
+            "courseId": 15,
+            "teacherId": 9,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 12,
+            "teacherId": 4,
+            "classroomId": 5,
+            "combinedGroupId": null
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 12,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 14,
+            "teacherId": 11,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        }
+      },
+      "18": {
+        "1": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 15,
+            "teacherId": 24,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "4": {
+            "courseId": 13,
+            "teacherId": 6,
+            "classroomId": 3,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 13,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": {
+            "courseId": 13,
+            "teacherId": 6,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 15,
+            "teacherId": 24,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": null,
+          "2": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 4,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "5": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "4": null
+        }
+      },
+      "19": {
+        "1": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 15,
+            "teacherId": 24,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "4": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 5,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "2": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 13,
+            "teacherId": 6,
+            "classroomId": 3,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": null,
+          "2": {
+            "courseId": 15,
+            "teacherId": 24,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "3": null,
+          "4": null
+        },
+        "4": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 13,
+            "teacherId": 6,
+            "classroomId": 3,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        },
+        "5": {
+          "1": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 9,
+            "combinedGroupId": 5
+          },
+          "4": null
+        }
+      },
+      "20": {
+        "1": {
+          "1": null,
+          "2": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 15,
+            "teacherId": 16,
+            "classroomId": 10,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 14,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 8,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "3": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 13,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 5,
+            "teacherId": 8,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "5": {
+          "1": null,
+          "2": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 15,
+            "teacherId": 16,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "4": null
+        }
+      },
+      "21": {
+        "1": {
+          "1": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 15,
+            "teacherId": 16,
+            "classroomId": 10,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 14,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "2": {
+          "1": null,
+          "2": {
+            "courseId": 5,
+            "teacherId": 8,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 14,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 14,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": null,
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 5,
+            "teacherId": 8,
+            "classroomId": 14,
+            "combinedGroupId": null
+          }
+        },
+        "5": {
+          "1": null,
+          "2": {
+            "courseId": 15,
+            "teacherId": 16,
+            "classroomId": 11,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 14,
+            "teacherId": 15,
+            "classroomId": 5,
+            "combinedGroupId": null
+          },
+          "4": null
+        }
+      },
+      "23": {
+        "1": {
+          "1": {
+            "courseId": 12,
+            "teacherId": 20,
+            "classroomId": 9,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 15,
+            "teacherId": 19,
+            "classroomId": 9,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        },
+        "2": {
+          "1": null,
+          "2": {
+            "courseId": 14,
+            "teacherId": 6,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 10,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 4,
+            "combinedGroupId": null
+          }
+        },
+        "3": {
+          "1": null,
+          "2": null,
+          "3": {
+            "courseId": 15,
+            "teacherId": 19,
+            "classroomId": 9,
+            "combinedGroupId": null
+          },
+          "4": {
+            "courseId": 12,
+            "teacherId": 20,
+            "classroomId": 9,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 5,
+            "teacherId": 16,
+            "classroomId": 10,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": null
+        },
+        "5": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 6,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 16,
+            "teacherId": 4,
+            "classroomId": 9,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        }
+      },
+      "25": {
+        "1": {
+          "1": null,
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 15,
+            "teacherId": 19,
+            "classroomId": 9,
+            "combinedGroupId": null
+          }
+        },
+        "2": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 6,
+            "classroomId": 12,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 13,
+            "teacherId": 18,
+            "classroomId": 1,
+            "combinedGroupId": null
+          },
+          "3": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 8,
+            "combinedGroupId": null
+          },
+          "4": null
+        },
+        "3": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 15,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 15,
+            "teacherId": 19,
+            "classroomId": 7,
+            "combinedGroupId": null
+          }
+        },
+        "4": {
+          "1": {
+            "courseId": 14,
+            "teacherId": 6,
+            "classroomId": 13,
+            "combinedGroupId": null
+          },
+          "2": null,
+          "3": null,
+          "4": {
+            "courseId": 13,
+            "teacherId": 18,
+            "classroomId": 1,
+            "combinedGroupId": null
+          }
+        },
+        "5": {
+          "1": {
+            "courseId": 16,
+            "teacherId": 15,
+            "classroomId": 7,
+            "combinedGroupId": null
+          },
+          "2": {
+            "courseId": 12,
+            "teacherId": 5,
+            "classroomId": 8,
+            "combinedGroupId": null
+          },
+          "3": null,
+          "4": null
+        }
+      }
+    }
+  }
+}
