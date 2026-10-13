@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学院课表智能分析工具</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 18px;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    /* ---------- 顶部 ---------- */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      border-radius: 14px;
+      padding: 22px 28px;
+      box-shadow: 0 6px 24px rgba(37, 99, 235, .25);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .hero h1 {
+      font-size: 21px;
+      letter-spacing: .5px;
+    }
+
+    .hero .sub {
+      font-size: 12px;
+      opacity: .8;
+      margin-top: 6px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat .num {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .hero-stat .lbl {
+      font-size: 11px;
+      opacity: .75;
+      margin-top: 2px;
+    }
+
+    /* ---------- 面板 / 工具栏 ---------- */
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-top: 16px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, .06);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: .3px;
+    }
+
+    select {
+      padding: 9px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      min-width: 180px;
+      background: #fff;
+      cursor: pointer;
+      transition: .18s;
+      font-family: inherit;
+      color: #1e293b;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+
+    select:disabled {
+      background: #f1f5f9;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    button {
+      padding: 9px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .18s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .btn-green {
+      background: #059669;
+      color: #fff;
+    }
+
+    .btn-green:hover:not(:disabled) {
+      background: #047857;
+      transform: translateY(-1px);
+    }
+
+    /* ---------- 状态栏 ---------- */
+    .status {
+      margin-top: 12px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      background: #f1f5f9;
+      color: #475569;
+      border-left: 3px solid #94a3b8;
+      line-height: 1.65;
+    }
+
+    .status.ok {
+      background: #ecfdf5;
+      color: #047857;
+      border-left-color: #059669;
+    }
+
+    .status.err {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-left-color: #dc2626;
+    }
+
+    /* ---------- 结果区 ---------- */
+    .result-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .result-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .result-sub {
+      font-size: 12.5px;
+      color: #64748b;
+    }
+
+    /* ---------- 课表网格 ---------- */
+    .grid-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(15, 23, 42, .07);
+    }
+
+    .grid-scroll::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    .grid-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .grid-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .scroll-hint {
+      display: none;
+    }
+
+    .grid-table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .grid-table th {
+      background: #1e293b;
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 10px 6px;
+      text-align: center;
+      letter-spacing: .5px;
+    }
+
+    .grid-table th:first-child {
+      background: #0f172a;
+      width: 74px;
+    }
+
+    .grid-table td {
+      border-top: 1px solid #e2e8f0;
+      border-left: 1px solid #e2e8f0;
+      padding: 6px;
+      vertical-align: top;
+      height: 96px;
+      background: #fff;
+    }
+
+    .grid-table tr td:first-child {
+      background: #f8fafc;
+      border-left: none;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: #475569;
+      vertical-align: middle;
+    }
+
+    .grid-table tr:first-child td {
+      border-top: none;
+    }
+
+    .grid-table td:last-child {
+      border-right: none;
+    }
+
+    .cell-empty {
+      text-align: center;
+      color: #cbd5e1;
+      font-size: 12px;
+      padding-top: 6px;
+    }
+
+    /* 课程卡片 */
+    .ccard {
+      background: #eff6ff;
+      border-left: 3px solid #2563eb;
+      border-radius: 6px;
+      padding: 5px 7px;
+      margin-bottom: 4px;
+      text-align: left;
+      line-height: 1.45;
+    }
+
+    .ccard:last-child {
+      margin-bottom: 0;
+    }
+
+    .ccard.combined {
+      background: #fef3c7;
+      border-left-color: #d97706;
+    }
+
+    .ccard .cname {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e3a8a;
+      display: block;
+      margin-bottom: 2px;
+      word-break: break-word;
+    }
+
+    .ccard.combined .cname {
+      color: #92400e;
+    }
+
+    .ccard .cmeta {
+      font-size: 11px;
+      color: #64748b;
+      display: block;
+      word-break: break-word;
+    }
+
+    .ccard .badge {
+      display: inline-block;
+      font-size: 9.5px;
+      background: #fbbf24;
+      color: #78350f;
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-left: 4px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+
+    /* ---------- 列表视图 ---------- */
+    .lst-wrap {
+      border-radius: 10px;
+    }
+
+    .lst {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(15, 23, 42, .07);
+    }
+
+    .lst th {
+      background: #1e293b;
+      color: #fff;
+      font-size: 12.5px;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .lst td {
+      padding: 9px 12px;
+      font-size: 12.5px;
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+    }
+
+    .lst tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .lst tr:hover td {
+      background: #eff6ff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ===================== 移动端 ===================== */
+    @media (max-width: 720px) {
+      body {
+        padding: 10px;
+      }
+
+      .panel {
+        padding: 14px 16px;
+        border-radius: 10px;
+      }
+
+      .hero {
+        padding: 18px 20px;
+        border-radius: 12px;
+      }
+
+      .hero h1 {
+        font-size: 17px;
+      }
+
+      .hero .sub {
+        font-size: 11px;
+      }
+
+      .hero-stats {
+        gap: 16px;
+      }
+
+      .hero-stat .num {
+        font-size: 18px;
+      }
+
+      .hero-stat .lbl {
+        font-size: 10px;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .field {
+        width: 100%;
+      }
+
+      .field label {
+        font-size: 11.5px;
+      }
+
+      select {
+        min-width: 0;
+        width: 100%;
+        font-size: 14px;
+        padding: 11px 12px;
+      }
+
+      .toolbar>button {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .result-title {
+        font-size: 15px;
+      }
+
+      .result-sub {
+        font-size: 11.5px;
+      }
+
+      .result-head {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+      }
+
+      .scroll-hint {
+        display: block;
+        text-align: center;
+        font-size: 11.5px;
+        color: #64748b;
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 6px;
+        padding: 6px 10px;
+        margin-bottom: 8px;
+      }
+
+      .grid-scroll {
+        margin: 0 -16px;
+        padding: 0 16px;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .grid-table {
+        min-width: 660px;
+        font-size: 11px;
+        border-radius: 8px;
+      }
+
+      .grid-table th {
+        font-size: 11.5px;
+        padding: 9px 4px;
+      }
+
+      .grid-table th:first-child {
+        width: 56px;
+      }
+
+      .grid-table td {
+        padding: 5px;
+        height: 88px;
+      }
+
+      .grid-table tr td:first-child {
+        font-size: 11px;
+        width: 56px;
+      }
+
+      .grid-table thead th:first-child,
+      .grid-table tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+      }
+
+      .grid-table thead th:first-child {
+        z-index: 3;
+      }
+
+      .grid-table tbody td:first-child {
+        box-shadow: 1px 0 0 #e2e8f0, 4px 0 8px -4px rgba(15, 23, 42, .10);
+      }
+
+      .grid-table thead th:first-child {
+        box-shadow: 1px 0 0 #1e293b, 4px 0 8px -4px rgba(15, 23, 42, .25);
+      }
+
+      .ccard {
+        padding: 4px 6px;
+        border-left-width: 2px;
+        margin-bottom: 3px;
+      }
+
+      .ccard .cname {
+        font-size: 11px;
+      }
+
+      .ccard .cmeta {
+        font-size: 10px;
+        line-height: 1.35;
+        word-break: break-all;
+      }
+
+      .ccard .badge {
+        font-size: 9px;
+        padding: 0 4px;
+      }
+
+      .lst-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .lst-wrap .lst {
+        min-width: 560px;
+      }
+
+      .lst th,
+      .lst td {
+        font-size: 11.5px;
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- 顶部 -->
+    <div class="hero" style="display: none;">
+      <div>
+        <h1>学院课表智能分析工具</h1>
+        <div class="sub">数据内置 · 支持按教师 / 班级 / 教室 / 课程查询</div>
+      </div>
+      <div class="hero-stats" id="heroStats"></div>
+    </div>
+
+    <!-- 工具栏 -->
+    <div class="panel">
+      <div class="toolbar">
+        <div class="field">
+          <label>查询类型</label>
+          <select id="qType" onchange="onTypeChange()">
+            <option value="teacher">按教师查询</option>
+            <option value="class">按班级查询</option>
+            <option value="classroom">按教室查询占用</option>
+            <option value="course">按课程查授课</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label id="targetLabel">选择教师</label>
+          <select id="qTarget"></select>
+        </div>
+
+        <button class="btn-primary" id="btnQuery" onclick="doQuery()" disabled>查询课表</button>
+        <button class="btn-green" id="btnExport" onclick="exportExcel()" style="display:none">导出 Excel</button>
+      </div>
+
+      <div class="status" id="status" style="display: none;">正在读取内置数据…</div>
+    </div>
+
+    <!-- 结果 -->
+    <div class="panel hidden" id="resultPanel">
+      <div class="result-head">
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-sub" id="resultSub"></div>
+      </div>
+      <div id="resultBody"></div>
+    </div>
+
+  </div>
+
+  <!-- ================================================================
+       ★★★ 数据区：把课表 JSON 粘贴到下面这个标签里面（替换花括号里的内容）★★★
+       注意：JSON 里不能出现 </script> 字样
+       ================================================================ -->
+  <script id="kbData" type="application/json">
+  {
+    "teachers":[{"id":1,"name":"贾雨欣"},{"id":2,"name":"潘子怡"},{"id":3,"name":"纪少萌"},{"id":4,"name":"齐佳英"},{"id":5,"name":"张巧娜"},{"id":6,"name":"孟凤霞"},{"id":7,"name":"罗乔"},{"id":8,"name":"刘泽坤"},{"id":9,"name":"赵琪"},{"id":10,"name":"祁佳轩"},{"id":11,"name":"马文翠"},{"id":12,"name":"王倩"},{"id":13,"name":"徐鼎"},{"id":14,"name":"王宇琪"},{"id":15,"name":"赵艺菲"},{"id":16,"name":"李珊珊"},{"id":17,"name":"马敬涛"},{"id":18,"name":"苏敬文"},{"id":19,"name":"张森"},{"id":20,"name":"张乾"},{"id":21,"name":"张玉宁"},{"id":22,"name":"柳金铭"},{"id":23,"name":"武晶晶"},{"id":24,"name":"陈晓"}],"courses":[{"id":1,"name":"计算机组成原理"},{"id":2,"name":"Java程序设计"},{"id":3,"name":"数据库技术及应用（mysql）"},{"id":4,"name":"路由交换技术"},{"id":5,"name":"计算机网络技术基础"},{"id":6,"name":"Android移动应用开发"},{"id":7,"name":"HTML+CSS"},{"id":8,"name":"JavaScript"},{"id":9,"name":"Python程序设计"},{"id":10,"name":"AI"},{"id":11,"name":"Windows Server操作系统"},{"id":12,"name":"C语言程序设计"},{"id":13,"name":"Photoshop平面设计"},{"id":14,"name":"数据结构（上）"},{"id":15,"name":"信息技术基础"},{"id":16,"name":"计算机专业英语"}],"classes":[{"id":1,"name":"25计网","grade":"25"},{"id":2,"name":"25计应1班","grade":"25"},{"id":3,"name":"25计应2班","grade":"25"},{"id":4,"name":"25计应3班","grade":"25"},{"id":5,"name":"25移动互联1班","grade":"25"},{"id":6,"name":"25移动互联2班","grade":"25"},{"id":7,"name":"25移动互联3班","grade":"25"},{"id":8,"name":"25移动互联4班","grade":"25"},{"id":9,"name":"25软件技术","grade":"25"},{"id":10,"name":"25大数据技术","grade":"25"},{"id":11,"name":"25云计算技术应用","grade":"25"},{"id":12,"name":"26计网1班","grade":"26"},{"id":13,"name":"26计网2班","grade":"26"},{"id":14,"name":"26计应1班","grade":"26"},{"id":15,"name":"26计应2班","grade":"26"},{"id":17,"name":"26电子信息工程技术","grade":"26"},{"id":18,"name":"26移动互联1班","grade":"26"},{"id":19,"name":"26移动互联2班","grade":"26"},{"id":20,"name":"26大数据技术1班","grade":"26"},{"id":21,"name":"26大数据技术2班","grade":"26"},{"id":23,"name":"26云计算1班","grade":"26"},{"id":25,"name":"26软件技术1班","grade":"26"}],"classrooms":[{"id":1,"name":"机房1","type":"机房"},{"id":2,"name":"机房2","type":"机房"},{"id":3,"name":"机房3","type":"机房"},{"id":4,"name":"321","type":"教室"},{"id":5,"name":"322","type":"教室"},{"id":6,"name":"323","type":"教室"},{"id":7,"name":"324","type":"教室"},{"id":8,"name":"325","type":"教室"},{"id":9,"name":"330","type":"教室"},{"id":10,"name":"331","type":"教室"},{"id":11,"name":"332","type":"教室"},{"id":12,"name":"520","type":"教室"},{"id":13,"name":"521","type":"教室"},{"id":14,"name":"530","type":"教室"}],"combinedGroups":[{"id":1,"name":"25计应2班 3班","classIds":[3,4]},{"id":2,"name":"25移动互联1班2班","classIds":[5,6]},{"id":3,"name":"25移动互联3班4班","classIds":[7,8]},{"id":4,"name":"25大数据 云计算","classIds":[10,11]},{"id":5,"name":"26移动互联","classIds":[18,19]}],"schedule":{"1":{"1":{"1":null,"2":{"courseId":3,"teacherId":14,"classroomId":3,"combinedGroupId":null},"3":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":{"courseId":2,"teacherId":20,"classroomId":7,"combinedGroupId":null}},"2":{"1":null,"2":{"courseId":11,"teacherId":14,"classroomId":11,"combinedGroupId":null},"3":null,"4":{"courseId":1,"teacherId":1,"classroomId":8,"combinedGroupId":null}},"3":{"1":null,"2":{"courseId":3,"teacherId":14,"classroomId":5,"combinedGroupId":null},"3":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":4,"teacherId":8,"classroomId":4,"combinedGroupId":null},"2":{"courseId":1,"teacherId":1,"classroomId":8,"combinedGroupId":null},"3":{"courseId":2,"teacherId":20,"classroomId":2,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null},"3":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":null},"4":null}},"2":{"1":{"1":{"courseId":1,"teacherId":1,"classroomId":11,"combinedGroupId":null},"2":null,"3":{"courseId":3,"teacherId":10,"classroomId":3,"combinedGroupId":null},"4":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":null}},"2":{"1":{"courseId":5,"teacherId":17,"classroomId":5,"combinedGroupId":null},"2":null,"3":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":{"courseId":11,"teacherId":14,"classroomId":5,"combinedGroupId":null}},"3":{"1":{"courseId":5,"teacherId":17,"classroomId":5,"combinedGroupId":null},"2":{"courseId":2,"teacherId":20,"classroomId":12,"combinedGroupId":null},"3":null,"4":null},"4":{"1":{"courseId":1,"teacherId":1,"classroomId":11,"combinedGroupId":null},"2":null,"3":null,"4":null},"5":{"1":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null},"2":{"courseId":3,"teacherId":10,"classroomId":6,"combinedGroupId":null},"3":{"courseId":2,"teacherId":20,"classroomId":2,"combinedGroupId":null},"4":null}},"3":{"1":{"1":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":{"courseId":2,"teacherId":20,"classroomId":7,"combinedGroupId":1},"4":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1}},"2":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":14,"combinedGroupId":1},"3":{"courseId":1,"teacherId":1,"classroomId":7,"combinedGroupId":1},"4":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":1}},"3":{"1":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":1},"2":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":1}},"4":{"1":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":null,"4":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":1}},"5":{"1":{"courseId":1,"teacherId":1,"classroomId":10,"combinedGroupId":1},"2":null,"3":null,"4":null}},"4":{"1":{"1":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":{"courseId":2,"teacherId":20,"classroomId":7,"combinedGroupId":1},"4":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1}},"2":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":14,"combinedGroupId":1},"3":{"courseId":1,"teacherId":1,"classroomId":7,"combinedGroupId":1},"4":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":1}},"3":{"1":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":1},"2":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":1}},"4":{"1":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":null,"4":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":1}},"5":{"1":{"courseId":1,"teacherId":1,"classroomId":10,"combinedGroupId":1},"2":null,"3":null,"4":null}},"5":{"1":{"1":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":2},"2":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"3":null,"4":null},"2":{"1":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":2}},"3":{"1":{"courseId":10,"teacherId":1,"classroomId":2,"combinedGroupId":2},"2":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":2},"3":null,"4":null},"4":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":5,"teacherId":16,"classroomId":7,"combinedGroupId":2},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":2}},"5":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":13,"combinedGroupId":2},"3":null,"4":{"courseId":10,"teacherId":1,"classroomId":2,"combinedGroupId":2}}},"6":{"1":{"1":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":2},"2":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"3":null,"4":null},"2":{"1":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":2}},"3":{"1":{"courseId":10,"teacherId":1,"classroomId":2,"combinedGroupId":2},"2":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":2},"3":null,"4":null},"4":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":5,"teacherId":16,"classroomId":7,"combinedGroupId":2},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":2}},"5":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":13,"combinedGroupId":2},"3":null,"4":{"courseId":10,"teacherId":1,"classroomId":2,"combinedGroupId":2}}},"7":{"1":{"1":null,"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":3},"4":{"courseId":10,"teacherId":1,"classroomId":1,"combinedGroupId":3}},"2":{"1":{"courseId":3,"teacherId":14,"classroomId":1,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":null},"3":{"1":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"2":{"courseId":10,"teacherId":1,"classroomId":3,"combinedGroupId":3},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3}},"4":{"1":{"courseId":3,"teacherId":14,"classroomId":8,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":null},"5":{"1":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":3},"4":null}},"8":{"1":{"1":null,"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":3},"4":{"courseId":10,"teacherId":1,"classroomId":1,"combinedGroupId":3}},"2":{"1":{"courseId":3,"teacherId":14,"classroomId":1,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":null},"3":{"1":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"2":{"courseId":10,"teacherId":1,"classroomId":3,"combinedGroupId":3},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3}},"4":{"1":{"courseId":3,"teacherId":14,"classroomId":8,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":null},"5":{"1":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":3},"4":null}},"9":{"1":{"1":{"courseId":11,"teacherId":14,"classroomId":8,"combinedGroupId":null},"2":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":null},"3":null,"4":null},"2":{"1":{"courseId":1,"teacherId":2,"classroomId":11,"combinedGroupId":null},"2":{"courseId":8,"teacherId":13,"classroomId":10,"combinedGroupId":null},"3":null,"4":{"courseId":9,"teacherId":3,"classroomId":2,"combinedGroupId":null}},"3":{"1":{"courseId":3,"teacherId":10,"classroomId":11,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":10,"teacherId":2,"classroomId":3,"combinedGroupId":null}},"4":{"1":{"courseId":8,"teacherId":13,"classroomId":3,"combinedGroupId":null},"2":null,"3":{"courseId":1,"teacherId":2,"classroomId":11,"combinedGroupId":null},"4":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null}},"5":{"1":null,"2":{"courseId":9,"teacherId":3,"classroomId":1,"combinedGroupId":null},"3":null,"4":{"courseId":10,"teacherId":2,"classroomId":3,"combinedGroupId":null}}},"10":{"1":{"1":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4},"2":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":4},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":4}},"2":{"1":{"courseId":7,"teacherId":10,"classroomId":2,"combinedGroupId":4},"2":null,"3":{"courseId":2,"teacherId":20,"classroomId":4,"combinedGroupId":4},"4":null},"3":{"1":{"courseId":4,"teacherId":8,"classroomId":10,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":4}},"4":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":13,"combinedGroupId":4},"3":{"courseId":7,"teacherId":10,"classroomId":1,"combinedGroupId":4},"4":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4}},"5":{"1":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":4}}},"11":{"1":{"1":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4},"2":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":4},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":4}},"2":{"1":{"courseId":7,"teacherId":10,"classroomId":2,"combinedGroupId":4},"2":null,"3":{"courseId":2,"teacherId":20,"classroomId":4,"combinedGroupId":4},"4":null},"3":{"1":{"courseId":4,"teacherId":8,"classroomId":10,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":4}},"4":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":13,"combinedGroupId":4},"3":{"courseId":7,"teacherId":10,"classroomId":1,"combinedGroupId":4},"4":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4}},"5":{"1":{"courseId":10,"teacherId":18,"classroomId":2,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":4}}},"12":{"1":{"1":{"courseId":16,"teacherId":12,"classroomId":7,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":12,"combinedGroupId":null},"3":null,"4":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null}},"2":{"1":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":null},"3":{"1":null,"2":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null},"3":null,"4":null},"4":{"1":{"courseId":14,"teacherId":11,"classroomId":7,"combinedGroupId":null},"2":null,"3":{"courseId":16,"teacherId":12,"classroomId":5,"combinedGroupId":null},"4":null},"5":{"1":{"courseId":12,"teacherId":13,"classroomId":9,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":null}},"13":{"1":{"1":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"2":null,"3":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":{"courseId":16,"teacherId":12,"classroomId":11,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"3":null,"4":null},"4":{"1":null,"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"3":null,"4":null}},"14":{"1":{"1":null,"2":{"courseId":16,"teacherId":12,"classroomId":7,"combinedGroupId":null},"3":{"courseId":14,"teacherId":11,"classroomId":11,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":15,"teacherId":9,"classroomId":7,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":12,"teacherId":13,"classroomId":7,"combinedGroupId":null}},"3":{"1":null,"2":{"courseId":13,"teacherId":19,"classroomId":2,"combinedGroupId":null},"3":null,"4":{"courseId":16,"teacherId":12,"classroomId":5,"combinedGroupId":null}},"4":{"1":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":13,"teacherId":19,"classroomId":2,"combinedGroupId":null}},"5":{"1":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":7,"combinedGroupId":null},"3":null,"4":null}},"15":{"1":{"1":null,"2":null,"3":{"courseId":13,"teacherId":6,"classroomId":1,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":11,"combinedGroupId":null}},"2":{"1":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":11,"combinedGroupId":null},"4":null},"3":{"1":null,"2":{"courseId":13,"teacherId":6,"classroomId":1,"combinedGroupId":null},"3":null,"4":{"courseId":14,"teacherId":11,"classroomId":10,"combinedGroupId":null}},"4":{"1":null,"2":{"courseId":12,"teacherId":13,"classroomId":10,"combinedGroupId":null},"3":null,"4":{"courseId":16,"teacherId":12,"classroomId":4,"combinedGroupId":null}},"5":{"1":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"2":null,"3":null,"4":null}},"17":{"1":{"1":{"courseId":5,"teacherId":8,"classroomId":12,"combinedGroupId":null},"2":null,"3":null,"4":null},"2":{"1":null,"2":null,"3":{"courseId":12,"teacherId":4,"classroomId":5,"combinedGroupId":null},"4":{"courseId":15,"teacherId":9,"classroomId":12,"combinedGroupId":null}},"3":{"1":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":{"courseId":5,"teacherId":8,"classroomId":12,"combinedGroupId":null}},"4":{"1":null,"2":{"courseId":15,"teacherId":9,"classroomId":12,"combinedGroupId":null},"3":null,"4":{"courseId":12,"teacherId":4,"classroomId":5,"combinedGroupId":null}},"5":{"1":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":null}},"18":{"1":{"1":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"2":null,"3":{"courseId":15,"teacherId":24,"classroomId":9,"combinedGroupId":5},"4":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null}},"2":{"1":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":5},"2":null,"3":null,"4":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null}},"3":{"1":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null},"2":{"courseId":15,"teacherId":24,"classroomId":9,"combinedGroupId":5},"3":null,"4":null},"4":{"1":null,"2":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":4,"combinedGroupId":null},"4":null},"5":{"1":null,"2":null,"3":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":5},"4":null}},"19":{"1":{"1":null,"2":null,"3":{"courseId":15,"teacherId":24,"classroomId":9,"combinedGroupId":5},"4":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null}},"2":{"1":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":5},"2":{"courseId":12,"teacherId":5,"classroomId":7,"combinedGroupId":null},"3":null,"4":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null}},"3":{"1":null,"2":{"courseId":15,"teacherId":24,"classroomId":9,"combinedGroupId":5},"3":null,"4":null},"4":{"1":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"2":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null},"3":null,"4":null},"5":{"1":{"courseId":12,"teacherId":5,"classroomId":12,"combinedGroupId":null},"2":null,"3":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":5},"4":null}},"20":{"1":{"1":null,"2":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"3":{"courseId":15,"teacherId":16,"classroomId":10,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null}},"2":{"1":{"courseId":5,"teacherId":8,"classroomId":13,"combinedGroupId":null},"2":null,"3":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"4":null},"3":{"1":null,"2":null,"3":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null},"4":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null}},"4":{"1":null,"2":null,"3":{"courseId":5,"teacherId":8,"classroomId":14,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"3":{"courseId":15,"teacherId":16,"classroomId":11,"combinedGroupId":null},"4":null}},"21":{"1":{"1":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"2":{"courseId":15,"teacherId":16,"classroomId":10,"combinedGroupId":null},"3":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null},"4":null},"2":{"1":null,"2":{"courseId":5,"teacherId":8,"classroomId":13,"combinedGroupId":null},"3":null,"4":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null}},"3":{"1":null,"2":null,"3":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null}},"4":{"1":null,"2":null,"3":null,"4":{"courseId":5,"teacherId":8,"classroomId":14,"combinedGroupId":null}},"5":{"1":null,"2":{"courseId":15,"teacherId":16,"classroomId":11,"combinedGroupId":null},"3":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"4":null}},"23":{"1":{"1":{"courseId":12,"teacherId":20,"classroomId":9,"combinedGroupId":null},"2":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null},"3":null,"4":null},"2":{"1":null,"2":{"courseId":14,"teacherId":6,"classroomId":12,"combinedGroupId":null},"3":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":4,"combinedGroupId":null}},"3":{"1":null,"2":null,"3":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null},"4":{"courseId":12,"teacherId":20,"classroomId":9,"combinedGroupId":null}},"4":{"1":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":null},"2":null,"3":null,"4":null},"5":{"1":{"courseId":14,"teacherId":6,"classroomId":13,"combinedGroupId":null},"2":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":null},"3":null,"4":null}},"25":{"1":{"1":null,"2":null,"3":null,"4":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null}},"2":{"1":{"courseId":14,"teacherId":6,"classroomId":12,"combinedGroupId":null},"2":{"courseId":13,"teacherId":18,"classroomId":1,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":8,"combinedGroupId":null},"4":null},"3":{"1":{"courseId":16,"teacherId":15,"classroomId":7,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":15,"teacherId":19,"classroomId":7,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":6,"classroomId":13,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":13,"teacherId":18,"classroomId":1,"combinedGroupId":null}},"5":{"1":{"courseId":16,"teacherId":15,"classroomId":7,"combinedGroupId":null},"2":{"courseId":12,"teacherId":5,"classroomId":8,"combinedGroupId":null},"3":null,"4":null}}}
+  }
+  </script>
+
+  <script>
+    /* ======================================================================
+       一、常量
+       ====================================================================== */
+    const DAY_NAME = { 1: '周一', 2: '周二', 3: '周三', 4: '周四', 5: '周五' };
+    const SESSION_NAME = { 1: '1-2节', 2: '3-4节', 3: '5-6节', 4: '7-8节' };
+    const DAY_LIST = [1, 2, 3, 4, 5];
+    const SESSION_LIST = [1, 2, 3, 4];
+
+    /* 内置数据为空时的在线回退地址（不需要可留空字符串 ''） */
+    const ONLINE_FALLBACK_URL = 'https://evan-ma.github.io/my-tool-data/kb_data.json';
+
+    /* ======================================================================
+       二、全局状态
+       ====================================================================== */
+    let DB = null;                 // 原始表数据
+    let entries = [];              // 展开后的排课明细
+    let teacherById = {}, courseById = {}, classById = {}, roomById = {}, combById = {};
+    let currentQuery = null;       // 当前查询条件，用于导出
+    let DATA_READY = false;
+
+    /* ======================================================================
+       三、数据加载
+       ====================================================================== */
+    /* 读取页面内嵌的 JSON */
+    function readEmbeddedJson() {
+      const el = document.getElementById('kbData');
+      const raw = el ? el.textContent.trim() : '';
+      if (!raw) return null;
+      return JSON.parse(raw); // 解析失败会抛出异常
+    }
+
+    /* 判断一份数据是否为空壳 */
+    function isEmptySys(sys) {
+      if (!sys || typeof sys !== 'object') return true;
+      const tCount = Array.isArray(sys.teachers) ? sys.teachers.length : 0;
+      const sCount = (sys.schedule && typeof sys.schedule === 'object')
+        ? Object.keys(sys.schedule).length : 0;
+      return tCount === 0 && sCount === 0;
+    }
+
+    /* 把 JSON 转成内部结构 */
+    function buildDBFromJson(sys) {
+      return {
+        teachers: (sys.teachers || []).map(t => [t.id, t.name]),
+        courses: (sys.courses || []).map(c => [c.id, c.name]),
+        classes: (sys.classes || []).map(c => [c.id, c.name, c.grade || '']),
+        rooms: (sys.classrooms || []).map(r => [r.id, r.name, r.type || '']),
+        combined: (sys.combinedGroups || []).map(g => [g.id, g.name, g.classIds || []]),
+        schedule: (function () {
+          const arr = [];
+          const sch = sys.schedule || {};
+          Object.keys(sch).forEach(classIdStr => {
+            const classId = Number(classIdStr);
+            const byDay = sch[classIdStr];
+            if (!byDay) return;
+            Object.keys(byDay).forEach(dayStr => {
+              const day = Number(dayStr);
+              const bySession = byDay[dayStr];
+              if (!bySession) return;
+              Object.keys(bySession).forEach(sessStr => {
+                const session = Number(sessStr);
+                const e = bySession[sessStr];
+                if (!e || !e.courseId) return;
+                arr.push([
+                  classId, day, session,
+                  e.courseId, e.teacherId, e.classroomId,
+                  e.combinedGroupId || null
+                ]);
+              });
+            });
+          });
+          return arr;
+        })()
+      };
+    }
+    /* 求多个字符串的最长公共前缀 */
+    function commonPrefix(strs) {
+      if (!strs.length) return '';
+      let prefix = strs[0];
+      for (let i = 1; i < strs.length; i++) {
+        while (prefix && strs[i].indexOf(prefix) !== 0) {
+          prefix = prefix.slice(0, -1);
+        }
+        if (!prefix) return '';
+      }
+      return prefix;
+    }
+
+    /* 生成简洁合班名：首个班级完整显示，后续只显示去掉公共前缀后的部分
+       例：["26移动互联1班","26移动互联2班"] → "26移动互联1班 +2班" */
+    function buildCombName(names) {
+      if (!names.length) return '';
+      if (names.length === 1) return names[0];
+      const prefix = commonPrefix(names);
+      const parts = names.map((n, i) => {
+        if (i === 0) return n;                    // 第一个保留完整名
+        const short = n.slice(prefix.length);     // 后续去掉公共前缀
+        return short || n;                        // 若为空则退回完整名
+      });
+      return parts[0] + ' +' + parts.slice(1).join(' +');
+    }
+    /* 建立索引 + 展开排课明细 */
+    function buildIndex() {
+      teacherById = {}; courseById = {}; classById = {}; roomById = {}; combById = {};
+
+      DB.teachers.forEach(([id, name]) => { teacherById[id] = name; });
+      DB.courses.forEach(([id, name]) => { courseById[id] = name; });
+      DB.classes.forEach(([id, name, grade]) => { classById[id] = { name, grade }; });
+      DB.rooms.forEach(([id, name, type]) => { roomById[id] = { name, type }; });
+      (DB.combined || []).forEach(([id, name, classIds]) => { combById[id] = { name, classIds }; });
+
+           entries = DB.schedule.map(([classId, day, session, courseId, teacherId, roomId, combId]) => {
+        // 合班显示名：优先用 classIds 从班级表反查真实班级名，再压缩为简洁格式
+        let combName = '';
+        if (combId && combById[combId]) {
+          const g = combById[combId];
+          if (g.classIds && g.classIds.length) {
+            const names = g.classIds.map(cid =>
+              (classById[cid] && classById[cid].name) || ('班级' + cid)
+            );
+            combName = buildCombName(names);
+          } else {
+            combName = g.name || '';
+          }
+        }
+        return {
+          classId, day, session, courseId, teacherId, roomId, combId,
+          className: (classById[classId] && classById[classId].name) || ('班级' + classId),
+          classGrade: (classById[classId] && classById[classId].grade) || '',
+          courseName: courseById[courseId] || ('课程' + courseId),
+          teacherName: teacherById[teacherId] || ('教师' + teacherId),
+          roomName: (roomById[roomId] && roomById[roomId].name) || ('教室' + roomId),
+          roomType: (roomById[roomId] && roomById[roomId].type) || '',
+          combName: combName
+        };
+      });
+    }
+
+    /* 初始化数据（优先内置，其次在线回退） */
+    async function initData() {
+      const btnQuery = document.getElementById('btnQuery');
+      const btnExport = document.getElementById('btnExport');
+      btnQuery.disabled = true;
+      btnExport.style.display = 'none';
+      document.getElementById('resultPanel').classList.add('hidden');
+
+      setStatus('正在读取内置课表数据…');
+
+      let sys = null;
+      let from = '';
+
+      /* 1) 内置数据 */
+      try {
+        const json = readEmbeddedJson();
+        if (json && !isEmptySys(json.system || json)) {
+          sys = json.system || json;
+          from = '内置数据';
+        }
+      } catch (e) {
+        setStatus('内置 JSON 解析失败：' + e.message +
+          '　请检查页面底部 <script id="kbData"> 标签中的内容是否为合法 JSON（注意中英文引号、末尾不要多逗号）。', 'err');
+        return;
+      }
+
+      /* 2) 在线回退 */
+      if (!sys && ONLINE_FALLBACK_URL) {
+        setStatus('内置数据为空，正在尝试在线回退加载…');
+        try {
+          const res = await fetch(ONLINE_FALLBACK_URL);
+          if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+          const json = await res.json();
+          sys = json.system || json;
+          from = '在线回退数据';
+        } catch (e) {
+          setStatus('数据加载失败：内置数据为空，在线回退也不可用（' + e.message +
+            '）。请把课表 JSON 粘贴到页面底部 <script id="kbData"> 标签内。', 'err');
+          return;
+        }
+      }
+
+      if (!sys) {
+        setStatus('暂无数据：请把课表 JSON 粘贴到页面底部 <script id="kbData"> 标签内。', 'err');
+        return;
+      }
+
+      /* 3) 结构校验 */
+      if (!Array.isArray(sys.teachers) || !Array.isArray(sys.classes) ||
+        !sys.schedule || typeof sys.schedule !== 'object') {
+        setStatus('数据结构不符合要求：缺少 teachers / classes / schedule 字段。', 'err');
+        return;
+      }
+
+      DB = buildDBFromJson(sys);
+      buildIndex();
+      onTypeChange();
+      refreshHeroStats();
+
+      DATA_READY = true;
+      btnQuery.disabled = false;
+      setStatus(`${from}加载成功：${entries.length} 条排课 · ${DB.teachers.length} 位教师 · ` +
+        `${DB.classes.length} 个班级 · ${DB.courses.length} 门课程 · ${DB.rooms.length} 个教室`, 'ok');
+    }
+
+    /* ======================================================================
+       四、下拉框 & 顶部统计
+       ====================================================================== */
+    function onTypeChange() {
+      const type = document.getElementById('qType').value;
+      const label = document.getElementById('targetLabel');
+      const sel = document.getElementById('qTarget');
+
+      const map = {
+        teacher: ['选择教师', DB.teachers.map(t => [t[0], t[1]])],
+        class: ['选择班级', DB.classes.map(c => [c[0], c[1]])],
+        classroom: ['选择教室', DB.rooms.map(r => [r[0], r[1]])],
+        course: ['选择课程', DB.courses.map(c => [c[0], c[1]])]
+      };
+      const item = map[type];
+      label.textContent = item[0];
+
+      sel.innerHTML = '<option value="">-- 请选择 --</option>';
+      item[1].forEach(([id, name]) => {
+        const o = document.createElement('option');
+        o.value = id;
+        o.textContent = name;
+        sel.appendChild(o);
+      });
+    }
+
+    function refreshHeroStats() {
+      const el = document.getElementById('heroStats');
+      el.innerHTML = `
+        <div class="hero-stat"><div class="num">${entries.length}</div><div class="lbl">排课条目</div></div>
+        <div class="hero-stat"><div class="num">${DB.teachers.length}</div><div class="lbl">教师</div></div>
+        <div class="hero-stat"><div class="num">${DB.classes.length}</div><div class="lbl">班级</div></div>
+        <div class="hero-stat"><div class="num">${DB.rooms.length}</div><div class="lbl">教室</div></div>`;
+    }
+
+    function setStatus(msg, kind) {
+      const el = document.getElementById('status');
+      el.className = 'status' + (kind ? ' ' + kind : '');
+      el.textContent = msg;
+    }
+
+    /* ======================================================================
+       五、查询与渲染
+       ====================================================================== */
+    function doQuery() {
+      if (!DATA_READY) { alert('数据尚未加载完成'); return; }
+
+      const type = document.getElementById('qType').value;
+      const id = Number(document.getElementById('qTarget').value);
+      if (!id) { alert('请先选择要查询的对象'); return; }
+
+      currentQuery = { type, id };
+
+      let ok = true;
+      if (type === 'teacher') ok = renderTeacher(id);
+      else if (type === 'class') ok = renderClass(id);
+      else if (type === 'classroom') ok = renderClassroom(id);
+      else if (type === 'course') ok = renderCourse(id);
+
+      if (!ok) {
+        document.getElementById('resultPanel').classList.add('hidden');
+        document.getElementById('btnExport').style.display = 'none';
+        currentQuery = null;
+        return;
+      }
+
+      document.getElementById('resultPanel').classList.remove('hidden');
+      document.getElementById('btnExport').style.display = 'inline-block';
+    }
+
+    /* 去重 */
+    function dedupe(arr) {
+      const seen = new Set();
+      return arr.filter(e => {
+        const k = e.courseId + '|' + e.teacherId + '|' + e.roomId;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+    }
+
+    /* 按 星期-节次 分组 */
+    function groupBySlot(list) {
+      const grid = {};
+      list.forEach(e => {
+        const k = e.day + '-' + e.session;
+        (grid[k] = grid[k] || []).push(e);
+      });
+      Object.keys(grid).forEach(k => { grid[k] = dedupe(grid[k]); });
+      return grid;
+    }
+
+    /* 课程卡片 */
+    function cardHTML(e, opts) {
+      opts = opts || {};
+      const cls = e.combName ? 'ccard combined' : 'ccard';
+      const badge = e.combName ? '<span class="badge">合班</span>' : '';
+
+      let meta = '';
+      if (opts.showTeacher !== false && e.teacherName) meta += `<span class="cmeta">👨‍🏫 ${e.teacherName}</span>`;
+      if (opts.showRoom !== false && e.roomName) meta += `<span class="cmeta">📍 ${e.roomName}</span>`;
+      if (e.combName) {
+        meta += `<span class="cmeta">👥 ${e.combName}</span>`;
+      } else if (opts.showClass && e.className) {
+        meta += `<span class="cmeta">🏫 ${e.className}</span>`;
+      }
+
+      return `<div class="${cls}">
+        <span class="cname">${e.courseName}${badge}</span>
+        ${meta}
+      </div>`;
+    }
+
+    /* 通用课表表格 */
+    function gridTableHTML(list, opts) {
+      const grid = groupBySlot(list);
+      let html = '<div class="scroll-hint">← 左右滑动查看完整课表 →</div>';
+      html += '<div class="grid-scroll">';
+      html += '<table class="grid-table"><thead><tr><th>节次</th>';
+      DAY_LIST.forEach(d => { html += `<th>${DAY_NAME[d]}</th>`; });
+      html += '</tr></thead><tbody>';
+
+      SESSION_LIST.forEach(s => {
+        html += `<tr><td>${SESSION_NAME[s]}</td>`;
+        DAY_LIST.forEach(d => {
+          const cell = grid[d + '-' + s] || [];
+          html += '<td>';
+          if (cell.length) {
+            cell.forEach(e => { html += cardHTML(e, opts); });
+          } else {
+            html += `<div class="cell-empty">${(opts && opts.emptyText) || '—'}</div>`;
+          }
+          html += '</td>';
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      return html;
+    }
+
+    /* -------- 按教师 -------- */
+    function renderTeacher(tid) {
+      const name = teacherById[tid] || ('教师' + tid);
+      const list = entries.filter(e => e.teacherId === tid);
+      if (!list.length) { alert('该教师暂无排课记录'); return false; }
+
+      const sessions = new Set(list.map(e => e.day + '-' + e.session));
+      const totalHours = sessions.size * 2;
+
+      document.getElementById('resultTitle').textContent = `【${name}】教师课表`;
+      document.getElementById('resultSub').textContent =
+        `共 ${sessions.size} 节课（${totalHours} 课时） · 授课 ${new Set(list.map(e => e.courseId)).size} 门课程 · 涉及 ${new Set(list.map(e => e.classId)).size} 个班级`;
+      document.getElementById('resultBody').innerHTML =
+        gridTableHTML(list, { showTeacher: false, showRoom: true, showClass: true });
+      return true;
+    }
+
+    /* -------- 按班级 -------- */
+    function renderClass(cid) {
+      const info = classById[cid] || { name: '班级' + cid, grade: '' };
+      const list = entries.filter(e => e.classId === cid);
+      if (!list.length) { alert('该班级暂无排课记录'); return false; }
+
+      const courses = new Set(list.map(e => e.courseId));
+      const teachers = new Set(list.map(e => e.teacherId));
+      const totalHours = list.length * 2;
+
+      document.getElementById('resultTitle').textContent = `【${info.name}】班级课表`;
+      document.getElementById('resultSub').textContent =
+        `${info.grade} 级 · 共 ${list.length} 节课（${totalHours} 课时） · ${courses.size} 门课程 · ${teachers.size} 位任课教师`;
+      document.getElementById('resultBody').innerHTML =
+        gridTableHTML(list, { showTeacher: true, showRoom: true, showClass: false });
+      return true;
+    }
+
+    /* -------- 按教室 -------- */
+    function renderClassroom(rid) {
+      const info = roomById[rid] || { name: '教室' + rid, type: '' };
+      const list = entries.filter(e => e.roomId === rid);
+      if (!list.length) { alert('该教室暂无排课记录'); return false; }
+
+      const grid = groupBySlot(list);
+      const totalSlots = DAY_LIST.length * SESSION_LIST.length;
+      const usedSlots = Object.keys(grid).length;
+      const rate = Math.round(usedSlots / totalSlots * 100);
+
+      document.getElementById('resultTitle').textContent = `【${info.name}】教室占用情况`;
+      document.getElementById('resultSub').textContent =
+        `${info.type} · 占用 ${usedSlots}/${totalSlots} 个时段（${rate}%） · 共 ${list.length} 条排课`;
+      document.getElementById('resultBody').innerHTML =
+        gridTableHTML(list, { showTeacher: true, showRoom: false, showClass: true, emptyText: '空闲' });
+      return true;
+    }
+
+    /* -------- 按课程 -------- */
+    function renderCourse(cid) {
+      const name = courseById[cid] || ('课程' + cid);
+      const list = entries.filter(e => e.courseId === cid);
+      if (!list.length) { alert('该课程暂无排课记录'); return false; }
+
+      const teachers = [...new Set(list.map(e => e.teacherId))];
+      const classes = [...new Set(list.map(e => e.classId))];
+
+      document.getElementById('resultTitle').textContent = `【${name}】授课情况`;
+      document.getElementById('resultSub').textContent =
+        `${teachers.length} 位任课教师 · ${classes.length} 个班级 · 共 ${list.length} 条排课记录`;
+
+      const byTeacher = {};
+      list.forEach(e => {
+        if (!byTeacher[e.teacherId]) byTeacher[e.teacherId] = { name: e.teacherName, items: [] };
+        byTeacher[e.teacherId].items.push(e);
+      });
+
+      let html = '<div class="lst-wrap"><table class="lst"><thead><tr>';
+      html += '<th style="width:110px">任课教师</th><th style="width:150px">班级</th>' +
+        '<th style="width:70px">星期</th><th style="width:80px">节次</th><th>教室</th>';
+      html += '</tr></thead><tbody>';
+
+      Object.values(byTeacher).forEach(t => {
+        t.items.sort((a, b) =>
+          a.className.localeCompare(b.className, 'zh-CN') ||
+          a.day - b.day || a.session - b.session
+        );
+        t.items.forEach((e, i) => {
+          html += '<tr>';
+          if (i === 0) {
+            html += `<td rowspan="${t.items.length}" style="font-weight:700;color:#1e3a8a;vertical-align:middle">${t.name}</td>`;
+          }
+          html += `<td>${e.className}${e.combName ? ' <span style="font-size:10px;color:#b45309">（合班）</span>' : ''}</td>`;
+          html += `<td>${DAY_NAME[e.day]}</td>`;
+          html += `<td>${SESSION_NAME[e.session]}</td>`;
+          html += `<td>${e.roomName}</td>`;
+          html += '</tr>';
+        });
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('resultBody').innerHTML = html;
+      return true;
+    }
+
+    /* ======================================================================
+       六、导出 Excel（HTML 转 .xls）
+       ====================================================================== */
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    const EXPORT_CSS = `
+<style>
+  table { border-collapse: collapse; font-family: "Microsoft YaHei","PingFang SC",sans-serif; }
+  th, td { border: 1px solid #94a3b8; padding: 5px 6px; font-size: 10pt; vertical-align: top; }
+  th { background: #1e293b; color: #ffffff; text-align: center; font-weight: bold; }
+  th.corner { background: #0f172a; }
+  td.session { background: #f1f5f9; text-align: center; font-weight: bold; color: #475569; vertical-align: middle; }
+  td.free { text-align: center; vertical-align: middle; color: #cbd5e1; }
+  td.busy { background: #eff6ff; }
+  div.course { margin: 0 0 6px 0; }
+  div.course:last-child { margin-bottom: 0; }
+  span.cname { font-weight: bold; color: #1e3a8a; font-size: 10pt; }
+  span.cmeta { color: #475569; font-size: 9pt; }
+  div.combined span.cname { color: #92400e; }
+  table.lst td.teacher { font-weight: bold; color: #1e3a8a; background: #f8fafc; text-align: center; vertical-align: middle; }
+</style>`;
+
+    function buildGridExportHtml(list, opts) {
+      const grid = groupBySlot(list);
+      const emptyText = opts.emptyText || '—';
+
+      let h = EXPORT_CSS;
+      h += '<table>';
+      h += '<colgroup><col width="72">';
+      for (let i = 0; i < 5; i++) h += '<col width="155">';
+      h += '</colgroup>';
+
+      h += '<tr><th class="corner">节次</th>';
+      DAY_LIST.forEach(d => { h += `<th>${DAY_NAME[d]}</th>`; });
+      h += '</tr>';
+
+      SESSION_LIST.forEach(s => {
+        h += `<tr><td class="session">${SESSION_NAME[s]}</td>`;
+        DAY_LIST.forEach(d => {
+          const cell = grid[d + '-' + s] || [];
+          if (cell.length) {
+            h += '<td class="busy">';
+            cell.forEach(e => {
+              const metas = [];
+              if (opts.showTeacher) metas.push('👨‍🏫 ' + e.teacherName);
+              if (opts.showRoom) metas.push('📍 ' + e.roomName);
+              if (e.combName) metas.push('👥 ' + e.combName);
+              else if (opts.showClass) metas.push('🏫 ' + e.className);
+
+              h += `<div class="course${e.combName ? ' combined' : ''}">`;
+              h += `<span class="cname">${esc(e.courseName)}${e.combName ? '（合班）' : ''}</span><br>`;
+              if (metas.length) h += `<span class="cmeta">${esc(metas.join(' ｜ '))}</span>`;
+              h += '</div>';
+            });
+            h += '</td>';
+          } else {
+            h += `<td class="free">${esc(emptyText)}</td>`;
+          }
+        });
+        h += '</tr>';
+      });
+      h += '</table>';
+      return h;
+    }
+
+    function buildListExportHtml(list) {
+      const byTeacher = {};
+      list.forEach(e => {
+        if (!byTeacher[e.teacherId]) byTeacher[e.teacherId] = { name: e.teacherName, items: [] };
+        byTeacher[e.teacherId].items.push(e);
+      });
+
+      let h = EXPORT_CSS;
+      h += '<table class="lst">';
+      h += '<colgroup><col width="110"><col width="160"><col width="70"><col width="85"><col width="130"></colgroup>';
+      h += '<tr><th>任课教师</th><th>班级</th><th>星期</th><th>节次</th><th>教室</th></tr>';
+
+      Object.values(byTeacher).forEach(t => {
+        t.items.sort((a, b) =>
+          a.className.localeCompare(b.className, 'zh-CN') ||
+          a.day - b.day || a.session - b.session
+        );
+        t.items.forEach((e, i) => {
+          h += '<tr>';
+          if (i === 0) h += `<td class="teacher" rowspan="${t.items.length}">${esc(t.name)}</td>`;
+          h += `<td>${esc(e.className)}${e.combName ? '（合班）' : ''}</td>`;
+          h += `<td style="text-align:center">${DAY_NAME[e.day]}</td>`;
+          h += `<td style="text-align:center">${SESSION_NAME[e.session]}</td>`;
+          h += `<td>${esc(e.roomName)}</td>`;
+          h += '</tr>';
+        });
+      });
+
+      h += '</table>';
+      return h;
+    }
+
+    function downloadHtmlAsXls(html, fileName) {
+      const full = `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<!--[if gte mso 9]><xml>
+<x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+<x:Name>课表</x:Name>
+<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook>
+</xml><![endif]-->
+</head>
+<body>${html}</body>
+</html>`;
+
+      const blob = new Blob(['\ufeff' + full], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function exportExcel() {
+      if (!currentQuery) return;
+      const { type, id } = currentQuery;
+      let html = '', fileName = '';
+
+      if (type === 'teacher') {
+        const name = teacherById[id] || ('教师' + id);
+        html = buildGridExportHtml(entries.filter(e => e.teacherId === id),
+          { showTeacher: false, showRoom: true, showClass: true });
+        fileName = `${name}_课表.xls`;
+      } else if (type === 'class') {
+        const info = classById[id] || { name: '班级' + id };
+        html = buildGridExportHtml(entries.filter(e => e.classId === id),
+          { showTeacher: true, showRoom: true, showClass: false });
+        fileName = `${info.name}_课表.xls`;
+      } else if (type === 'classroom') {
+        const info = roomById[id] || { name: '教室' + id };
+        html = buildGridExportHtml(entries.filter(e => e.roomId === id),
+          { showTeacher: true, showRoom: false, showClass: true, emptyText: '空闲' });
+        fileName = `${info.name}_占用情况.xls`;
+      } else if (type === 'course') {
+        const name = courseById[id] || ('课程' + id);
+        html = buildListExportHtml(entries.filter(e => e.courseId === id));
+        fileName = `${name}_授课情况.xls`;
+      }
+
+      downloadHtmlAsXls(html, fileName);
+      setStatus(`已导出：${fileName}（若 Excel 提示格式与扩展名不符，选择「是」即可正常显示）`, 'ok');
+    }
+
+    /* ======================================================================
+       七、启动
+       ====================================================================== */
+    (function init() {
+      DB = { teachers: [], courses: [], classes: [], rooms: [], combined: [], schedule: [] };
+      buildIndex();
+      onTypeChange();
+      refreshHeroStats();
+      initData();
+    })();
+  </script>
+</body>
+
+</html>
