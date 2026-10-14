@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工资计算器 · 正算 / 反推</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #2b3445;
+    --text-2: #6b7688;
+    --text-3: #9aa4b5;
+    --line: #e8ecf2;
+    --primary: #4a6cf7;
+    --primary-soft: #eef2ff;
+    --teal: #0ea5a4;
+    --teal-soft: #e6f7f6;
+    --green: #16a34a;
+    --red: #dc2626;
+    --amber: #b45309;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app { max-width: 720px; margin: 0 auto; }
+
+  .page-head { margin-bottom: 18px; }
+  .page-head h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .page-head p { font-size: 13px; color: var(--text-3); margin-top: 4px; }
+
+  /* ---------- Tab ---------- */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: #eaedf3;
+    padding: 4px;
+    border-radius: 11px;
+    margin-bottom: 16px;
+  }
+  .tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-2);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all .15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: #fff;
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(20,30,50,.10);
+  }
+
+  /* ---------- 卡片 ---------- */
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 2px rgba(20,30,50,.04), 0 8px 24px rgba(20,30,50,.05);
+    margin-bottom: 16px;
+  }
+
+  .group + .group {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .group-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-3);
+    letter-spacing: .5px;
+    margin-bottom: 14px;
+  }
+
+  /* ---------- 表单 ---------- */
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .field:last-child { margin-bottom: 0; }
+
+  .field > label {
+    flex: none;
+    width: 104px;
+    font-size: 14px;
+    color: var(--text-2);
+  }
+
+  .ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .input-box {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .input-box:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74,108,247,.12);
+  }
+  .input-box input {
+    border: none;
+    outline: none;
+    width: 110px;
+    padding: 9px 2px 9px 13px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+  .input-box input::placeholder { color: #c3cad6; }
+  .input-box .unit { padding: 0 13px 0 3px; font-size: 13px; color: var(--text-3); flex: none; }
+  .input-box.sm input { width: 64px; }
+
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+
+  .chip {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--text-2);
+    border-radius: 9px;
+    padding: 8px 15px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip:hover { border-color: #c7d0e0; color: var(--text); }
+  .chip.on { background: var(--primary-soft); border-color: #bcc8ff; color: var(--primary); font-weight: 600; }
+
+  .hint { font-size: 12px; color: var(--text-3); }
+  .range-sep { color: var(--text-3); font-size: 13px; }
+
+  /* ---------- 提示 / 错误 ---------- */
+  .error {
+    margin-top: 18px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 1px solid #fee2e2;
+  }
+  .info-box {
+    margin-top: 18px;
+    background: #f0fdf4;
+    color: #15803d;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 1px solid #bbf7d0;
+  }
+  .warn-box {
+    margin-top: 18px;
+    background: #fffbeb;
+    color: var(--amber);
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 1px solid #fde68a;
+  }
+
+  /* ---------- 按钮 ---------- */
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+
+  .btn {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn:active { transform: translateY(1px); }
+
+  .btn-normal { background: var(--primary); color: #fff; box-shadow: 0 2px 10px rgba(74,108,247,.30); }
+  .btn-normal:hover { background: #3b5cf0; }
+
+  .btn-holiday { background: var(--teal); color: #fff; box-shadow: 0 2px 10px rgba(14,165,164,.28); }
+  .btn-holiday:hover { background: #0b8d8c; }
+
+  .btn-ghost { background: #fff; color: var(--text-2); border: 1px solid var(--line); }
+  .btn-ghost:hover { border-color: #c7d0e0; color: var(--text); }
+
+  /* ---------- 结果 ---------- */
+  .result-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-normal { background: var(--primary-soft); color: var(--primary); }
+  .badge-holiday { background: var(--teal-soft); color: #0d8a89; }
+
+  .total { display: flex; align-items: baseline; gap: 8px; }
+  .total-label { font-size: 13px; color: var(--text-3); }
+  .total-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .total-value.holiday { color: var(--teal); }
+
+  .detail { list-style: none; margin-top: 4px; }
+  .detail li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #f4f6fa;
+  }
+  .detail li:last-child { border-bottom: none; }
+
+  .d-label { color: var(--text-2); display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+  .d-note { font-style: normal; font-size: 12px; color: var(--text-3); }
+  .d-value { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
+
+  .kind-plus .d-value { color: var(--green); }
+  .kind-minus .d-value { color: var(--red); }
+  .kind-muted .d-value { color: var(--text-3); font-weight: 500; }
+  .kind-info { padding: 6px 0 !important; font-size: 13px; }
+  .kind-info .d-label, .kind-info .d-value { color: var(--text-3); font-weight: 400; }
+
+  /* ---------- 历史记录 ---------- */
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .card-head .group-title { margin-bottom: 0; }
+
+  .link-btn {
+    border: none;
+    background: none;
+    color: var(--text-3);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all .15s;
+  }
+  .link-btn:hover { color: var(--red); background: #fef2f2; }
+
+  .history { list-style: none; }
+  .history li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #f4f6fa;
+    font-size: 13px;
+  }
+  .history li:last-child { border-bottom: none; }
+
+  .h-time { color: var(--text-3); font-variant-numeric: tabular-nums; flex: 1; min-width: 0; }
+  .badge-sm { padding: 3px 10px; font-size: 12px; }
+  .h-total { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); flex: none; }
+
+  /* ---------- 反推匹配列表 ---------- */
+  .match-list { list-style: none; margin-top: 6px; }
+  .match-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1px solid var(--line);
+  }
+  .match-item:last-child { margin-bottom: 0; }
+  .match-item.exact { background: #f0fdf4; border-color: #bbf7d0; }
+  .match-item.near { background: #fffbeb; border-color: #fde68a; }
+
+  .match-main { min-width: 0; }
+  .match-k {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .match-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .match-item.exact .match-sub { color: #15803d; }
+  .match-item.near .match-sub { color: var(--amber); }
+
+  .match-val {
+    font-size: 15px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    flex: none;
+  }
+
+  .match-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-3);
+    margin: 18px 0 10px;
+  }
+  .match-title:first-child { margin-top: 6px; }
+  .match-title .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .tag-green { background: #dcfce7; color: #15803d; }
+  .tag-amber { background: #fef3c7; color: var(--amber); }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 560px) {
+    body { padding: 20px 12px 48px; }
+    .card { padding: 18px 16px; border-radius: 12px; }
+    .field { flex-direction: column; align-items: stretch; gap: 8px; }
+    .field > label { width: auto; font-size: 13px; }
+    .input-box { flex: 1; }
+    .input-box input { width: 100%; }
+    .input-box.sm input { width: 56px; }
+    .actions .btn { flex: 1 1 100%; }
+    .total-value { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="app">
+
+    <header class="page-head">
+      <h1>工资计算器</h1>
+      <p>正算工资 · 反推考勤</p>
+    </header>
+
+    <!-- Tab 切换 -->
+    <nav class="tabs">
+      <button class="tab" :class="{ active: tab === 'calc' }" @click="tab = 'calc'">计算工资</button>
+      <button class="tab" :class="{ active: tab === 'reverse' }" @click="tab = 'reverse'">反推考勤</button>
+    </nav>
+
+    <!-- ======================= 正算 ======================= -->
+    <template v-if="tab === 'calc'">
+
+      <section class="card">
+
+        <div class="group">
+          <h2 class="group-title">基础信息</h2>
+
+          <div class="field">
+            <label>基本工资</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.baseSalary" min="0" step="100" placeholder="0">
+                <span class="unit">元</span>
+              </div>
+              <button class="chip" :class="{ on: form.baseSalary === 4500 }" @click="form.baseSalary = 4500">4500</button>
+              <button class="chip" :class="{ on: form.baseSalary === 5000 }" @click="form.baseSalary = 5000">5000</button>
+              <button class="chip" :class="{ on: form.baseSalary === 6000 }" @click="form.baseSalary = 6000">6000</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>当月工作日</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.workDays" min="1" step="1" placeholder="0">
+                <span class="unit">天</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <h2 class="group-title">正常模式参数</h2>
+
+          <div class="field">
+            <label>迟到次数</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.lateCount" min="0" step="1" placeholder="0">
+                <span class="unit">次</span>
+              </div>
+              <span class="hint">每次扣 10 元，并取消全勤</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>请假天数</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.leaveDays" min="0" step="0.5" placeholder="0">
+                <span class="unit">天</span>
+              </div>
+              <span class="hint">按天扣工资，并取消全勤</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>缺勤次数</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.absentCount" min="0" step="1" placeholder="0">
+                <span class="unit">次</span>
+              </div>
+              <span class="hint">每次扣半天工资，并取消全勤</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <h2 class="group-title">假期模式参数</h2>
+
+          <div class="field">
+            <label>假期工资</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.holidaySalary" min="0" step="100" placeholder="0">
+                <span class="unit">元</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>上班天数</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="form.holidayWorkDays" min="0" step="1" placeholder="0">
+                <span class="unit">天</span>
+              </div>
+              <span class="hint">超出当月工作日的部分不计</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="error" v-if="error">{{ error }}</p>
+
+        <div class="actions">
+          <button class="btn btn-normal" @click="calcNormal">计算正常工资</button>
+          <button class="btn btn-holiday" @click="calcHoliday">计算假期工资</button>
+          <button class="btn btn-ghost" @click="reset">重置</button>
+        </div>
+      </section>
+
+      <section class="card" v-if="result">
+        <div class="result-head">
+          <span class="badge" :class="'badge-' + result.mode">{{ result.modeText }}</span>
+          <div class="total">
+            <span class="total-label">应发工资</span>
+            <span class="total-value" :class="{ holiday: result.mode === 'holiday' }">
+              ¥ {{ money(result.total) }}
+            </span>
+          </div>
+        </div>
+
+        <ul class="detail">
+          <li v-for="(item, i) in result.items" :key="i" :class="'kind-' + item.kind">
+            <span class="d-label">
+              {{ item.label }}
+              <em class="d-note" v-if="item.note">{{ item.note }}</em>
+            </span>
+            <span class="d-value">
+              <template v-if="item.kind === 'plus'">+</template>
+              <template v-else-if="item.kind === 'minus'">-</template>
+              {{ money(item.value) }}
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card" v-if="history.length">
+        <div class="card-head">
+          <h2 class="group-title">历史记录</h2>
+          <button class="link-btn" @click="history = []">清空</button>
+        </div>
+        <ul class="history">
+          <li v-for="(h, i) in history" :key="i">
+            <span class="h-time">{{ h.time }}</span>
+            <span class="badge badge-sm" :class="'badge-' + h.mode">{{ h.modeText }}</span>
+            <span class="h-total">¥ {{ money(h.total) }}</span>
+          </li>
+        </ul>
+      </section>
+
+    </template>
+
+    <!-- ======================= 反推 ======================= -->
+    <template v-else>
+
+      <section class="card">
+        <div class="group">
+          <h2 class="group-title">输入条件</h2>
+
+          <div class="field">
+            <label>实际工资</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="rf.target" min="0" step="0.01" placeholder="0.00">
+                <span class="unit">元</span>
+              </div>
+              <span class="hint">工资条上拿到手的金额</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>正常工资</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="rf.normalSalary" min="0" step="100" placeholder="0">
+                <span class="unit">元</span>
+              </div>
+              <button class="chip" :class="{ on: rf.normalSalary === 4200 }" @click="rf.normalSalary = 4200">4200</button>
+              <button class="chip" :class="{ on: rf.normalSalary === 4500 }" @click="rf.normalSalary = 4500">4500</button>
+              <button class="chip" :class="{ on: rf.normalSalary === 5000 }" @click="rf.normalSalary = 5000">5000</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>假期工资</label>
+            <div class="ctrl">
+              <div class="input-box">
+                <input type="number" v-model.number="rf.holidaySalary" min="0" step="100" placeholder="0">
+                <span class="unit">元</span>
+              </div>
+              <span class="hint">默认 2200</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>工作日范围</label>
+            <div class="ctrl">
+              <div class="input-box sm">
+                <input type="number" v-model.number="rf.minDays" min="1" step="1">
+              </div>
+              <span class="range-sep">~</span>
+              <div class="input-box sm">
+                <input type="number" v-model.number="rf.maxDays" min="1" step="1">
+              </div>
+              <span class="hint">天</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="error" v-if="reverseError">{{ reverseError }}</p>
+
+        <div class="actions">
+          <button class="btn btn-normal" @click="calcReverse">开始反推</button>
+          <button class="btn btn-ghost" @click="resetReverse">重置</button>
+        </div>
+      </section>
+
+      <section class="card" v-if="reverseResult">
+        <div class="result-head">
+          <span class="badge badge-holiday">反推结果</span>
+          <div class="total">
+            <span class="total-label">目标工资</span>
+            <span class="total-value holiday">¥ {{ money(reverseResult.target) }}</span>
+          </div>
+        </div>
+
+        <template v-if="reverseResult.exact.length">
+          <div class="match-title">
+            精确匹配
+            <span class="tag tag-green">{{ reverseResult.exact.length }} 个</span>
+          </div>
+          <ul class="match-list">
+            <li v-for="(m, i) in reverseResult.exact" :key="'e' + i" class="match-item exact">
+              <div class="match-main">
+                <div class="match-k">工作日 {{ m.W }} 天 · 上班 {{ m.A }} 天</div>
+                <div class="match-sub">不上班 {{ m.offDays }} 天 · 结果与目标工资完全一致</div>
+              </div>
+              <div class="match-val">¥ {{ money(m.total) }}</div>
+            </li>
+          </ul>
+        </template>
+
+        <template v-if="!reverseResult.exact.length && reverseResult.near.length">
+          <div class="match-title">
+            未找到精确匹配 · 以下是误差最小的组合
+            <span class="tag tag-amber">参考</span>
+          </div>
+          <ul class="match-list">
+            <li v-for="(m, i) in reverseResult.near" :key="'n' + i" class="match-item near">
+              <div class="match-main">
+                <div class="match-k">工作日 {{ m.W }} 天 · 上班 {{ m.A }} 天</div>
+                <div class="match-sub">
+                  不上班 {{ m.offDays }} 天 ·
+                  结果 ¥ {{ money(m.total) }} · 相差 {{ m.diff > 0 ? '+' : '' }}{{ money(m.diff) }}
+                </div>
+              </div>
+              <div class="match-val">¥ {{ money(m.total) }}</div>
+            </li>
+          </ul>
+        </template>
+
+        <p class="info-box" v-if="reverseResult.exact.length === 0">
+          提示：可适当扩大「工作日范围」，或者检查正常工资 / 假期工资基数是否正确。
+        </p>
+      </section>
+
+    </template>
+
+  </div>
+</div>
+
+<script>
+const { createApp, reactive, ref } = Vue;
+
+createApp({
+  setup() {
+    const tab = ref('calc');
+
+    /* ---------- 正算 ---------- */
+    const defaults = () => ({
+      baseSalary: 4500,
+      workDays: 21,
+      lateCount: 0,
+      leaveDays: 0,
+      absentCount: 0,
+      holidaySalary: 2200,
+      holidayWorkDays: 0,
+    });
+
+    const form = reactive(defaults());
+    const error = ref('');
+    const result = ref(null);
+    const history = ref([]);
+
+    const toNum = (v) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    const trunc2 = (n) => Math.floor(n * 100 + 1e-9) / 100;
+    const money = (n) => Number(n).toFixed(2);
+
+    const validate = () => {
+      const base = toNum(form.baseSalary);
+      const days = toNum(form.workDays);
+      if (base <= 0) return '请填写有效的基本工资';
+      if (days <= 0) return '当月工作日必须大于 0';
+      if (!Number.isInteger(days)) return '当月工作日需为整数';
+      return '';
+    };
+
+    const pushHistory = (mode, modeText, total) => {
+      history.value.unshift({
+        time: new Date().toLocaleString('zh-CN', { hour12: false }),
+        mode, modeText, total,
+      });
+      if (history.value.length > 20) history.value.pop();
+    };
+
+    const calcNormal = () => {
+      const err = validate();
+      if (err) { error.value = err; result.value = null; return; }
+      error.value = '';
+
+      const base   = toNum(form.baseSalary);
+      const days   = toNum(form.workDays);
+      const late   = Math.max(0, Math.floor(toNum(form.lateCount)));
+      const leave  = Math.max(0, toNum(form.leaveDays));
+      const absent = Math.max(0, Math.floor(toNum(form.absentCount)));
+
+      const dayWage   = base / days;
+      const isFull    = late === 0 && leave === 0 && absent === 0;
+      const fullBonus = isFull ? base * 0.05 : 0;
+      const leaveCut  = leave * dayWage;
+      const absentCut = absent * dayWage * 0.5;
+      const lateCut   = late * 10;
+
+      const total = trunc2(base + fullBonus - leaveCut - absentCut - lateCut);
+
+      const items = [];
+      items.push({ label: '日工资', value: trunc2(dayWage), kind: 'info', note: `${money(base)} ÷ ${days} 天` });
+      items.push({ label: '基本工资', value: base, kind: 'plus', note: '' });
+      items.push({
+        label: '全勤奖',
+        value: trunc2(fullBonus),
+        kind: fullBonus > 0 ? 'plus' : 'muted',
+        note: fullBonus > 0 ? '基本工资 × 5%' : '有迟到 / 请假 / 缺勤，无全勤奖',
+      });
+      if (leave > 0)  items.push({ label: '请假扣款', value: trunc2(leaveCut),  kind: 'minus', note: `${leave} 天 × ${money(trunc2(dayWage))}` });
+      if (absent > 0) items.push({ label: '缺勤扣款', value: trunc2(absentCut), kind: 'minus', note: `${absent} 次 × 半天工资` });
+      if (late > 0)   items.push({ label: '迟到扣款', value: lateCut,           kind: 'minus', note: `${late} 次 × 10 元` });
+
+      result.value = { mode: 'normal', modeText: '正常工资', total, items };
+      pushHistory('normal', '正常', total);
+    };
+
+    const calcHoliday = () => {
+      const err = validate();
+      if (err) { error.value = err; result.value = null; return; }
+      error.value = '';
+
+      const base    = toNum(form.baseSalary);
+      const days    = toNum(form.workDays);
+      const hSalary = Math.max(0, toNum(form.holidaySalary));
+
+      let workIn = Math.max(0, Math.floor(toNum(form.holidayWorkDays)));
+      if (workIn > days) workIn = days;
+
+      const offDays = days - workIn;
+      const normalPart  = (base / days) * workIn;
+      const holidayPart = (hSalary / days) * offDays;
+      const total = trunc2(normalPart + holidayPart);
+
+      const items = [];
+      items.push({
+        label: '正常上班部分',
+        value: trunc2(normalPart),
+        kind: 'plus',
+        note: workIn > 0 ? `${money(base)} ÷ ${days} × ${workIn} 天` : '本月未上班',
+      });
+      items.push({
+        label: '假期部分',
+        value: trunc2(holidayPart),
+        kind: 'plus',
+        note: offDays > 0 ? `${money(hSalary)} ÷ ${days} × ${offDays} 天` : '本月无假期天数',
+      });
+
+      result.value = { mode: 'holiday', modeText: '假期工资', total, items };
+      pushHistory('holiday', '假期', total);
+    };
+
+    const reset = () => {
+      Object.assign(form, defaults());
+      error.value = '';
+      result.value = null;
+    };
+
+    /* ---------- 反推 ---------- */
+    const rf = reactive({
+      target: 3404.76,
+      normalSalary: 4500,
+      holidaySalary: 2200,
+      minDays: 18,
+      maxDays: 26,
+    });
+
+    const reverseError = ref('');
+    const reverseResult = ref(null);
+
+    const calcReverse = () => {
+      const target  = toNum(rf.target);
+      const normal  = toNum(rf.normalSalary);
+      const holiday = toNum(rf.holidaySalary);
+      let wMin = Math.max(1, Math.floor(toNum(rf.minDays)));
+      let wMax = Math.max(1, Math.floor(toNum(rf.maxDays)));
+
+      if (target <= 0)    { reverseError.value = '请填写实际工资'; return; }
+      if (normal <= 0)    { reverseError.value = '请填写正常工资基数'; return; }
+      if (holiday < 0)    { reverseError.value = '假期工资不能为负数'; return; }
+      if (normal <= holiday) { reverseError.value = '正常工资基数应大于假期工资基数'; return; }
+      if (wMax < wMin)    { [wMin, wMax] = [wMax, wMin]; }
+      if (wMax - wMin > 80){ reverseError.value = '工作日范围过大，请缩小到 80 天以内'; return; }
+
+      reverseError.value = '';
+
+      const targetCents = Math.round(target * 100);
+      const exact = [];
+      const all = [];
+
+      for (let W = wMin; W <= wMax; W++) {
+        for (let A = 0; A <= W; A++) {
+          const raw = (normal / W) * A + (holiday / W) * (W - A);
+          const total = trunc2(raw);
+          const cents = Math.round(total * 100);
+          const diffCents = cents - targetCents;
+          const item = {
+            W, A,
+            offDays: W - A,
+            total,
+            diff: diffCents / 100,
+          };
+          if (diffCents === 0) exact.push(item);
+          all.push(item);
+        }
+      }
+
+      exact.sort((a, b) => a.W - b.W || a.A - b.A);
+
+      all.sort((a, b) => {
+        const d = Math.abs(a.diff) - Math.abs(b.diff);
+        if (d !== 0) return d;
+        return a.W - b.W || a.A - b.A;
+      });
+
+      const exactSet = new Set(exact.map(x => x.W + '-' + x.A));
+      const near = all
+        .filter(x => !exactSet.has(x.W + '-' + x.A))
+        .slice(0, 6);
+
+      reverseResult.value = { target, exact, near };
+    };
+
+    const resetReverse = () => {
+      Object.assign(rf, {
+        target: 3404.76,
+        normalSalary: 4500,
+        holidaySalary: 2200,
+        minDays: 18,
+        maxDays: 26,
+      });
+      reverseError.value = '';
+      reverseResult.value = null;
+    };
+
+    return {
+      tab,
+      // 正算
+      form, error, result, history,
+      money,
+      calcNormal, calcHoliday, reset,
+      // 反推
+      rf, reverseError, reverseResult,
+      calcReverse, resetReverse,
+    };
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>
