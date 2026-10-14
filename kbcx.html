@@ -6,562 +6,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>学院课表智能分析工具</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-      padding: 18px;
-      min-height: 100vh;
+      background: #f1f5f9; color: #1e293b; padding: 18px; min-height: 100vh;
     }
-
-    .wrap {
-      max-width: 1220px;
-      margin: 0 auto;
-    }
+    .wrap { max-width: 1220px; margin: 0 auto; }
 
     /* ---------- 顶部 ---------- */
     .hero {
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: #fff;
-      border-radius: 14px;
-      padding: 22px 28px;
+      color: #fff; border-radius: 14px; padding: 22px 28px;
       box-shadow: 0 6px 24px rgba(37, 99, 235, .25);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
     }
-
-    .hero h1 {
-      font-size: 21px;
-      letter-spacing: .5px;
-    }
-
-    .hero .sub {
-      font-size: 12px;
-      opacity: .8;
-      margin-top: 6px;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 22px;
-      flex-wrap: wrap;
-    }
-
-    .hero-stat {
-      text-align: center;
-    }
-
-    .hero-stat .num {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .hero-stat .lbl {
-      font-size: 11px;
-      opacity: .75;
-      margin-top: 2px;
-    }
+    .hero h1 { font-size: 21px; letter-spacing: .5px; }
+    .hero .sub { font-size: 12px; opacity: .8; margin-top: 6px; }
+    .hero-stats { display: flex; gap: 22px; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 22px; font-weight: 700; }
+    .hero-stat .lbl { font-size: 11px; opacity: .75; margin-top: 2px; }
 
     /* ---------- 面板 / 工具栏 ---------- */
     .panel {
-      background: #fff;
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin-top: 16px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, .06);
+      background: #fff; border-radius: 12px; padding: 18px 22px;
+      margin-top: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, .06);
     }
-
-    .toolbar {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: flex-end;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .field label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #64748b;
-      letter-spacing: .3px;
-    }
-
+    .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 12px; font-weight: 700; color: #64748b; letter-spacing: .3px; }
     select {
-      padding: 9px 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 13px;
-      min-width: 180px;
-      background: #fff;
-      cursor: pointer;
-      transition: .18s;
-      font-family: inherit;
-      color: #1e293b;
+      padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 8px;
+      font-size: 13px; min-width: 180px; background: #fff; cursor: pointer;
+      transition: .18s; font-family: inherit; color: #1e293b;
     }
-
-    select:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-    }
-
-    select:disabled {
-      background: #f1f5f9;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-
+    select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+    select:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
     button {
-      padding: 9px 18px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .18s;
-      font-family: inherit;
-      white-space: nowrap;
+      padding: 9px 18px; border: none; border-radius: 8px; font-size: 13px;
+      font-weight: 700; cursor: pointer; transition: .18s;
+      font-family: inherit; white-space: nowrap;
     }
-
-    button:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .btn-primary {
-      background: #2563eb;
-      color: #fff;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-    }
-
-    .btn-green {
-      background: #059669;
-      color: #fff;
-    }
-
-    .btn-green:hover:not(:disabled) {
-      background: #047857;
-      transform: translateY(-1px);
-    }
+    button:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-green { background: #059669; color: #fff; }
+    .btn-green:hover:not(:disabled) { background: #047857; transform: translateY(-1px); }
 
     /* ---------- 状态栏 ---------- */
     .status {
-      margin-top: 12px;
-      padding: 9px 14px;
-      border-radius: 8px;
-      font-size: 12.5px;
-      background: #f1f5f9;
-      color: #475569;
-      border-left: 3px solid #94a3b8;
-      line-height: 1.65;
+      margin-top: 12px; padding: 9px 14px; border-radius: 8px;
+      font-size: 12.5px; background: #f1f5f9; color: #475569;
+      border-left: 3px solid #94a3b8; line-height: 1.65;
     }
-
-    .status.ok {
-      background: #ecfdf5;
-      color: #047857;
-      border-left-color: #059669;
-    }
-
-    .status.err {
-      background: #fef2f2;
-      color: #b91c1c;
-      border-left-color: #dc2626;
-    }
+    .status.ok { background: #ecfdf5; color: #047857; border-left-color: #059669; }
+    .status.err { background: #fef2f2; color: #b91c1c; border-left-color: #dc2626; }
 
     /* ---------- 结果区 ---------- */
     .result-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #e2e8f0;
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+      padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;
     }
-
-    .result-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .result-sub {
-      font-size: 12.5px;
-      color: #64748b;
-    }
+    .result-title { font-size: 17px; font-weight: 700; color: #0f172a; }
+    .result-sub { font-size: 12.5px; color: #64748b; }
 
     /* ---------- 课表网格 ---------- */
     .grid-scroll {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 10px;
-      box-shadow: 0 1px 6px rgba(15, 23, 42, .07);
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      border-radius: 10px; box-shadow: 0 1px 6px rgba(15, 23, 42, .07);
     }
-
-    .grid-scroll::-webkit-scrollbar {
-      height: 7px;
-    }
-
-    .grid-scroll::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-
-    .grid-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .scroll-hint {
-      display: none;
-    }
-
+    .grid-scroll::-webkit-scrollbar { height: 7px; }
+    .grid-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .grid-scroll::-webkit-scrollbar-track { background: transparent; }
+    .scroll-hint { display: none; }
     .grid-table {
-      width: 100%;
-      min-width: 680px;
-      border-collapse: separate;
-      border-spacing: 0;
-      table-layout: fixed;
-      border-radius: 10px;
-      overflow: hidden;
+      width: 100%; min-width: 680px; border-collapse: separate;
+      border-spacing: 0; table-layout: fixed; border-radius: 10px; overflow: hidden;
     }
-
     .grid-table th {
-      background: #1e293b;
-      color: #fff;
-      font-size: 12.5px;
-      font-weight: 700;
-      padding: 10px 6px;
-      text-align: center;
-      letter-spacing: .5px;
+      background: #1e293b; color: #fff; font-size: 12.5px; font-weight: 700;
+      padding: 10px 6px; text-align: center; letter-spacing: .5px;
     }
-
-    .grid-table th:first-child {
-      background: #0f172a;
-      width: 74px;
-    }
-
+    .grid-table th:first-child { background: #0f172a; width: 74px; }
     .grid-table td {
-      border-top: 1px solid #e2e8f0;
-      border-left: 1px solid #e2e8f0;
-      padding: 6px;
-      vertical-align: top;
-      height: 96px;
-      background: #fff;
+      border-top: 1px solid #e2e8f0; border-left: 1px solid #e2e8f0;
+      padding: 6px; vertical-align: top; height: 96px; background: #fff;
     }
-
     .grid-table tr td:first-child {
-      background: #f8fafc;
-      border-left: none;
-      text-align: center;
-      font-weight: 700;
-      font-size: 12px;
-      color: #475569;
-      vertical-align: middle;
+      background: #f8fafc; border-left: none; text-align: center;
+      font-weight: 700; font-size: 12px; color: #475569; vertical-align: middle;
     }
-
-    .grid-table tr:first-child td {
-      border-top: none;
-    }
-
-    .grid-table td:last-child {
-      border-right: none;
-    }
-
-    .cell-empty {
-      text-align: center;
-      color: #cbd5e1;
-      font-size: 12px;
-      padding-top: 6px;
-    }
+    .grid-table tr:first-child td { border-top: none; }
+    .grid-table td:last-child { border-right: none; }
+    .cell-empty { text-align: center; color: #cbd5e1; font-size: 12px; padding-top: 6px; }
 
     /* 课程卡片 */
     .ccard {
-      background: #eff6ff;
-      border-left: 3px solid #2563eb;
-      border-radius: 6px;
-      padding: 5px 7px;
-      margin-bottom: 4px;
-      text-align: left;
-      line-height: 1.45;
+      background: #eff6ff; border-left: 3px solid #2563eb; border-radius: 6px;
+      padding: 5px 7px; margin-bottom: 4px; text-align: left; line-height: 1.45;
     }
-
-    .ccard:last-child {
-      margin-bottom: 0;
-    }
-
-    .ccard.combined {
-      background: #fef3c7;
-      border-left-color: #d97706;
-    }
-
+    .ccard:last-child { margin-bottom: 0; }
+    .ccard.combined { background: #fef3c7; border-left-color: #d97706; }
     .ccard .cname {
-      font-size: 12px;
-      font-weight: 700;
-      color: #1e3a8a;
-      display: block;
-      margin-bottom: 2px;
-      word-break: break-word;
+      font-size: 12px; font-weight: 700; color: #1e3a8a;
+      display: block; margin-bottom: 2px; word-break: break-word;
     }
-
-    .ccard.combined .cname {
-      color: #92400e;
-    }
-
-    .ccard .cmeta {
-      font-size: 11px;
-      color: #64748b;
-      display: block;
-      word-break: break-word;
-    }
-
+    .ccard.combined .cname { color: #92400e; }
+    .ccard .cmeta { font-size: 11px; color: #64748b; display: block; word-break: break-word; }
     .ccard .badge {
-      display: inline-block;
-      font-size: 9.5px;
-      background: #fbbf24;
-      color: #78350f;
-      border-radius: 4px;
-      padding: 1px 5px;
-      margin-left: 4px;
-      font-weight: 700;
-      vertical-align: middle;
+      display: inline-block; font-size: 9.5px; background: #fbbf24; color: #78350f;
+      border-radius: 4px; padding: 1px 5px; margin-left: 4px;
+      font-weight: 700; vertical-align: middle;
     }
 
     /* ---------- 列表视图 ---------- */
-    .lst-wrap {
-      border-radius: 10px;
-    }
-
+    .lst-wrap { border-radius: 10px; }
     .lst {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      border-radius: 10px;
-      overflow: hidden;
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(15, 23, 42, .07);
+    }
+    .lst th { background: #1e293b; color: #fff; font-size: 12.5px; padding: 10px 12px; text-align: left; font-weight: 700; }
+    .lst td { padding: 9px 12px; font-size: 12.5px; border-top: 1px solid #e2e8f0; background: #fff; }
+    .lst tr:nth-child(even) td { background: #f8fafc; }
+    .lst tr:hover td { background: #eff6ff; }
+
+    .hidden { display: none !important; }
+
+    /* ===================== 全系总课表（Excel 风格） ===================== */
+    .all-scroll {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
       box-shadow: 0 1px 6px rgba(15, 23, 42, .07);
     }
+    .all-scroll::-webkit-scrollbar { height: 9px; }
+    .all-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-    .lst th {
-      background: #1e293b;
-      color: #fff;
-      font-size: 12.5px;
-      padding: 10px 12px;
-      text-align: left;
-      font-weight: 700;
+    .all-table { border-collapse: separate; border-spacing: 0; background: #fff; }
+    .all-table th {
+      background: #1e293b; color: #fff; font-size: 12px; font-weight: 700;
+      padding: 8px 4px; text-align: center; white-space: nowrap;
+      border-left: 1px solid #334155;
     }
+    .all-table thead tr:first-child th { background: #0f172a; }
+    .all-table th.sub { font-size: 11px; font-weight: 600; color: #cbd5e1; }
+    .all-table th.corner {
+      background: #0f172a; position: sticky; left: 0; z-index: 3;
+    }
+    .all-table td {
+      border-top: 1px solid #e2e8f0; border-left: 1px solid #e2e8f0;
+      padding: 4px; vertical-align: top; height: 68px; background: #fff;
+    }
+    .all-table td.cls-cell {
+      background: #f8fafc; border-left: none; text-align: center;
+      vertical-align: middle; font-weight: 700; font-size: 12px; color: #1e3a8a;
+      white-space: nowrap; padding: 6px 10px;
+      position: sticky; left: 0; z-index: 2;
+      box-shadow: 1px 0 0 #e2e8f0, 4px 0 8px -4px rgba(15, 23, 42, .10);
+    }
+    .all-table tbody tr:hover td { background: #f8fbff; }
+    .all-table tbody tr:hover td.cls-cell { background: #eef2f7; }
 
-    .lst td {
-      padding: 9px 12px;
-      font-size: 12.5px;
-      border-top: 1px solid #e2e8f0;
-      background: #fff;
+    .all-table .mini {
+      background: #eff6ff; border-left: 2px solid #2563eb; border-radius: 4px;
+      padding: 3px 5px; margin-bottom: 3px; line-height: 1.35;
     }
-
-    .lst tr:nth-child(even) td {
-      background: #f8fafc;
+    .all-table .mini:last-child { margin-bottom: 0; }
+    .all-table .mini.combined { background: #fef3c7; border-left-color: #d97706; }
+    .all-table .mini .cname {
+      display: block; font-size: 11.5px; font-weight: 700;
+      color: #1e3a8a; word-break: break-word;
     }
-
-    .lst tr:hover td {
-      background: #eff6ff;
+    .all-table .mini.combined .cname { color: #92400e; }
+    .all-table .mini .cmeta {
+      display: block; font-size: 10px; color: #64748b; word-break: break-word;
     }
-
-    .hidden {
-      display: none !important;
-    }
+    .all-table .cell-empty { text-align: center; color: #e2e8f0; font-size: 13px; padding-top: 0; }
 
     /* ===================== 移动端 ===================== */
     @media (max-width: 720px) {
-      body {
-        padding: 10px;
-      }
-
-      .panel {
-        padding: 14px 16px;
-        border-radius: 10px;
-      }
-
-      .hero {
-        padding: 18px 20px;
-        border-radius: 12px;
-      }
-
-      .hero h1 {
-        font-size: 17px;
-      }
-
-      .hero .sub {
-        font-size: 11px;
-      }
-
-      .hero-stats {
-        gap: 16px;
-      }
-
-      .hero-stat .num {
-        font-size: 18px;
-      }
-
-      .hero-stat .lbl {
-        font-size: 10px;
-      }
-
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-
-      .field {
-        width: 100%;
-      }
-
-      .field label {
-        font-size: 11.5px;
-      }
-
-      select {
-        min-width: 0;
-        width: 100%;
-        font-size: 14px;
-        padding: 11px 12px;
-      }
-
-      .toolbar>button {
-        width: 100%;
-        padding: 12px;
-        font-size: 14px;
-      }
-
-      .result-title {
-        font-size: 15px;
-      }
-
-      .result-sub {
-        font-size: 11.5px;
-      }
-
-      .result-head {
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-      }
-
+      body { padding: 10px; }
+      .panel { padding: 14px 16px; border-radius: 10px; }
+      .hero { padding: 18px 20px; border-radius: 12px; }
+      .hero h1 { font-size: 17px; }
+      .hero .sub { font-size: 11px; }
+      .hero-stats { gap: 16px; }
+      .hero-stat .num { font-size: 18px; }
+      .hero-stat .lbl { font-size: 10px; }
+      .toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
+      .field { width: 100%; }
+      .field label { font-size: 11.5px; }
+      select { min-width: 0; width: 100%; font-size: 14px; padding: 11px 12px; }
+      .toolbar > button { width: 100%; padding: 12px; font-size: 14px; }
+      .result-title { font-size: 15px; }
+      .result-sub { font-size: 11.5px; }
+      .result-head { margin-bottom: 10px; padding-bottom: 10px; }
       .scroll-hint {
-        display: block;
-        text-align: center;
-        font-size: 11.5px;
-        color: #64748b;
-        background: #f8fafc;
-        border: 1px dashed #cbd5e1;
-        border-radius: 6px;
-        padding: 6px 10px;
-        margin-bottom: 8px;
+        display: block; text-align: center; font-size: 11.5px; color: #64748b;
+        background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px;
+        padding: 6px 10px; margin-bottom: 8px;
       }
-
-      .grid-scroll {
-        margin: 0 -16px;
-        padding: 0 16px;
-        border-radius: 0;
-        box-shadow: none;
-      }
-
-      .grid-table {
-        min-width: 660px;
-        font-size: 11px;
-        border-radius: 8px;
-      }
-
-      .grid-table th {
-        font-size: 11.5px;
-        padding: 9px 4px;
-      }
-
-      .grid-table th:first-child {
-        width: 56px;
-      }
-
-      .grid-table td {
-        padding: 5px;
-        height: 88px;
-      }
-
-      .grid-table tr td:first-child {
-        font-size: 11px;
-        width: 56px;
-      }
-
+      .grid-scroll { margin: 0 -16px; padding: 0 16px; border-radius: 0; box-shadow: none; }
+      .grid-table { min-width: 660px; font-size: 11px; border-radius: 8px; }
+      .grid-table th { font-size: 11.5px; padding: 9px 4px; }
+      .grid-table th:first-child { width: 56px; }
+      .grid-table td { padding: 5px; height: 88px; }
+      .grid-table tr td:first-child { font-size: 11px; width: 56px; }
       .grid-table thead th:first-child,
-      .grid-table tbody td:first-child {
-        position: sticky;
-        left: 0;
-        z-index: 2;
-      }
+      .grid-table tbody td:first-child { position: sticky; left: 0; z-index: 2; }
+      .grid-table thead th:first-child { z-index: 3; }
+      .grid-table tbody td:first-child { box-shadow: 1px 0 0 #e2e8f0, 4px 0 8px -4px rgba(15, 23, 42, .10); }
+      .grid-table thead th:first-child { box-shadow: 1px 0 0 #1e293b, 4px 0 8px -4px rgba(15, 23, 42, .25); }
+      .ccard { padding: 4px 6px; border-left-width: 2px; margin-bottom: 3px; }
+      .ccard .cname { font-size: 11px; }
+      .ccard .cmeta { font-size: 10px; line-height: 1.35; word-break: break-all; }
+      .ccard .badge { font-size: 9px; padding: 0 4px; }
+      .lst-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .lst-wrap .lst { min-width: 560px; }
+      .lst th, .lst td { font-size: 11.5px; padding: 8px 10px; }
 
-      .grid-table thead th:first-child {
-        z-index: 3;
-      }
-
-      .grid-table tbody td:first-child {
-        box-shadow: 1px 0 0 #e2e8f0, 4px 0 8px -4px rgba(15, 23, 42, .10);
-      }
-
-      .grid-table thead th:first-child {
-        box-shadow: 1px 0 0 #1e293b, 4px 0 8px -4px rgba(15, 23, 42, .25);
-      }
-
-      .ccard {
-        padding: 4px 6px;
-        border-left-width: 2px;
-        margin-bottom: 3px;
-      }
-
-      .ccard .cname {
-        font-size: 11px;
-      }
-
-      .ccard .cmeta {
-        font-size: 10px;
-        line-height: 1.35;
-        word-break: break-all;
-      }
-
-      .ccard .badge {
-        font-size: 9px;
-        padding: 0 4px;
-      }
-
-      .lst-wrap {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .lst-wrap .lst {
-        min-width: 560px;
-      }
-
-      .lst th,
-      .lst td {
-        font-size: 11.5px;
-        padding: 8px 10px;
-      }
+      /* 全系总课表移动端微调 */
+      .all-table th { font-size: 11px; padding: 7px 3px; }
+      .all-table th.sub { font-size: 10px; }
+      .all-table td { padding: 3px; height: 62px; }
+      .all-table td.cls-cell { font-size: 11px; padding: 5px 8px; }
+      .all-table .mini { padding: 2px 4px; margin-bottom: 2px; }
+      .all-table .mini .cname { font-size: 10.5px; }
+      .all-table .mini .cmeta { font-size: 9.5px; }
     }
   </style>
 </head>
@@ -584,6 +255,7 @@
         <div class="field">
           <label>查询类型</label>
           <select id="qType" onchange="onTypeChange()">
+            <option value="all">全系总课表</option>
             <option value="teacher">按教师查询</option>
             <option value="class">按班级查询</option>
             <option value="classroom">按教室查询占用</option>
@@ -592,11 +264,11 @@
         </div>
 
         <div class="field">
-          <label id="targetLabel">选择教师</label>
+          <label id="targetLabel">年级筛选</label>
           <select id="qTarget"></select>
         </div>
 
-        <button class="btn-primary" id="btnQuery" onclick="doQuery()" disabled>查询课表</button>
+        <button class="btn-primary" id="btnQuery" onclick="doQuery()" disabled>刷新总课表</button>
         <button class="btn-green" id="btnExport" onclick="exportExcel()" style="display:none">导出 Excel</button>
       </div>
 
@@ -619,10 +291,8 @@
        注意：JSON 里不能出现 </script> 字样
        ================================================================ -->
   <script id="kbData" type="application/json">
-
-    {"teachers":[{"id":1,"name":"贾雨欣","isPublic":false},{"id":2,"name":"潘子怡","isPublic":false},{"id":3,"name":"纪少萌","isPublic":false},{"id":4,"name":"齐佳英","isPublic":false},{"id":5,"name":"张巧娜","isPublic":false},{"id":6,"name":"孟凤霞","isPublic":false},{"id":7,"name":"罗乔","isPublic":false},{"id":8,"name":"刘泽坤","isPublic":false},{"id":9,"name":"赵琪","isPublic":false},{"id":10,"name":"祁佳轩","isPublic":false},{"id":11,"name":"马文翠","isPublic":false},{"id":12,"name":"王倩","isPublic":false},{"id":13,"name":"徐鼎","isPublic":false},{"id":14,"name":"王宇琪","isPublic":false},{"id":15,"name":"赵艺菲","isPublic":false},{"id":16,"name":"李珊珊","isPublic":false},{"id":17,"name":"马敬涛","isPublic":false},{"id":18,"name":"苏敬文","isPublic":false},{"id":19,"name":"张森","isPublic":false},{"id":20,"name":"张乾","isPublic":false},{"id":21,"name":"张玉宁"},{"id":22,"name":"柳金铭"},{"id":23,"name":"武晶晶"},{"id":24,"name":"陈晓"},{"id":25,"name":"庞旭蕾","isPublic":true},{"id":26,"name":"史绍鑫","isPublic":true},{"id":27,"name":"冯婉怡","isPublic":true},{"id":28,"name":"张格","isPublic":true},{"id":29,"name":"王璇","isPublic":true},{"id":30,"name":"吴童蕴","isPublic":true},{"id":31,"name":"许皎皎","isPublic":true},{"id":32,"name":"李荟芳","isPublic":true},{"id":33,"name":"孟祥纯","isPublic":true},{"id":34,"name":"康涛","isPublic":true},{"id":35,"name":"杨梦怡","isPublic":true},{"id":36,"name":"聂飞","isPublic":true},{"id":37,"name":"刘禧贤","isPublic":true}],"courses":[{"id":1,"name":"计算机组成原理"},{"id":2,"name":"Java程序设计"},{"id":3,"name":"数据库技术及应用（mysql）"},{"id":4,"name":"路由交换技术"},{"id":5,"name":"计算机网络技术基础"},{"id":6,"name":"Android移动应用开发"},{"id":7,"name":"HTML+CSS"},{"id":8,"name":"JavaScript"},{"id":9,"name":"Python程序设计"},{"id":10,"name":"AI"},{"id":11,"name":"Windows Server操作系统"},{"id":12,"name":"C语言程序设计"},{"id":13,"name":"Photoshop平面设计"},{"id":14,"name":"数据结构（上）"},{"id":15,"name":"信息技术基础"},{"id":16,"name":"计算机专业英语"},{"id":17,"name":"Adobe Illustrator"},{"id":18,"name":"形势与政策（1-4周）"},{"id":19,"name":"习思想"},{"id":20,"name":"大英"},{"id":21,"name":"体育1"},{"id":22,"name":"思修"},{"id":23,"name":"劳动素养"},{"id":24,"name":"形势与政策1（9-12周）"},{"id":25,"name":"体育1 张格+M22:V22R2F20:V22"}],"classes":[{"id":1,"name":"25计网","grade":"25"},{"id":2,"name":"25计应1班","grade":"25"},{"id":3,"name":"25计应2班","grade":"25"},{"id":4,"name":"25计应3班","grade":"25"},{"id":5,"name":"25移动互联1班","grade":"25"},{"id":6,"name":"25移动互联2班","grade":"25"},{"id":7,"name":"25移动互联3班","grade":"25"},{"id":8,"name":"25移动互联4班","grade":"25"},{"id":9,"name":"25软件技术","grade":"25"},{"id":10,"name":"25大数据技术","grade":"25"},{"id":11,"name":"25云计算技术应用","grade":"25"},{"id":12,"name":"26计网1班","grade":"26"},{"id":13,"name":"26计网2班","grade":"26"},{"id":14,"name":"26计应1班","grade":"26"},{"id":15,"name":"26计应2班","grade":"26"},{"id":17,"name":"26电子信息工程技术","grade":"26"},{"id":18,"name":"26移动互联1班","grade":"26"},{"id":19,"name":"26移动互联2班","grade":"26"},{"id":20,"name":"26大数据技术1班","grade":"26"},{"id":21,"name":"26大数据技术2班","grade":"26"},{"id":23,"name":"26云计算1班","grade":"26"},{"id":25,"name":"26软件技术1班","grade":"26"}],"classrooms":[{"id":1,"name":"机房1","type":"机房"},{"id":2,"name":"机房2","type":"机房"},{"id":3,"name":"机房3","type":"机房"},{"id":4,"name":"321","type":"教室"},{"id":5,"name":"322","type":"教室"},{"id":6,"name":"323","type":"教室"},{"id":7,"name":"324","type":"教室"},{"id":8,"name":"325","type":"教室"},{"id":9,"name":"330","type":"教室"},{"id":10,"name":"331","type":"教室"},{"id":11,"name":"332","type":"教室"},{"id":12,"name":"520","type":"教室"},{"id":13,"name":"521","type":"教室"},{"id":14,"name":"530","type":"教室"},{"id":15,"name":"402","type":"教室"},{"id":16,"name":"411","type":"教室"},{"id":17,"name":"320","type":"教室"},{"id":18,"name":"509","type":"教室"},{"id":19,"name":"226","type":"教室"},{"id":20,"name":"529","type":"教室"},{"id":21,"name":"409","type":"教室"},{"id":22,"name":"528","type":"教室"},{"id":23,"name":"401","type":"教室"},{"id":24,"name":"522","type":"教室"},{"id":25,"name":"424","type":"教室"},{"id":26,"name":"222","type":"教室"},{"id":27,"name":"223","type":"教室"},{"id":28,"name":"操场","type":"体育场"},{"id":29,"name":"511","type":"教室"},{"id":30,"name":"210","type":"教室"},{"id":31,"name":"512","type":"教室"},{"id":32,"name":"318","type":"教室"},{"id":33,"name":"420","type":"教室"},{"id":34,"name":"502","type":"教室"},{"id":35,"name":"122","type":"教室"},{"id":36,"name":"109","type":"教室"},{"id":37,"name":"120","type":"教室"},{"id":38,"name":"508","type":"教室"},{"id":39,"name":"428","type":"教室"},{"id":40,"name":"127","type":"教室"},{"id":41,"name":"510","type":"教室"},{"id":42,"name":"423","type":"教室"},{"id":43,"name":"310","type":"教室"}],"combinedGroups":[{"id":1,"name":"25计应2班 3班","classIds":[3,4]},{"id":2,"name":"25移动互联1班2班","classIds":[5,6]},{"id":3,"name":"25移动互联3班4班","classIds":[7,8]},{"id":4,"name":"25大数据 云计算","classIds":[10,11]},{"id":6,"name":"25云计算技术应用 +计应3班","classIds":[4,11]},{"id":7,"name":"26电子信息工程技术 +移动互联1班","classIds":[17,18]},{"id":8,"name":"26大数据技术1班 +移动互联2班","classIds":[19,20]},{"id":9,"name":"26电子信息工程技术 +计应2班","classIds":[15,17]},{"id":10,"name":"26云计算班 +软件技术班","classIds":[23,25]}],"schedule":{"1":{"1":{"1":null,"2":{"courseId":3,"teacherId":14,"classroomId":3,"combinedGroupId":null},"3":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":{"courseId":2,"teacherId":20,"classroomId":7,"combinedGroupId":null}},"2":{"1":{"courseId":18,"teacherId":25,"classroomId":15,"combinedGroupId":null,"weekRange":"1-4周"},"2":{"courseId":11,"teacherId":14,"classroomId":11,"combinedGroupId":null},"3":null,"4":{"courseId":1,"teacherId":1,"classroomId":8,"combinedGroupId":null}},"3":{"1":{"courseId":19,"teacherId":26,"classroomId":16,"combinedGroupId":null},"2":{"courseId":3,"teacherId":14,"classroomId":5,"combinedGroupId":null},"3":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":4,"teacherId":8,"classroomId":4,"combinedGroupId":null},"2":{"courseId":1,"teacherId":1,"classroomId":8,"combinedGroupId":null},"3":{"courseId":2,"teacherId":20,"classroomId":2,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null},"3":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":null},"4":null}},"2":{"1":{"1":{"courseId":1,"teacherId":1,"classroomId":11,"combinedGroupId":null},"2":null,"3":{"courseId":3,"teacherId":10,"classroomId":3,"combinedGroupId":null},"4":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null}},"2":{"1":{"courseId":5,"teacherId":17,"classroomId":5,"combinedGroupId":null},"2":null,"3":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":{"courseId":11,"teacherId":14,"classroomId":5,"combinedGroupId":null}},"3":{"1":{"courseId":5,"teacherId":17,"classroomId":5,"combinedGroupId":null},"2":{"courseId":2,"teacherId":20,"classroomId":12,"combinedGroupId":null},"3":null,"4":{"courseId":18,"teacherId":25,"classroomId":17,"combinedGroupId":null,"weekRange":"1-4周"}},"4":{"1":{"courseId":1,"teacherId":1,"classroomId":11,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":19,"teacherId":26,"classroomId":18,"combinedGroupId":null}},"5":{"1":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null},"2":{"courseId":3,"teacherId":10,"classroomId":19,"combinedGroupId":null},"3":{"courseId":2,"teacherId":20,"classroomId":2,"combinedGroupId":null},"4":null}},"3":{"1":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":null,"4":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1}},"2":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":14,"combinedGroupId":1},"3":{"courseId":1,"teacherId":1,"classroomId":7,"combinedGroupId":1},"4":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":1}},"3":{"1":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":null},"2":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":1}},"4":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":{"courseId":18,"teacherId":25,"classroomId":20,"combinedGroupId":null,"weekRange":"1-4周"},"3":null,"4":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":1}},"5":{"1":{"courseId":1,"teacherId":1,"classroomId":10,"combinedGroupId":1},"2":{"courseId":19,"teacherId":26,"classroomId":21,"combinedGroupId":null},"3":null,"4":null}},"4":{"1":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":null,"4":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1}},"2":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":14,"combinedGroupId":1},"3":{"courseId":1,"teacherId":1,"classroomId":7,"combinedGroupId":1},"4":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":1}},"3":{"1":null,"2":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1},"3":{"courseId":2,"teacherId":7,"classroomId":3,"combinedGroupId":null},"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":1}},"4":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":{"courseId":2,"teacherId":7,"classroomId":22,"combinedGroupId":null},"3":null,"4":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":1}},"5":{"1":{"courseId":1,"teacherId":1,"classroomId":10,"combinedGroupId":1},"2":null,"3":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":6,"weekRange":"1-4周"},"4":{"courseId":19,"teacherId":26,"classroomId":24,"combinedGroupId":null}}},"5":{"1":{"1":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":2},"2":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"3":null,"4":null},"2":{"1":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":2}},"3":{"1":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2},"2":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":19,"teacherId":26,"classroomId":25,"combinedGroupId":2}},"4":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":5,"teacherId":16,"classroomId":7,"combinedGroupId":2},"3":{"courseId":18,"teacherId":25,"classroomId":15,"combinedGroupId":null,"weekRange":"1-4周"},"4":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":2}},"5":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":13,"combinedGroupId":2},"3":null,"4":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2}}},"6":{"1":{"1":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":2},"2":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"3":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":null,"weekRange":"1-4周"},"4":null},"2":{"1":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":2}},"3":{"1":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2},"2":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":19,"teacherId":26,"classroomId":25,"combinedGroupId":2}},"4":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":5,"teacherId":16,"classroomId":7,"combinedGroupId":2},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":2}},"5":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":13,"combinedGroupId":2},"3":null,"4":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2}}},"7":{"1":{"1":null,"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":3},"4":{"courseId":17,"teacherId":1,"classroomId":1,"combinedGroupId":3}},"2":{"1":{"courseId":3,"teacherId":14,"classroomId":1,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":null},"3":{"1":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"2":{"courseId":17,"teacherId":1,"classroomId":3,"combinedGroupId":3},"3":{"courseId":18,"teacherId":25,"classroomId":17,"combinedGroupId":null,"weekRange":"1-4周"},"4":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3}},"4":{"1":{"courseId":3,"teacherId":14,"classroomId":8,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":19,"teacherId":26,"classroomId":18,"combinedGroupId":3},"4":null},"5":{"1":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":3},"4":null}},"8":{"1":{"1":null,"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":3},"4":{"courseId":17,"teacherId":1,"classroomId":1,"combinedGroupId":3}},"2":{"1":{"courseId":3,"teacherId":14,"classroomId":1,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":{"courseId":18,"teacherId":25,"classroomId":16,"combinedGroupId":null,"weekRange":"1-4周"}},"3":{"1":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"2":{"courseId":17,"teacherId":1,"classroomId":3,"combinedGroupId":3},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3}},"4":{"1":{"courseId":3,"teacherId":14,"classroomId":8,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":19,"teacherId":26,"classroomId":18,"combinedGroupId":3},"4":null},"5":{"1":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":3},"4":null}},"9":{"1":{"1":{"courseId":11,"teacherId":14,"classroomId":8,"combinedGroupId":null},"2":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":null},"3":null,"4":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":null,"weekRange":"1-4周"}},"2":{"1":{"courseId":1,"teacherId":2,"classroomId":11,"combinedGroupId":null},"2":{"courseId":8,"teacherId":13,"classroomId":10,"combinedGroupId":null},"3":{"courseId":19,"teacherId":26,"classroomId":21,"combinedGroupId":null},"4":{"courseId":9,"teacherId":3,"classroomId":1,"combinedGroupId":null}},"3":{"1":{"courseId":3,"teacherId":10,"classroomId":11,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":17,"teacherId":2,"classroomId":3,"combinedGroupId":null}},"4":{"1":{"courseId":8,"teacherId":13,"classroomId":3,"combinedGroupId":null},"2":null,"3":{"courseId":1,"teacherId":2,"classroomId":11,"combinedGroupId":null},"4":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null}},"5":{"1":null,"2":{"courseId":9,"teacherId":3,"classroomId":1,"combinedGroupId":null},"3":null,"4":{"courseId":17,"teacherId":2,"classroomId":3,"combinedGroupId":null}}},"10":{"1":{"1":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4},"2":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":4},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":4}},"2":{"1":{"courseId":7,"teacherId":10,"classroomId":2,"combinedGroupId":4},"2":{"courseId":19,"teacherId":26,"classroomId":26,"combinedGroupId":4},"3":{"courseId":2,"teacherId":20,"classroomId":4,"combinedGroupId":4},"4":null},"3":{"1":{"courseId":4,"teacherId":8,"classroomId":10,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4}},"4":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":13,"combinedGroupId":4},"3":{"courseId":7,"teacherId":10,"classroomId":1,"combinedGroupId":4},"4":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4}},"5":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4},"2":{"courseId":18,"teacherId":25,"classroomId":27,"combinedGroupId":null,"weekRange":"1-4周"},"3":null,"4":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":4}}},"11":{"1":{"1":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4},"2":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":4},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":4}},"2":{"1":{"courseId":7,"teacherId":10,"classroomId":2,"combinedGroupId":4},"2":{"courseId":19,"teacherId":26,"classroomId":26,"combinedGroupId":4},"3":{"courseId":2,"teacherId":20,"classroomId":4,"combinedGroupId":4},"4":null},"3":{"1":{"courseId":4,"teacherId":8,"classroomId":10,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4}},"4":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":13,"combinedGroupId":4},"3":{"courseId":7,"teacherId":10,"classroomId":1,"combinedGroupId":4},"4":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4}},"5":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4},"2":null,"3":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":6,"weekRange":"1-4周"},"4":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":4}}},"12":{"1":{"1":{"courseId":16,"teacherId":12,"classroomId":7,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":12,"combinedGroupId":null},"3":{"courseId":20,"teacherId":27,"classroomId":21,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null}},"3":{"1":null,"2":null,"3":{"courseId":22,"teacherId":29,"classroomId":23,"combinedGroupId":null},"4":{"courseId":15,"teacherId":9,"classroomId":26,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":11,"classroomId":7,"combinedGroupId":null},"2":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":5,"combinedGroupId":null},"4":{"courseId":24,"teacherId":31,"classroomId":29,"combinedGroupId":null,"weekRange":"9-12周"}},"5":{"1":{"courseId":12,"teacherId":13,"classroomId":9,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":null}}},"13":{"1":{"1":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"2":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null},"3":null,"4":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null}},"2":{"1":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":{"courseId":16,"teacherId":12,"classroomId":11,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"3":{"courseId":20,"teacherId":27,"classroomId":21,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":22,"teacherId":29,"classroomId":30,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":null},"5":{"1":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"2":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"3":null,"4":{"courseId":24,"teacherId":32,"classroomId":31,"combinedGroupId":null,"weekRange":"9-12周"}}},"14":{"1":{"1":{"courseId":20,"teacherId":33,"classroomId":32,"combinedGroupId":null},"2":{"courseId":16,"teacherId":12,"classroomId":7,"combinedGroupId":null},"3":{"courseId":14,"teacherId":11,"classroomId":11,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":15,"teacherId":9,"classroomId":7,"combinedGroupId":null},"2":{"courseId":22,"teacherId":34,"classroomId":15,"combinedGroupId":null},"3":null,"4":{"courseId":12,"teacherId":13,"classroomId":7,"combinedGroupId":null}},"3":{"1":{"courseId":21,"teacherId":31,"classroomId":28,"combinedGroupId":null},"2":{"courseId":13,"teacherId":19,"classroomId":2,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":5,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"2":{"courseId":24,"teacherId":31,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"3":null,"4":{"courseId":13,"teacherId":19,"classroomId":2,"combinedGroupId":null}},"5":{"1":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":7,"combinedGroupId":null},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":null}},"15":{"1":{"1":{"courseId":22,"teacherId":29,"classroomId":33,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":6,"classroomId":1,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":11,"combinedGroupId":null}},"2":{"1":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":11,"combinedGroupId":null},"4":null},"3":{"1":null,"2":{"courseId":13,"teacherId":6,"classroomId":1,"combinedGroupId":null},"3":{"courseId":20,"teacherId":33,"classroomId":7,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":10,"combinedGroupId":null}},"4":{"1":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":9},"2":{"courseId":12,"teacherId":13,"classroomId":10,"combinedGroupId":null},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":{"courseId":16,"teacherId":12,"classroomId":4,"combinedGroupId":null}},"5":{"1":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"2":null,"3":{"courseId":24,"teacherId":32,"classroomId":31,"combinedGroupId":null,"weekRange":"9-12周"},"4":null}},"17":{"1":{"1":{"courseId":5,"teacherId":8,"classroomId":12,"combinedGroupId":null},"2":{"courseId":20,"teacherId":33,"classroomId":6,"combinedGroupId":null},"3":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"4":{"courseId":22,"teacherId":34,"classroomId":34,"combinedGroupId":null}},"2":{"1":null,"2":{"courseId":24,"teacherId":32,"classroomId":31,"combinedGroupId":null,"weekRange":"9-12周"},"3":{"courseId":12,"teacherId":4,"classroomId":5,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":12,"combinedGroupId":null}},"3":{"1":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":{"courseId":5,"teacherId":8,"classroomId":12,"combinedGroupId":null}},"4":{"1":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":9},"2":{"courseId":12,"teacherId":4,"classroomId":12,"combinedGroupId":null},"3":null,"4":null},"5":{"1":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":null}},"18":{"1":{"1":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"2":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"3":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"4":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null}},"2":{"1":{"courseId":16,"teacherId":7,"classroomId":9,"combinedGroupId":null},"2":null,"3":{"courseId":24,"teacherId":31,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"4":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null}},"3":{"1":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"3":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null},"4":null},"4":{"1":null,"2":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":4,"combinedGroupId":null},"4":{"courseId":16,"teacherId":7,"classroomId":22,"combinedGroupId":null}},"5":{"1":{"courseId":20,"teacherId":27,"classroomId":35,"combinedGroupId":null},"2":{"courseId":22,"teacherId":29,"classroomId":36,"combinedGroupId":null},"3":null,"4":null}},"19":{"1":{"1":null,"2":{"courseId":24,"teacherId":31,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"3":{"courseId":15,"teacherId":16,"classroomId":37,"combinedGroupId":8},"4":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null}},"2":{"1":{"courseId":16,"teacherId":4,"classroomId":38,"combinedGroupId":null},"2":{"courseId":12,"teacherId":5,"classroomId":7,"combinedGroupId":null},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":16,"classroomId":6,"combinedGroupId":8},"2":null,"3":null,"4":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"2":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null},"3":{"courseId":22,"teacherId":29,"classroomId":39,"combinedGroupId":null},"4":null},"5":{"1":{"courseId":12,"teacherId":5,"classroomId":12,"combinedGroupId":null},"2":{"courseId":20,"teacherId":27,"classroomId":40,"combinedGroupId":null},"3":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":null},"4":null}},"20":{"1":{"1":null,"2":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"3":{"courseId":15,"teacherId":16,"classroomId":37,"combinedGroupId":8},"4":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null}},"2":{"1":{"courseId":5,"teacherId":8,"classroomId":13,"combinedGroupId":null},"2":null,"3":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"4":{"courseId":21,"teacherId":31,"classroomId":28,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":16,"classroomId":6,"combinedGroupId":8},"2":{"courseId":24,"teacherId":32,"classroomId":41,"combinedGroupId":null,"weekRange":"9-12周"},"3":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null},"4":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null}},"4":{"1":{"courseId":23,"teacherId":35,"classroomId":28,"combinedGroupId":null},"2":{"courseId":20,"teacherId":27,"classroomId":18,"combinedGroupId":null},"3":{"courseId":5,"teacherId":8,"classroomId":14,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"3":null,"4":{"courseId":22,"teacherId":29,"classroomId":42,"combinedGroupId":null}}},"21":{"1":{"1":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"2":{"courseId":15,"teacherId":16,"classroomId":10,"combinedGroupId":null},"3":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"2":{"courseId":5,"teacherId":8,"classroomId":13,"combinedGroupId":null},"3":{"courseId":20,"teacherId":27,"classroomId":16,"combinedGroupId":null},"4":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null}},"3":{"1":null,"2":{"courseId":21,"teacherId":31,"classroomId":28,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null}},"4":{"1":null,"2":{"courseId":22,"teacherId":34,"classroomId":15,"combinedGroupId":null},"3":{"courseId":24,"teacherId":32,"classroomId":13,"combinedGroupId":null,"weekRange":"9-12周"},"4":{"courseId":5,"teacherId":8,"classroomId":14,"combinedGroupId":null}},"5":{"1":null,"2":{"courseId":15,"teacherId":16,"classroomId":11,"combinedGroupId":null},"3":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"4":null}},"23":{"1":{"1":{"courseId":12,"teacherId":20,"classroomId":9,"combinedGroupId":null},"2":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null},"3":{"courseId":24,"teacherId":31,"classroomId":43,"combinedGroupId":null,"weekRange":"9-12周"},"4":null},"2":{"1":{"courseId":20,"teacherId":33,"classroomId":18,"combinedGroupId":null},"2":{"courseId":14,"teacherId":6,"classroomId":12,"combinedGroupId":null},"3":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":4,"combinedGroupId":null}},"3":{"1":null,"2":null,"3":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null},"4":{"courseId":12,"teacherId":20,"classroomId":9,"combinedGroupId":null}},"4":{"1":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":null},"2":{"courseId":22,"teacherId":36,"classroomId":41,"combinedGroupId":null},"3":null,"4":null},"5":{"1":{"courseId":14,"teacherId":6,"classroomId":13,"combinedGroupId":null},"2":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":null},"3":{"courseId":25,"teacherId":null,"classroomId":28,"combinedGroupId":null},"4":{"courseId":23,"teacherId":35,"classroomId":28,"combinedGroupId":10}}},"25":{"1":{"1":{"courseId":24,"teacherId":32,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"2":{"courseId":22,"teacherId":34,"classroomId":29,"combinedGroupId":null},"3":null,"4":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null}},"2":{"1":{"courseId":14,"teacherId":6,"classroomId":12,"combinedGroupId":null},"2":{"courseId":13,"teacherId":18,"classroomId":1,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":8,"combinedGroupId":null},"4":{"courseId":20,"teacherId":33,"classroomId":29,"combinedGroupId":null}},"3":{"1":{"courseId":16,"teacherId":15,"classroomId":7,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":15,"teacherId":19,"classroomId":7,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":6,"classroomId":13,"combinedGroupId":null},"2":{"courseId":21,"teacherId":37,"classroomId":28,"combinedGroupId":null},"3":null,"4":{"courseId":13,"teacherId":18,"classroomId":1,"combinedGroupId":null}},"5":{"1":{"courseId":16,"teacherId":15,"classroomId":7,"combinedGroupId":null},"2":{"courseId":12,"teacherId":5,"classroomId":8,"combinedGroupId":null},"3":null,"4":{"courseId":23,"teacherId":35,"classroomId":28,"combinedGroupId":10}}}}}
- 
-</script>
+    {"teachers":[{"id":1,"name":"贾雨欣","isPublic":false},{"id":2,"name":"潘子怡","isPublic":false},{"id":3,"name":"纪少萌","isPublic":false},{"id":4,"name":"齐佳英","isPublic":false},{"id":5,"name":"张巧娜","isPublic":false},{"id":6,"name":"孟凤霞","isPublic":false},{"id":7,"name":"罗乔","isPublic":false},{"id":8,"name":"刘泽坤","isPublic":false},{"id":9,"name":"赵琪","isPublic":false},{"id":10,"name":"祁佳轩","isPublic":false},{"id":11,"name":"马文翠","isPublic":false},{"id":12,"name":"王倩","isPublic":false},{"id":13,"name":"徐鼎","isPublic":false},{"id":14,"name":"王宇琪","isPublic":false},{"id":15,"name":"赵艺菲","isPublic":false},{"id":16,"name":"李珊珊","isPublic":false},{"id":17,"name":"马敬涛","isPublic":false},{"id":18,"name":"苏敬文","isPublic":false},{"id":19,"name":"张森","isPublic":false},{"id":20,"name":"张乾","isPublic":false},{"id":21,"name":"张玉宁"},{"id":22,"name":"柳金铭"},{"id":23,"name":"武晶晶"},{"id":24,"name":"陈晓"},{"id":25,"name":"庞旭蕾","isPublic":true},{"id":26,"name":"史绍鑫","isPublic":true},{"id":27,"name":"冯婉怡","isPublic":true},{"id":28,"name":"张格","isPublic":true},{"id":29,"name":"王璇","isPublic":true},{"id":30,"name":"吴童蕴","isPublic":true},{"id":31,"name":"许皎皎","isPublic":true},{"id":32,"name":"李荟芳","isPublic":true},{"id":33,"name":"孟祥纯","isPublic":true},{"id":34,"name":"康涛","isPublic":true},{"id":35,"name":"杨梦怡","isPublic":true},{"id":36,"name":"聂飞","isPublic":true},{"id":37,"name":"刘禧贤","isPublic":true}],"courses":[{"id":1,"name":"计算机组成原理"},{"id":2,"name":"Java程序设计"},{"id":3,"name":"数据库技术及应用（mysql）"},{"id":4,"name":"路由交换技术"},{"id":5,"name":"计算机网络技术基础"},{"id":6,"name":"Android移动应用开发"},{"id":7,"name":"HTML+CSS"},{"id":8,"name":"JavaScript"},{"id":9,"name":"Python程序设计"},{"id":11,"name":"Windows Server操作系统"},{"id":12,"name":"C语言程序设计"},{"id":13,"name":"Photoshop平面设计"},{"id":14,"name":"数据结构（上）"},{"id":15,"name":"信息技术基础"},{"id":16,"name":"计算机专业英语"},{"id":17,"name":"Adobe Illustrator"},{"id":18,"name":"形势与政策（1-4周）"},{"id":19,"name":"习思想"},{"id":20,"name":"大英"},{"id":21,"name":"体育1"},{"id":22,"name":"思修"},{"id":23,"name":"劳动素养"},{"id":24,"name":"形势与政策1（9-12周）"},{"id":25,"name":"体育1"}],"classes":[{"id":1,"name":"25计网","grade":"25"},{"id":2,"name":"25计应1班","grade":"25"},{"id":3,"name":"25计应2班","grade":"25"},{"id":4,"name":"25计应3班","grade":"25"},{"id":5,"name":"25移动互联1班","grade":"25"},{"id":6,"name":"25移动互联2班","grade":"25"},{"id":7,"name":"25移动互联3班","grade":"25"},{"id":8,"name":"25移动互联4班","grade":"25"},{"id":9,"name":"25软件技术","grade":"25"},{"id":10,"name":"25大数据技术","grade":"25"},{"id":11,"name":"25云计算技术应用","grade":"25"},{"id":12,"name":"26计网1班","grade":"26"},{"id":13,"name":"26计网2班","grade":"26"},{"id":14,"name":"26计应1班","grade":"26"},{"id":15,"name":"26计应2班","grade":"26"},{"id":17,"name":"26电子信息工程技术","grade":"26"},{"id":18,"name":"26移动互联1班","grade":"26"},{"id":19,"name":"26移动互联2班","grade":"26"},{"id":20,"name":"26大数据技术1班","grade":"26"},{"id":21,"name":"26大数据技术2班","grade":"26"},{"id":23,"name":"26云计算1班","grade":"26"},{"id":25,"name":"26软件技术1班","grade":"26"}],"classrooms":[{"id":1,"name":"机房1","type":"机房"},{"id":2,"name":"机房2","type":"机房"},{"id":3,"name":"机房3","type":"机房"},{"id":4,"name":"321","type":"教室"},{"id":5,"name":"322","type":"教室"},{"id":6,"name":"323","type":"教室"},{"id":7,"name":"324","type":"教室"},{"id":8,"name":"325","type":"教室"},{"id":9,"name":"330","type":"教室"},{"id":10,"name":"331","type":"教室"},{"id":11,"name":"332","type":"教室"},{"id":12,"name":"520","type":"教室"},{"id":13,"name":"521","type":"教室"},{"id":14,"name":"530","type":"教室"},{"id":15,"name":"402","type":"教室"},{"id":16,"name":"411","type":"教室"},{"id":17,"name":"320","type":"教室"},{"id":18,"name":"509","type":"教室"},{"id":19,"name":"226","type":"教室"},{"id":20,"name":"529","type":"教室"},{"id":21,"name":"409","type":"教室"},{"id":22,"name":"528","type":"教室"},{"id":23,"name":"401","type":"教室"},{"id":24,"name":"522","type":"教室"},{"id":25,"name":"424","type":"教室"},{"id":26,"name":"222","type":"教室"},{"id":27,"name":"223","type":"教室"},{"id":28,"name":"操场","type":"体育场"},{"id":29,"name":"511","type":"教室"},{"id":30,"name":"210","type":"教室"},{"id":31,"name":"512","type":"教室"},{"id":32,"name":"318","type":"教室"},{"id":33,"name":"420","type":"教室"},{"id":34,"name":"502","type":"教室"},{"id":35,"name":"122","type":"教室"},{"id":36,"name":"109","type":"教室"},{"id":37,"name":"120","type":"教室"},{"id":38,"name":"508","type":"教室"},{"id":39,"name":"428","type":"教室"},{"id":40,"name":"127","type":"教室"},{"id":41,"name":"510","type":"教室"},{"id":42,"name":"423","type":"教室"},{"id":43,"name":"310","type":"教室"}],"combinedGroups":[{"id":1,"name":"25计应2班 3班","classIds":[3,4]},{"id":2,"name":"25移动互联1班2班","classIds":[5,6]},{"id":3,"name":"25移动互联3班4班","classIds":[7,8]},{"id":4,"name":"25大数据 云计算","classIds":[10,11]},{"id":6,"name":"25云计算技术应用 +计应3班","classIds":[4,11]},{"id":7,"name":"26电子信息工程技术 +移动互联1班","classIds":[17,18]},{"id":8,"name":"26大数据技术1班 +移动互联2班","classIds":[19,20]},{"id":9,"name":"26电子信息工程技术 +计应2班","classIds":[15,17]},{"id":10,"name":"26云计算班 +软件技术班","classIds":[23,25]}],"schedule":{"1":{"1":{"1":null,"2":{"courseId":3,"teacherId":14,"classroomId":3,"combinedGroupId":null},"3":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":{"courseId":2,"teacherId":20,"classroomId":7,"combinedGroupId":null}},"2":{"1":{"courseId":18,"teacherId":25,"classroomId":15,"combinedGroupId":null,"weekRange":"1-4周"},"2":{"courseId":11,"teacherId":14,"classroomId":11,"combinedGroupId":null},"3":null,"4":{"courseId":1,"teacherId":1,"classroomId":8,"combinedGroupId":null}},"3":{"1":{"courseId":19,"teacherId":26,"classroomId":16,"combinedGroupId":null},"2":{"courseId":3,"teacherId":14,"classroomId":5,"combinedGroupId":null},"3":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":4,"teacherId":8,"classroomId":4,"combinedGroupId":null},"2":{"courseId":1,"teacherId":1,"classroomId":8,"combinedGroupId":null},"3":{"courseId":2,"teacherId":20,"classroomId":2,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null},"3":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":null},"4":null}},"2":{"1":{"1":{"courseId":1,"teacherId":1,"classroomId":11,"combinedGroupId":null},"2":null,"3":{"courseId":3,"teacherId":10,"classroomId":3,"combinedGroupId":null},"4":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null}},"2":{"1":{"courseId":5,"teacherId":17,"classroomId":5,"combinedGroupId":null},"2":null,"3":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":null},"4":{"courseId":11,"teacherId":14,"classroomId":5,"combinedGroupId":null}},"3":{"1":{"courseId":5,"teacherId":17,"classroomId":5,"combinedGroupId":null},"2":{"courseId":2,"teacherId":20,"classroomId":12,"combinedGroupId":null},"3":null,"4":{"courseId":18,"teacherId":25,"classroomId":17,"combinedGroupId":null,"weekRange":"1-4周"}},"4":{"1":{"courseId":1,"teacherId":1,"classroomId":11,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":19,"teacherId":26,"classroomId":18,"combinedGroupId":null}},"5":{"1":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null},"2":{"courseId":3,"teacherId":10,"classroomId":19,"combinedGroupId":null},"3":{"courseId":2,"teacherId":20,"classroomId":2,"combinedGroupId":null},"4":null}},"3":{"1":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":null,"4":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1}},"2":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":14,"combinedGroupId":1},"3":{"courseId":1,"teacherId":1,"classroomId":7,"combinedGroupId":1},"4":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":1}},"3":{"1":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":null},"2":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":1}},"4":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":{"courseId":18,"teacherId":25,"classroomId":20,"combinedGroupId":null,"weekRange":"1-4周"},"3":null,"4":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":1}},"5":{"1":{"courseId":1,"teacherId":1,"classroomId":10,"combinedGroupId":1},"2":{"courseId":19,"teacherId":26,"classroomId":21,"combinedGroupId":null},"3":null,"4":null}},"4":{"1":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":null,"3":null,"4":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1}},"2":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":14,"combinedGroupId":1},"3":{"courseId":1,"teacherId":1,"classroomId":7,"combinedGroupId":1},"4":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":1}},"3":{"1":null,"2":{"courseId":5,"teacherId":17,"classroomId":10,"combinedGroupId":1},"3":{"courseId":2,"teacherId":7,"classroomId":3,"combinedGroupId":null},"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":1}},"4":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":1},"2":{"courseId":2,"teacherId":7,"classroomId":22,"combinedGroupId":null},"3":null,"4":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":1}},"5":{"1":{"courseId":1,"teacherId":1,"classroomId":10,"combinedGroupId":1},"2":null,"3":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":6,"weekRange":"1-4周"},"4":{"courseId":19,"teacherId":26,"classroomId":24,"combinedGroupId":null}}},"5":{"1":{"1":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":2},"2":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"3":null,"4":null},"2":{"1":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":2}},"3":{"1":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2},"2":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":19,"teacherId":26,"classroomId":25,"combinedGroupId":2}},"4":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":5,"teacherId":16,"classroomId":7,"combinedGroupId":2},"3":{"courseId":18,"teacherId":25,"classroomId":15,"combinedGroupId":null,"weekRange":"1-4周"},"4":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":2}},"5":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":13,"combinedGroupId":2},"3":null,"4":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2}}},"6":{"1":{"1":{"courseId":3,"teacherId":10,"classroomId":1,"combinedGroupId":2},"2":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"3":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":null,"weekRange":"1-4周"},"4":null},"2":{"1":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":2}},"3":{"1":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2},"2":{"courseId":3,"teacherId":10,"classroomId":8,"combinedGroupId":2},"3":null,"4":{"courseId":19,"teacherId":26,"classroomId":25,"combinedGroupId":2}},"4":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":5,"teacherId":16,"classroomId":7,"combinedGroupId":2},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":2}},"5":{"1":{"courseId":6,"teacherId":17,"classroomId":1,"combinedGroupId":2},"2":{"courseId":1,"teacherId":2,"classroomId":13,"combinedGroupId":2},"3":null,"4":{"courseId":17,"teacherId":1,"classroomId":2,"combinedGroupId":2}}},"7":{"1":{"1":null,"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":3},"4":{"courseId":17,"teacherId":1,"classroomId":1,"combinedGroupId":3}},"2":{"1":{"courseId":3,"teacherId":14,"classroomId":1,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":null},"3":{"1":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"2":{"courseId":17,"teacherId":1,"classroomId":3,"combinedGroupId":3},"3":{"courseId":18,"teacherId":25,"classroomId":17,"combinedGroupId":null,"weekRange":"1-4周"},"4":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3}},"4":{"1":{"courseId":3,"teacherId":14,"classroomId":8,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":19,"teacherId":26,"classroomId":18,"combinedGroupId":3},"4":null},"5":{"1":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":3},"4":null}},"8":{"1":{"1":null,"2":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":3},"4":{"courseId":17,"teacherId":1,"classroomId":1,"combinedGroupId":3}},"2":{"1":{"courseId":3,"teacherId":14,"classroomId":1,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":null,"4":{"courseId":18,"teacherId":25,"classroomId":16,"combinedGroupId":null,"weekRange":"1-4周"}},"3":{"1":{"courseId":1,"teacherId":2,"classroomId":8,"combinedGroupId":3},"2":{"courseId":17,"teacherId":1,"classroomId":3,"combinedGroupId":3},"3":null,"4":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3}},"4":{"1":{"courseId":3,"teacherId":14,"classroomId":8,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":19,"teacherId":26,"classroomId":18,"combinedGroupId":3},"4":null},"5":{"1":{"courseId":5,"teacherId":16,"classroomId":11,"combinedGroupId":3},"2":{"courseId":6,"teacherId":17,"classroomId":2,"combinedGroupId":3},"3":{"courseId":11,"teacherId":3,"classroomId":7,"combinedGroupId":3},"4":null}},"9":{"1":{"1":{"courseId":11,"teacherId":14,"classroomId":8,"combinedGroupId":null},"2":{"courseId":3,"teacherId":10,"classroomId":2,"combinedGroupId":null},"3":null,"4":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":null,"weekRange":"1-4周"}},"2":{"1":{"courseId":1,"teacherId":2,"classroomId":11,"combinedGroupId":null},"2":{"courseId":8,"teacherId":13,"classroomId":10,"combinedGroupId":null},"3":{"courseId":19,"teacherId":26,"classroomId":21,"combinedGroupId":null},"4":{"courseId":9,"teacherId":3,"classroomId":1,"combinedGroupId":null}},"3":{"1":{"courseId":3,"teacherId":10,"classroomId":11,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":17,"teacherId":2,"classroomId":3,"combinedGroupId":null}},"4":{"1":{"courseId":8,"teacherId":13,"classroomId":3,"combinedGroupId":null},"2":null,"3":{"courseId":1,"teacherId":2,"classroomId":11,"combinedGroupId":null},"4":{"courseId":11,"teacherId":14,"classroomId":3,"combinedGroupId":null}},"5":{"1":null,"2":{"courseId":9,"teacherId":3,"classroomId":1,"combinedGroupId":null},"3":null,"4":{"courseId":17,"teacherId":2,"classroomId":3,"combinedGroupId":null}}},"10":{"1":{"1":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4},"2":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":4},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":4}},"2":{"1":{"courseId":7,"teacherId":10,"classroomId":2,"combinedGroupId":4},"2":{"courseId":19,"teacherId":26,"classroomId":26,"combinedGroupId":4},"3":{"courseId":2,"teacherId":20,"classroomId":4,"combinedGroupId":4},"4":null},"3":{"1":{"courseId":4,"teacherId":8,"classroomId":10,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4}},"4":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":13,"combinedGroupId":4},"3":{"courseId":7,"teacherId":10,"classroomId":1,"combinedGroupId":4},"4":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4}},"5":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4},"2":{"courseId":18,"teacherId":25,"classroomId":27,"combinedGroupId":null,"weekRange":"1-4周"},"3":null,"4":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":4}}},"11":{"1":{"1":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4},"2":{"courseId":4,"teacherId":8,"classroomId":14,"combinedGroupId":4},"3":null,"4":{"courseId":11,"teacherId":3,"classroomId":8,"combinedGroupId":4}},"2":{"1":{"courseId":7,"teacherId":10,"classroomId":2,"combinedGroupId":4},"2":{"courseId":19,"teacherId":26,"classroomId":26,"combinedGroupId":4},"3":{"courseId":2,"teacherId":20,"classroomId":4,"combinedGroupId":4},"4":null},"3":{"1":{"courseId":4,"teacherId":8,"classroomId":10,"combinedGroupId":4},"2":null,"3":null,"4":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4}},"4":{"1":null,"2":{"courseId":11,"teacherId":3,"classroomId":13,"combinedGroupId":4},"3":{"courseId":7,"teacherId":10,"classroomId":1,"combinedGroupId":4},"4":{"courseId":1,"teacherId":2,"classroomId":10,"combinedGroupId":4}},"5":{"1":{"courseId":17,"teacherId":18,"classroomId":2,"combinedGroupId":4},"2":null,"3":{"courseId":18,"teacherId":25,"classroomId":23,"combinedGroupId":6,"weekRange":"1-4周"},"4":{"courseId":2,"teacherId":20,"classroomId":1,"combinedGroupId":4}}},"12":{"1":{"1":{"courseId":16,"teacherId":12,"classroomId":7,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":12,"combinedGroupId":null},"3":{"courseId":20,"teacherId":27,"classroomId":21,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null}},"3":{"1":null,"2":null,"3":{"courseId":22,"teacherId":29,"classroomId":23,"combinedGroupId":null},"4":{"courseId":15,"teacherId":9,"classroomId":26,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":11,"classroomId":7,"combinedGroupId":null},"2":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":5,"combinedGroupId":null},"4":{"courseId":24,"teacherId":31,"classroomId":29,"combinedGroupId":null,"weekRange":"9-12周"}},"5":{"1":{"courseId":12,"teacherId":13,"classroomId":9,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":null}}},"13":{"1":{"1":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"2":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null},"3":null,"4":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null}},"2":{"1":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":{"courseId":16,"teacherId":12,"classroomId":11,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":9,"classroomId":13,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"3":{"courseId":20,"teacherId":27,"classroomId":21,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":22,"teacherId":29,"classroomId":30,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":{"courseId":13,"teacherId":19,"classroomId":3,"combinedGroupId":null},"4":null},"5":{"1":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"2":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"3":null,"4":{"courseId":24,"teacherId":32,"classroomId":31,"combinedGroupId":null,"weekRange":"9-12周"}}},"14":{"1":{"1":{"courseId":20,"teacherId":33,"classroomId":32,"combinedGroupId":null},"2":{"courseId":16,"teacherId":12,"classroomId":7,"combinedGroupId":null},"3":{"courseId":14,"teacherId":11,"classroomId":11,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":15,"teacherId":9,"classroomId":7,"combinedGroupId":null},"2":{"courseId":22,"teacherId":34,"classroomId":15,"combinedGroupId":null},"3":null,"4":{"courseId":12,"teacherId":13,"classroomId":7,"combinedGroupId":null}},"3":{"1":{"courseId":21,"teacherId":31,"classroomId":28,"combinedGroupId":null},"2":{"courseId":13,"teacherId":19,"classroomId":2,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":5,"combinedGroupId":null},"4":null},"4":{"1":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"2":{"courseId":24,"teacherId":31,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"3":null,"4":{"courseId":13,"teacherId":19,"classroomId":2,"combinedGroupId":null}},"5":{"1":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"2":{"courseId":12,"teacherId":13,"classroomId":7,"combinedGroupId":null},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":null}},"15":{"1":{"1":{"courseId":22,"teacherId":29,"classroomId":33,"combinedGroupId":null},"2":null,"3":{"courseId":13,"teacherId":6,"classroomId":1,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":11,"combinedGroupId":null}},"2":{"1":{"courseId":12,"teacherId":13,"classroomId":14,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"3":{"courseId":16,"teacherId":12,"classroomId":11,"combinedGroupId":null},"4":null},"3":{"1":null,"2":{"courseId":13,"teacherId":6,"classroomId":1,"combinedGroupId":null},"3":{"courseId":20,"teacherId":33,"classroomId":7,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":10,"combinedGroupId":null}},"4":{"1":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":9},"2":{"courseId":12,"teacherId":13,"classroomId":10,"combinedGroupId":null},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":{"courseId":16,"teacherId":12,"classroomId":4,"combinedGroupId":null}},"5":{"1":{"courseId":15,"teacherId":9,"classroomId":5,"combinedGroupId":null},"2":null,"3":{"courseId":24,"teacherId":32,"classroomId":31,"combinedGroupId":null,"weekRange":"9-12周"},"4":null}},"17":{"1":{"1":{"courseId":5,"teacherId":8,"classroomId":12,"combinedGroupId":null},"2":{"courseId":20,"teacherId":33,"classroomId":6,"combinedGroupId":null},"3":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"4":{"courseId":22,"teacherId":34,"classroomId":34,"combinedGroupId":null}},"2":{"1":null,"2":{"courseId":24,"teacherId":32,"classroomId":31,"combinedGroupId":null,"weekRange":"9-12周"},"3":{"courseId":12,"teacherId":4,"classroomId":5,"combinedGroupId":null},"4":{"courseId":14,"teacherId":11,"classroomId":12,"combinedGroupId":null}},"3":{"1":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":{"courseId":5,"teacherId":8,"classroomId":12,"combinedGroupId":null}},"4":{"1":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":9},"2":{"courseId":12,"teacherId":4,"classroomId":12,"combinedGroupId":null},"3":null,"4":null},"5":{"1":{"courseId":16,"teacherId":12,"classroomId":14,"combinedGroupId":null},"2":{"courseId":14,"teacherId":11,"classroomId":4,"combinedGroupId":null},"3":null,"4":null}},"18":{"1":{"1":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"2":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"3":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"4":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null}},"2":{"1":{"courseId":16,"teacherId":7,"classroomId":9,"combinedGroupId":null},"2":null,"3":{"courseId":24,"teacherId":31,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"4":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null}},"3":{"1":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null},"2":{"courseId":15,"teacherId":9,"classroomId":9,"combinedGroupId":7},"3":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null},"4":null},"4":{"1":null,"2":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":4,"combinedGroupId":null},"4":{"courseId":16,"teacherId":7,"classroomId":22,"combinedGroupId":null}},"5":{"1":{"courseId":20,"teacherId":27,"classroomId":35,"combinedGroupId":null},"2":{"courseId":22,"teacherId":29,"classroomId":36,"combinedGroupId":null},"3":null,"4":null}},"19":{"1":{"1":null,"2":{"courseId":24,"teacherId":31,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"3":{"courseId":15,"teacherId":16,"classroomId":37,"combinedGroupId":8},"4":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null}},"2":{"1":{"courseId":16,"teacherId":4,"classroomId":38,"combinedGroupId":null},"2":{"courseId":12,"teacherId":5,"classroomId":7,"combinedGroupId":null},"3":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"4":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":16,"classroomId":6,"combinedGroupId":8},"2":null,"3":null,"4":{"courseId":21,"teacherId":28,"classroomId":28,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"2":{"courseId":13,"teacherId":6,"classroomId":3,"combinedGroupId":null},"3":{"courseId":22,"teacherId":29,"classroomId":39,"combinedGroupId":null},"4":null},"5":{"1":{"courseId":12,"teacherId":5,"classroomId":12,"combinedGroupId":null},"2":{"courseId":20,"teacherId":27,"classroomId":40,"combinedGroupId":null},"3":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":null},"4":null}},"20":{"1":{"1":null,"2":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"3":{"courseId":15,"teacherId":16,"classroomId":37,"combinedGroupId":8},"4":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null}},"2":{"1":{"courseId":5,"teacherId":8,"classroomId":13,"combinedGroupId":null},"2":null,"3":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null},"4":{"courseId":21,"teacherId":31,"classroomId":28,"combinedGroupId":null}},"3":{"1":{"courseId":15,"teacherId":16,"classroomId":6,"combinedGroupId":8},"2":{"courseId":24,"teacherId":32,"classroomId":41,"combinedGroupId":null,"weekRange":"9-12周"},"3":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null},"4":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null}},"4":{"1":{"courseId":23,"teacherId":35,"classroomId":28,"combinedGroupId":null},"2":{"courseId":20,"teacherId":27,"classroomId":18,"combinedGroupId":null},"3":{"courseId":5,"teacherId":8,"classroomId":14,"combinedGroupId":null},"4":null},"5":{"1":null,"2":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"3":null,"4":{"courseId":22,"teacherId":29,"classroomId":42,"combinedGroupId":null}}},"21":{"1":{"1":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"2":{"courseId":15,"teacherId":16,"classroomId":10,"combinedGroupId":null},"3":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null},"4":null},"2":{"1":{"courseId":23,"teacherId":30,"classroomId":28,"combinedGroupId":null},"2":{"courseId":5,"teacherId":8,"classroomId":13,"combinedGroupId":null},"3":{"courseId":20,"teacherId":27,"classroomId":16,"combinedGroupId":null},"4":{"courseId":14,"teacherId":15,"classroomId":14,"combinedGroupId":null}},"3":{"1":null,"2":{"courseId":21,"teacherId":31,"classroomId":28,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":13,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":14,"combinedGroupId":null}},"4":{"1":null,"2":{"courseId":22,"teacherId":34,"classroomId":15,"combinedGroupId":null},"3":{"courseId":24,"teacherId":32,"classroomId":13,"combinedGroupId":null,"weekRange":"9-12周"},"4":{"courseId":5,"teacherId":8,"classroomId":14,"combinedGroupId":null}},"5":{"1":null,"2":{"courseId":15,"teacherId":16,"classroomId":11,"combinedGroupId":null},"3":{"courseId":14,"teacherId":15,"classroomId":5,"combinedGroupId":null},"4":null}},"23":{"1":{"1":{"courseId":12,"teacherId":20,"classroomId":9,"combinedGroupId":null},"2":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null},"3":{"courseId":24,"teacherId":31,"classroomId":43,"combinedGroupId":null,"weekRange":"9-12周"},"4":null},"2":{"1":{"courseId":20,"teacherId":33,"classroomId":18,"combinedGroupId":null},"2":{"courseId":14,"teacherId":6,"classroomId":12,"combinedGroupId":null},"3":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":null},"4":{"courseId":16,"teacherId":4,"classroomId":4,"combinedGroupId":null}},"3":{"1":null,"2":null,"3":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null},"4":{"courseId":12,"teacherId":20,"classroomId":9,"combinedGroupId":null}},"4":{"1":{"courseId":5,"teacherId":16,"classroomId":10,"combinedGroupId":null},"2":{"courseId":22,"teacherId":36,"classroomId":41,"combinedGroupId":null},"3":null,"4":null},"5":{"1":{"courseId":14,"teacherId":6,"classroomId":13,"combinedGroupId":null},"2":{"courseId":16,"teacherId":4,"classroomId":9,"combinedGroupId":null},"3":{"courseId":25,"teacherId":null,"classroomId":28,"combinedGroupId":null},"4":{"courseId":23,"teacherId":35,"classroomId":28,"combinedGroupId":10}}},"25":{"1":{"1":{"courseId":24,"teacherId":32,"classroomId":23,"combinedGroupId":null,"weekRange":"9-12周"},"2":{"courseId":22,"teacherId":34,"classroomId":29,"combinedGroupId":null},"3":null,"4":{"courseId":15,"teacherId":19,"classroomId":9,"combinedGroupId":null}},"2":{"1":{"courseId":14,"teacherId":6,"classroomId":12,"combinedGroupId":null},"2":{"courseId":13,"teacherId":18,"classroomId":1,"combinedGroupId":null},"3":{"courseId":12,"teacherId":5,"classroomId":8,"combinedGroupId":null},"4":{"courseId":20,"teacherId":33,"classroomId":29,"combinedGroupId":null}},"3":{"1":{"courseId":16,"teacherId":15,"classroomId":7,"combinedGroupId":null},"2":null,"3":null,"4":{"courseId":15,"teacherId":19,"classroomId":7,"combinedGroupId":null}},"4":{"1":{"courseId":14,"teacherId":6,"classroomId":13,"combinedGroupId":null},"2":{"courseId":21,"teacherId":37,"classroomId":28,"combinedGroupId":null},"3":null,"4":{"courseId":13,"teacherId":18,"classroomId":1,"combinedGroupId":null}},"5":{"1":{"courseId":16,"teacherId":15,"classroomId":7,"combinedGroupId":null},"2":{"courseId":12,"teacherId":5,"classroomId":8,"combinedGroupId":null},"3":null,"4":{"courseId":23,"teacherId":35,"classroomId":28,"combinedGroupId":10}}}}}
+  </script>
 
   <script>
     /* ======================================================================
@@ -632,6 +302,10 @@
     const SESSION_NAME = { 1: '1-2节', 2: '3-4节', 3: '5-6节', 4: '7-8节' };
     const DAY_LIST = [1, 2, 3, 4, 5];
     const SESSION_LIST = [1, 2, 3, 4];
+
+    /* 全系总课表列宽 */
+    const ALL_CLS_W = 108;
+    const ALL_COL_W = 100;
 
     /* 内置数据为空时的在线回退地址（不需要可留空字符串 ''） */
     const ONLINE_FALLBACK_URL = 'https://evan-ma.github.io/my-tool-data/kb_data.json';
@@ -648,15 +322,13 @@
     /* ======================================================================
        三、数据加载
        ====================================================================== */
-    /* 读取页面内嵌的 JSON */
     function readEmbeddedJson() {
       const el = document.getElementById('kbData');
       const raw = el ? el.textContent.trim() : '';
       if (!raw) return null;
-      return JSON.parse(raw); // 解析失败会抛出异常
+      return JSON.parse(raw);
     }
 
-    /* 判断一份数据是否为空壳 */
     function isEmptySys(sys) {
       if (!sys || typeof sys !== 'object') return true;
       const tCount = Array.isArray(sys.teachers) ? sys.teachers.length : 0;
@@ -665,7 +337,6 @@
       return tCount === 0 && sCount === 0;
     }
 
-    /* 把 JSON 转成内部结构 */
     function buildDBFromJson(sys) {
       return {
         teachers: (sys.teachers || []).map(t => [t.id, t.name]),
@@ -700,7 +371,7 @@
         })()
       };
     }
-    /* 求多个字符串的最长公共前缀 */
+
     function commonPrefix(strs) {
       if (!strs.length) return '';
       let prefix = strs[0];
@@ -713,20 +384,18 @@
       return prefix;
     }
 
-    /* 生成简洁合班名：首个班级完整显示，后续只显示去掉公共前缀后的部分
-       例：["26移动互联1班","26移动互联2班"] → "26移动互联1班 +2班" */
     function buildCombName(names) {
       if (!names.length) return '';
       if (names.length === 1) return names[0];
       const prefix = commonPrefix(names);
       const parts = names.map((n, i) => {
-        if (i === 0) return n;                    // 第一个保留完整名
-        const short = n.slice(prefix.length);     // 后续去掉公共前缀
-        return short || n;                        // 若为空则退回完整名
+        if (i === 0) return n;
+        const short = n.slice(prefix.length);
+        return short || n;
       });
       return parts[0] + ' +' + parts.slice(1).join(' +');
     }
-    /* 建立索引 + 展开排课明细 */
+
     function buildIndex() {
       teacherById = {}; courseById = {}; classById = {}; roomById = {}; combById = {};
 
@@ -737,7 +406,6 @@
       (DB.combined || []).forEach(([id, name, classIds]) => { combById[id] = { name, classIds }; });
 
       entries = DB.schedule.map(([classId, day, session, courseId, teacherId, roomId, combId]) => {
-        // 合班显示名：优先用 classIds 从班级表反查真实班级名，再压缩为简洁格式
         let combName = '';
         if (combId && combById[combId]) {
           const g = combById[combId];
@@ -763,7 +431,6 @@
       });
     }
 
-    /* 初始化数据（优先内置，其次在线回退） */
     async function initData() {
       const btnQuery = document.getElementById('btnQuery');
       const btnExport = document.getElementById('btnExport');
@@ -819,13 +486,18 @@
 
       DB = buildDBFromJson(sys);
       buildIndex();
-      onTypeChange();
       refreshHeroStats();
 
       DATA_READY = true;
-      btnQuery.disabled = false;
+      onTypeChange();
+
       setStatus(`${from}加载成功：${entries.length} 条排课 · ${DB.teachers.length} 位教师 · ` +
         `${DB.classes.length} 个班级 · ${DB.courses.length} 门课程 · ${DB.rooms.length} 个教室`, 'ok');
+
+      /* ★★★ 默认展示全系总课表 ★★★ */
+      document.getElementById('qType').value = 'all';
+      onTypeChange();
+      doQuery();
     }
 
     /* ======================================================================
@@ -835,23 +507,36 @@
       const type = document.getElementById('qType').value;
       const label = document.getElementById('targetLabel');
       const sel = document.getElementById('qTarget');
+      const btnQuery = document.getElementById('btnQuery');
 
-      const map = {
-        teacher: ['选择教师', DB.teachers.map(t => [t[0], t[1]])],
-        class: ['选择班级', DB.classes.map(c => [c[0], c[1]])],
-        classroom: ['选择教室', DB.rooms.map(r => [r[0], r[1]])],
-        course: ['选择课程', DB.courses.map(c => [c[0], c[1]])]
-      };
-      const item = map[type];
-      label.textContent = item[0];
+      if (type === 'all') {
+        /* 全系总课表：下拉框变成「年级筛选」 */
+        label.textContent = '年级筛选';
+        const grades = [...new Set((DB.classes || []).map(c => c[2]).filter(Boolean))]
+          .sort((a, b) => String(a).localeCompare(String(b), 'zh-CN'));
+        sel.innerHTML = '<option value="">全系（全部年级）</option>' +
+          grades.map(g => `<option value="${g}">${g} 级</option>`).join('');
+      } else {
+        const map = {
+          teacher: ['选择教师', (DB.teachers || []).map(t => [t[0], t[1]])],
+          class: ['选择班级', (DB.classes || []).map(c => [c[0], c[1]])],
+          classroom: ['选择教室', (DB.rooms || []).map(r => [r[0], r[1]])],
+          course: ['选择课程', (DB.courses || []).map(c => [c[0], c[1]])]
+        };
+        const item = map[type];
+        label.textContent = item[0];
 
-      sel.innerHTML = '<option value="">-- 请选择 --</option>';
-      item[1].forEach(([id, name]) => {
-        const o = document.createElement('option');
-        o.value = id;
-        o.textContent = name;
-        sel.appendChild(o);
-      });
+        sel.innerHTML = '<option value="">-- 请选择 --</option>';
+        item[1].forEach(([id, name]) => {
+          const o = document.createElement('option');
+          o.value = id;
+          o.textContent = name;
+          sel.appendChild(o);
+        });
+      }
+
+      btnQuery.disabled = !DATA_READY;
+      btnQuery.textContent = (type === 'all') ? '刷新总课表' : '查询课表';
     }
 
     function refreshHeroStats() {
@@ -876,16 +561,20 @@
       if (!DATA_READY) { alert('数据尚未加载完成'); return; }
 
       const type = document.getElementById('qType').value;
-      const id = Number(document.getElementById('qTarget').value);
-      if (!id) { alert('请先选择要查询的对象'); return; }
+      const raw = document.getElementById('qTarget').value;
 
-      currentQuery = { type, id };
+      if (type !== 'all' && !raw) { alert('请先选择要查询的对象'); return; }
+
+      currentQuery = (type === 'all')
+        ? { type: 'all', grade: raw }
+        : { type: type, id: Number(raw) };
 
       let ok = true;
-      if (type === 'teacher') ok = renderTeacher(id);
-      else if (type === 'class') ok = renderClass(id);
-      else if (type === 'classroom') ok = renderClassroom(id);
-      else if (type === 'course') ok = renderCourse(id);
+      if (type === 'all') ok = renderAll(raw);
+      else if (type === 'teacher') ok = renderTeacher(Number(raw));
+      else if (type === 'class') ok = renderClass(Number(raw));
+      else if (type === 'classroom') ok = renderClassroom(Number(raw));
+      else if (type === 'course') ok = renderCourse(Number(raw));
 
       if (!ok) {
         document.getElementById('resultPanel').classList.add('hidden');
@@ -898,7 +587,6 @@
       document.getElementById('btnExport').style.display = 'inline-block';
     }
 
-    /* 去重 */
     function dedupe(arr) {
       const seen = new Set();
       return arr.filter(e => {
@@ -909,7 +597,6 @@
       });
     }
 
-    /* 按 星期-节次 分组 */
     function groupBySlot(list) {
       const grid = {};
       list.forEach(e => {
@@ -920,7 +607,6 @@
       return grid;
     }
 
-    /* 课程卡片 */
     function cardHTML(e, opts) {
       opts = opts || {};
       const cls = e.combName ? 'ccard combined' : 'ccard';
@@ -941,7 +627,6 @@
       </div>`;
     }
 
-    /* 通用课表表格 */
     function gridTableHTML(list, opts) {
       const grid = groupBySlot(list);
       let html = '<div class="scroll-hint">← 左右滑动查看完整课表 →</div>';
@@ -967,6 +652,79 @@
 
       html += '</tbody></table></div>';
       return html;
+    }
+
+    /* -------- ★ 全系总课表（Excel 风格） -------- */
+    function renderAll(grade) {
+      let clsList = (DB.classes || []).map(c => ({ id: c[0], name: c[1], grade: c[2] || '' }));
+      if (grade) clsList = clsList.filter(c => String(c.grade) === String(grade));
+      clsList.sort((a, b) => a.id - b.id);
+
+      if (!clsList.length) { alert('没有符合条件的班级'); return false; }
+
+      /* 班级 -> 时段 -> 条目 */
+      const cellMap = {};
+      entries.forEach(e => {
+        const m = cellMap[e.classId] || (cellMap[e.classId] = {});
+        const k = e.day + '-' + e.session;
+        (m[k] = m[k] || []).push(e);
+      });
+
+      const gradeText = grade ? grade + '级' : '全系';
+      document.getElementById('resultTitle').textContent = `【${gradeText}】总课表`;
+      document.getElementById('resultSub').textContent =
+        `共 ${clsList.length} 个班级 · ${DAY_LIST.length} 天 × ${SESSION_LIST.length} 个节次 · 每格内含课程 / 教师 / 教室`;
+
+      const totalCols = DAY_LIST.length * SESSION_LIST.length;
+      const totalW = ALL_CLS_W + totalCols * ALL_COL_W;
+
+      let html = '<div class="scroll-hint">← 左右滑动查看完整课表 →</div>';
+      html += '<div class="all-scroll">';
+      html += `<table class="all-table" style="width:${totalW}px;table-layout:fixed">`;
+      html += '<colgroup>';
+      html += `<col style="width:${ALL_CLS_W}px">`;
+      for (let i = 0; i < totalCols; i++) html += `<col style="width:${ALL_COL_W}px">`;
+      html += '</colgroup>';
+
+      /* 表头两行 */
+      html += '<thead><tr>';
+      html += '<th class="corner" rowspan="2">班级</th>';
+      DAY_LIST.forEach(d => {
+        html += `<th colspan="${SESSION_LIST.length}">${DAY_NAME[d]}</th>`;
+      });
+      html += '</tr><tr>';
+      DAY_LIST.forEach(() => {
+        SESSION_LIST.forEach(s => { html += `<th class="sub">${SESSION_NAME[s]}</th>`; });
+      });
+      html += '</tr></thead><tbody>';
+
+      /* 每个班级一行 */
+      clsList.forEach(c => {
+        html += `<tr><td class="cls-cell">${esc(c.name)}</td>`;
+        DAY_LIST.forEach(d => {
+          SESSION_LIST.forEach(s => {
+            const cell = (cellMap[c.id] && cellMap[c.id][d + '-' + s]) || [];
+            html += '<td>';
+            if (cell.length) {
+              cell.forEach(e => {
+                html += `<div class="mini${e.combName ? ' combined' : ''}">`;
+                html += `<span class="cname">${esc(e.courseName)}</span>`;
+                html += `<span class="cmeta">${esc(e.teacherName)}</span>`;
+                html += `<span class="cmeta">${esc(e.roomName)}</span>`;
+                html += '</div>';
+              });
+            } else {
+              html += '<div class="cell-empty">·</div>';
+            }
+            html += '</td>';
+          });
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('resultBody').innerHTML = html;
+      return true;
     }
 
     /* -------- 按教师 -------- */
@@ -1140,6 +898,58 @@
       return h;
     }
 
+    /* ★ 全系总课表导出 */
+    function buildAllExportHtml(grade) {
+      let clsList = (DB.classes || []).map(c => ({ id: c[0], name: c[1], grade: c[2] || '' }));
+      if (grade) clsList = clsList.filter(c => String(c.grade) === String(grade));
+      clsList.sort((a, b) => a.id - b.id);
+
+      const cellMap = {};
+      entries.forEach(e => {
+        const m = cellMap[e.classId] || (cellMap[e.classId] = {});
+        const k = e.day + '-' + e.session;
+        (m[k] = m[k] || []).push(e);
+      });
+
+      let h = EXPORT_CSS;
+      h += '<table>';
+      h += '<colgroup><col width="90">';
+      for (let i = 0; i < DAY_LIST.length * SESSION_LIST.length; i++) h += '<col width="120">';
+      h += '</colgroup>';
+
+      h += '<tr><th class="corner" rowspan="2">班级</th>';
+      DAY_LIST.forEach(d => { h += `<th colspan="${SESSION_LIST.length}">${DAY_NAME[d]}</th>`; });
+      h += '</tr><tr>';
+      DAY_LIST.forEach(() => {
+        SESSION_LIST.forEach(s => { h += `<th>${SESSION_NAME[s]}</th>`; });
+      });
+      h += '</tr>';
+
+      clsList.forEach(c => {
+        h += `<tr><td class="teacher">${esc(c.name)}</td>`;
+        DAY_LIST.forEach(d => {
+          SESSION_LIST.forEach(s => {
+            const cell = (cellMap[c.id] && cellMap[c.id][d + '-' + s]) || [];
+            if (cell.length) {
+              h += '<td class="busy">';
+              cell.forEach(e => {
+                h += `<div class="course${e.combName ? ' combined' : ''}">`;
+                h += `<span class="cname">${esc(e.courseName)}</span><br>`;
+                h += `<span class="cmeta">${esc(e.teacherName)} ｜ ${esc(e.roomName)}</span>`;
+                h += '</div>';
+              });
+              h += '</td>';
+            } else {
+              h += '<td class="free">—</td>';
+            }
+          });
+        });
+        h += '</tr>';
+      });
+      h += '</table>';
+      return h;
+    }
+
     function buildListExportHtml(list) {
       const byTeacher = {};
       list.forEach(e => {
@@ -1205,7 +1015,11 @@
       const { type, id } = currentQuery;
       let html = '', fileName = '';
 
-      if (type === 'teacher') {
+      if (type === 'all') {
+        const grade = currentQuery.grade || '';
+        html = buildAllExportHtml(grade);
+        fileName = (grade ? grade + '级' : '全系') + '总课表.xls';
+      } else if (type === 'teacher') {
         const name = teacherById[id] || ('教师' + id);
         html = buildGridExportHtml(entries.filter(e => e.teacherId === id),
           { showTeacher: false, showRoom: true, showClass: true });
