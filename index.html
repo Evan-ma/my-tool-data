@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人工智能学院 · 内部工具导航</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --text: #1a1d26;
+      --text-secondary: #5f6b7a;
+      --accent: #2563eb;
+      --border: #e8ecf2;
+      --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.06);
+      --shadow-hover: 0 4px 8px rgba(0,0,0,.06), 0 12px 32px rgba(37,99,235,.12);
+      --radius: 16px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+              "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 顶部标题区 */
+    header {
+      width: 100%;
+      max-width: 960px;
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .college-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      color: var(--accent);
+      background: rgba(37, 99, 235, .08);
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 700;
+      letter-spacing: -.01em;
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* 工具卡片网格 */
+    .tool-grid {
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 24px 22px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(37, 99, 235, .25);
+    }
+
+    .tool-card:active {
+      transform: translateY(-1px);
+    }
+
+    .tool-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+      background: rgba(37, 99, 235, .08);
+    }
+
+    .tool-name {
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: -.01em;
+      margin-bottom: 6px;
+    }
+
+    .tool-desc {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    .tool-arrow {
+      margin-top: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tool-arrow::after {
+      content: "→";
+      transition: transform .18s ease;
+    }
+
+    .tool-card:hover .tool-arrow::after {
+      transform: translateX(3px);
+    }
+
+    /* 底部说明 */
+    footer {
+      margin-top: 40px;
+      font-size: 12.5px;
+      color: #a0aab8;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* 小屏微调 */
+    @media (max-width: 480px) {
+      header { padding: 36px 0 24px; }
+      .tool-grid { gap: 14px; }
+      .tool-card { padding: 22px 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="college-tag">人工智能学院</span>
+    <h1>内部工具导航</h1>
+    <p class="subtitle">学院日常教学与管理工具入口</p>
+  </header>
+
+  <main class="tool-grid" id="toolGrid"></main>
+
+  <footer>
+    人工智能学院 · 内部使用<br>
+  </footer>
+
+  <script>
+    /**
+     * ============================================
+     *  工具配置区 —— 以后添加新工具，只改这里
+     * ============================================
+     *  每个对象代表一张工具卡片：
+     *    name  : 工具名称（必填）
+     *    desc  : 一句话描述（必填）
+     *    url   : 工具链接（必填）
+     *    icon  : 图标（可选，emoji 即可，不填则显示默认图标）
+     */
+    const TOOLS = [
+      {
+        name: "课表查询工具",
+        desc: "学院全系总课表查询，覆盖周一至周五 4 节次，支持左右滑动查看。",
+        url: "https://evan-ma.github.io/my-tool-data/kbcx.html",
+        icon: "📅"
+      },
+      {
+        name: "成绩分析工具",
+        desc: "成绩统计与评语生成，自动计算平均分、标准差、合格率并给出评价。",
+        url: "https://evan-ma.github.io/my-tool-data/CJFXZS.html",
+        icon: "📊"
+      },
+      {
+        name: "工资计算器",
+        desc: "正算工资 · 反推考勤，支持正常模式与假期模式参数调整。",
+        url: "https://evan-ma.github.io/my-tool-data/gzjs.html",
+        icon: "💰"
+      },
+      {
+        name: "宿舍查询工具",
+        desc: "按楼号、楼层快速查找学院宿舍，并支持搜索与辅导员筛选。",
+        url: "https://evan-ma.github.io/my-tool-data/sscx.html",
+        icon: "🏢"
+      },
+      {
+        name: "教师上网账号",
+        desc: "快速查询教师上网卡号与密码，支持一键复制与已读标记。",
+        url: "https://evan-ma.github.io/my-tool-data/swzh-120.html",
+        icon: "📶"
+      }
+    ];
+
+    // ---- 渲染逻辑（无需改动）----
+    (function render() {
+      const grid = document.getElementById("toolGrid");
+      const defaultIcon = "🧰";
+
+      grid.innerHTML = TOOLS.map(tool => `
+        <a class="tool-card" href="${tool.url}" target="_blank" rel="noopener">
+          <div class="tool-icon">${tool.icon || defaultIcon}</div>
+          <div class="tool-name">${tool.name}</div>
+          <div class="tool-desc">${tool.desc}</div>
+          <div class="tool-arrow">打开工具</div>
+        </a>
+      `).join("");
+    })();
+  </script>
+
+</body>
+</html>
