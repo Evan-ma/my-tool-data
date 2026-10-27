@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人工智能学院 · 宿舍查询</title>
+<style>
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background:#f4f6fb;
+    color:#1f2937;
+    -webkit-font-smoothing:antialiased;
+  }
+  .hero{
+    background: linear-gradient(135deg,#4f46e5 0%, #7c3aed 55%, #a855f7 100%);
+    color:#fff;
+    padding:42px 20px 60px;
+    text-align:center;
+  }
+  .hero h1{ margin:0 0 10px; font-size:26px; letter-spacing:1px; font-weight:700; }
+  .hero p{ margin:0; font-size:14px; opacity:.82; }
+
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 16px 70px; }
+
+  /* 工具栏 */
+  .toolbar{
+    margin-top:-34px;
+    background:#fff;
+    border-radius:16px;
+    box-shadow: 0 12px 32px rgba(79,70,229,.12);
+    padding:14px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    position:sticky;
+    top:10px;
+    z-index:30;
+  }
+  .search-box{
+    flex:1 1 260px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    background:#f3f4f6;
+    border-radius:11px;
+    padding:0 12px;
+    height:46px;
+    border:1px solid transparent;
+    transition:.18s;
+    color:#9ca3af;
+  }
+  .search-box:focus-within{
+    background:#fff;
+    border-color:#c7d2fe;
+    box-shadow:0 0 0 3px rgba(99,102,241,.15);
+    color:#4f46e5;
+  }
+  .search-box input{
+    flex:1; min-width:0;
+    border:0; background:transparent; outline:0;
+    font-size:15px; color:#1f2937;
+    font-family:inherit;
+  }
+  .search-box input::placeholder{ color:#9ca3af; }
+  .clear-btn{
+    border:0; background:transparent; color:#9ca3af;
+    font-size:16px; cursor:pointer; padding:4px; line-height:1;
+    border-radius:6px; transition:.15s;
+  }
+  select{
+    height:46px;
+    border-radius:11px;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    padding:0 36px 0 14px;
+    font-size:15px;
+    font-family:inherit;
+    color:#374151;
+    outline:none;
+    cursor:pointer;
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 13px center;
+  }
+
+  /* 楼号标签 */
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding:20px 2px 6px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .chip{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:9px 16px;
+    border-radius:999px;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#4b5563;
+    font-size:14px;
+    font-family:inherit;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:.16s;
+  }
+  .chip.active{
+    background:#4f46e5; border-color:#4f46e5; color:#fff;
+    box-shadow:0 6px 16px rgba(79,70,229,.32);
+  }
+  .chip .n{ font-size:12px; opacity:.62; }
+  .chip.active .n{ opacity:.8; }
+
+  @media (min-width:720px){
+    .tabs{ flex-wrap:wrap; overflow-x:visible; }
+  }
+
+  /* 统计 */
+  .summary{
+    margin:14px 2px 0;
+    font-size:13.5px;
+    color:#6b7280;
+  }
+  .summary b{ color:#4f46e5; font-weight:600; }
+
+  /* 楼层分组 */
+  .group{ margin-top:26px; }
+  .group-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:4px;
+    padding-left:2px;
+  }
+  .group-head h2{ margin:0; font-size:17px; font-weight:700; }
+  .badge{
+    font-size:12px;
+    color:#4f46e5;
+    background:#eef2ff;
+    padding:3px 9px;
+    border-radius:999px;
+  }
+
+  .floor-group{ margin-top:14px; }
+  .floor-head{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:0 0 8px;
+    padding-left:2px;
+  }
+  .floor-head::before{
+    content:'';
+    width:3px;
+    height:14px;
+    border-radius:2px;
+    background:#a5b4fc;
+  }
+  .floor-name{ font-size:13.5px; font-weight:600; color:#374151; }
+  .floor-count{
+    font-size:11.5px; color:#6b7280; background:#f3f4f6;
+    padding:1px 8px; border-radius:999px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(82px, 1fr));
+    gap:8px;
+  }
+
+  /* 宿舍卡片 */
+  .room{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:9px 5px 8px; background:#fff; border:1px solid #e9ecf3; border-radius:10px;
+  }
+  .room .num{ font-size:15.5px; font-weight:700; color:#111827; line-height:1.1; }
+  .room .t{ display:flex; flex-wrap:wrap; justify-content:center; gap:3px; }
+  .tag{
+    font-size:10.5px; padding:1px 6px; border-radius:5px; font-weight:500; white-space:nowrap;
+  }
+  mark{ background:#fef08a; color:inherit; border-radius:3px; padding:0 1px; }
+
+  /* 空状态 */
+  .empty{ text-align:center; padding:70px 20px; color:#6b7280; }
+  .empty .ico{ font-size:44px; margin-bottom:14px; }
+  .empty p{ margin:0 0 18px; font-size:15px; }
+  .reset{
+    border:1px solid #c7d2fe; background:#eef2ff; color:#4f46e5;
+    padding:9px 20px; border-radius:10px; font-size:14px; font-family:inherit; cursor:pointer;
+  }
+
+  @media (max-width:520px){
+    .grid{ grid-template-columns:repeat(auto-fill, minmax(74px, 1fr)); gap:6px; }
+    .room{ padding:7px 4px 6px; }
+    .room .num{ font-size:14px; }
+    .tag{ font-size:10px; padding:1px 5px; }
+    select{ flex:1 1 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>人工智能学院 · 宿舍查询</h1>
+  <p>按楼号、楼层快速查找宿舍及对应辅导员</p>
+</header>
+
+<div class="wrap">
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+      <input id="q" type="text" placeholder="搜索宿舍号 / 辅导员 / 楼号" autocomplete="off">
+      <button class="clear-btn" id="clearBtn" title="清空" style="display:none;">✕</button>
+    </div>
+    <select id="teacherSel" aria-label="按辅导员筛选">
+      <option value="all">全部辅导员</option>
+    </select>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="summary" id="summary"></div>
+  
+  <div id="list">
+    <!-- 加载回退提示：如果微信完全拦截了 JS，用户会看到这块内容 -->
+    <div id="loadingFallback" style="text-align:center; padding:30px 20px; background:#fffbeb; color:#92400e; border:1px solid #fde68a; border-radius:12px; margin-top: 20px; font-size:14px; line-height:1.6;">
+      <div style="margin-bottom:8px; font-weight:bold;">正在加载数据...</div>
+      <span style="font-size:12px; opacity:0.85; display:block;">
+        若长时间不显示宿舍列表，是因为微信限制了本地网页的脚本运行。<br>
+        请点击右上角菜单「···」，选择「在浏览器中打开」。
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 最保守、原生 ES5 数据与逻辑 ============
+var DORMS = [
+  { b:"2号楼", rooms:[ ["601","李姝妤"],["602","李姝妤"],["603","李姝妤"],["604","李姝妤"],["605","宋佳莹"],["607","赵坤杰"],["608","赵坤杰"],["609","赵坤杰"],["610","赵伯航"],["611","赵伯航"],["612","赵伯航"],["613","刘腾飞"],["614","刘腾飞"],["615","杨晓东"],["617","杨晓东"],["618","刘腾飞"],["619","刘腾飞"] ]},
+  { b:"3号楼", rooms:[ ["101","雷利志"],["102","宋佳莹"],["105","雷利志"],["108","赵坤杰"],["109","赵坤杰"],["118","李姝妤"],["119","李姝妤"],["208","赵伯航"],["209","赵伯航"],["210","赵伯航"],["221","刘腾飞"],["222","刘腾飞"],["303","杨晓东"],["304","杨晓东"],["316","刘腾飞"] ]},
+  { b:"6号楼", rooms:[ ["526","雷利志"],["601","雷利志"],["603","雷利志"],["610","霍玉婷"],["611","霍玉婷"],["612","霍玉婷"],["613","霍玉婷"],["614","霍玉婷"],["623","武帆"],["624","武帆"] ]},
+  { b:"7号楼", rooms:[ ["522","赵伯航"],["523","赵伯航"],["524","赵伯航"],["525","杨晓东"],["526","赵伯航"],["618","武帆"],["619","雷利志"],["620","霍玉婷"],["621","武帆"],["622","雷利志"],["623","霍玉婷"],["625","刘腾飞"],["626","赵伯航"] ]},
+  { b:"8号楼", rooms:[ ["101","刘腾飞"],["102","杨晓东"],["103","刘腾飞"],["104","杨晓东"],["105","杨晓东"],["106","赵伯航"],["107","杨晓东"],["108","杨晓东"],["109","杨晓东"],["110","杨晓东"],["111","杨晓东"],["121","刘腾飞"],["122","刘腾飞"],["201","刘腾飞"],["202","刘腾飞"],["203","刘腾飞"],["204","刘腾飞"],["205","刘腾飞"],["206","刘腾飞"],["207","刘腾飞"],["208","刘腾飞"],["209","刘腾飞"],["210","刘腾飞"],["211","赵伯航"],["212","赵伯航"],["611","赵伯航"],["612","赵坤杰"],["613","杨晓东"],["622","赵坤杰"],["623","李姝妤/宋佳莹"] ]},
+  { b:"9号楼", rooms:[ ["502","宋佳莹"],["504","宋佳莹"],["505","赵坤杰"],["506","赵坤杰"],["507","赵坤杰"],["508","赵坤杰"],["509","赵坤杰"],["510","赵坤杰"],["511","赵坤杰"],["512","赵坤杰"],["513","赵坤杰"],["514","宋佳莹"],["515","赵坤杰"],["516","李姝妤"],["517","李姝妤"],["518","李姝妤"],["519","李姝妤"],["520","李姝妤"],["521","李姝妤"],["522","李姝妤"],["523","李姝妤"],["601","李姝妤"],["602","宋佳莹"],["603","李姝妤"] ]},
+  { b:"10号楼", rooms:[ ["105","雷利志"],["121","雷利志"],["122","雷利志"],["124","雷利志"],["125","雷利志"],["201","雷利志"],["202","雷利志"],["203","雷利志"],["204","雷利志"],["205","雷利志"],["213","雷利志"],["214","雷利志"],["215","雷利志"],["216","雷利志"],["219","霍玉婷"],["220","霍玉婷"],["221","霍玉婷"],["224","霍玉婷"],["225","霍玉婷"],["301","霍玉婷"],["302","霍玉婷"],["303","霍玉婷"],["304","霍玉婷"],["305","霍玉婷"],["306","霍玉婷"],["307","霍玉婷"],["308","霍玉婷"],["309","雷利志"],["317","霍玉婷"],["321","武帆"],["322","武帆"],["323","武帆"],["324","武帆"],["402","武帆"],["404","武帆"],["405","武帆"],["406","武帆"],["407","武帆"],["408","武帆"] ]},
+  { b:"12号楼", rooms:[ ["301","雷利志"],["302","雷利志"],["303","雷利志"],["304","雷利志"],["305","雷利志"],["306","雷利志"],["307","雷利志"],["308","雷利志"],["309","雷利志"],["310","雷利志"],["311","雷利志"],["312","雷利志"],["313","雷利志"],["314","雷利志"],["315","雷利志"],["316","雷利志"],["317","雷利志"],["318","雷利志"],["319","雷利志"],["320","雷利志"],["321","雷利志"],["322","雷利志"],["323","雷利志"],["324","雷利志"],["325","雷利志"],["326","雷利志"],["401","霍玉婷"],["402","霍玉婷"],["403","霍玉婷"],["404","霍玉婷"],["405","霍玉婷"],["406","霍玉婷"],["407","霍玉婷"],["408","霍玉婷"],["409","霍玉婷"],["410","武帆"],["411","武帆"],["412","武帆"],["413","武帆"],["414","武帆"],["415","武帆"],["416","武帆"],["417","武帆"],["418","武帆"],["419","武帆"],["420","武帆"],["421","武帆"],["422","武帆"],["423","武帆"],["424","武帆"],["425","武帆"],["426","武帆"] ]},
+  { b:"13号楼", rooms:[ ["406","赵坤杰"],["417","杨晓东"],["420","李姝妤"],["516","刘腾飞"],["521","杨晓东"],["522","刘腾飞"] ]},
+  { b:"15号楼", rooms:[ ["327","宋佳莹"],["328","赵坤杰"],["329","赵坤杰"],["330","李姝妤"],["331","李姝妤"],["332","李姝妤"],["333","赵伯航"],["334","刘腾飞"],["335","杨晓东"],["336","刘腾飞"],["339","李姝妤"],["342","赵坤杰"],["425","赵坤杰"],["434","刘腾飞"],["527","赵伯航"],["528","杨晓东"] ]},
+  { b:"16号楼", rooms:[ ["231","赵坤杰"],["303","赵伯航"],["304","赵伯航"],["305","杨晓东"],["308","宋佳莹"],["309","宋佳莹"],["310","宋佳莹"],["311","李姝妤"],["312","李姝妤"],["313","李姝妤"],["314","李姝妤"],["315","赵坤杰"],["316","赵坤杰"],["317","赵伯航"],["318","赵伯航"],["319","赵伯航"],["320","刘腾飞"],["321","刘腾飞"],["322","刘腾飞"],["323","刘腾飞"],["324","刘腾飞"],["325","杨晓东"],["326","杨晓东"],["327","杨晓东"],["722","李姝妤"],["822","赵坤杰"] ]}
+];
+
+var TOTAL = 0;
+for (var i = 0; i < DORMS.length; i++) TOTAL += DORMS[i].rooms.length;
+
+var TEACHERS = [];
+for (var i = 0; i < DORMS.length; i++) {
+  var rms = DORMS[i].rooms;
+  for (var j = 0; j < rms.length; j++) {
+    var tArr = rms[j][1].split('/');
+    for (var k = 0; k < tArr.length; k++) {
+      var name = tArr[k];
+      var exists = false;
+      for (var m = 0; m < TEACHERS.length; m++) {
+        if (TEACHERS[m] === name) { exists = true; break; }
+      }
+      if (!exists) TEACHERS.push(name);
+    }
+  }
+}
+TEACHERS.sort();
+
+var PALETTE = ["#4f46e5","#0891b2","#db2777","#ea580c","#16a34a","#9333ea","#dc2626","#0284c7","#ca8a04","#0d9488"];
+var TEACHER_COLORS = {};
+for (var i = 0; i < TEACHERS.length; i++) {
+  TEACHER_COLORS[TEACHERS[i]] = PALETTE[i % PALETTE.length];
+}
+
+function esc(s){
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function hexA(hex, a){
+  var n = parseInt(hex.slice(1), 16);
+  return 'rgba(' + ((n>>16)&255) + ',' + ((n>>8)&255) + ',' + (n&255) + ',' + a + ')';
+}
+
+// DOM 容器
+var $q = document.getElementById('q');
+var $clearBtn = document.getElementById('clearBtn');
+var $tabs = document.getElementById('tabs');
+var $summary = document.getElementById('summary');
+var $list = document.getElementById('list');
+var $teacherSel = document.getElementById('teacherSel');
+
+var state = { building: 'all', teacher: 'all', keyword: '' };
+
+// 初始化楼号标签
+var tabsHtml = '<button class="chip active" data-b="all">全部<span class="n">' + TOTAL + '</span></button>';
+for (var i = 0; i < DORMS.length; i++) {
+  var d = DORMS[i];
+  tabsHtml += '<button class="chip" data-b="' + esc(d.b) + '">' + esc(d.b) + '<span class="n">' + d.rooms.length + '</span></button>';
+}
+$tabs.innerHTML = tabsHtml;
+
+// 初始化辅导员下拉框
+for (var i = 0; i < TEACHERS.length; i++) {
+  var o = document.createElement('option');
+  o.value = TEACHERS[i];
+  o.innerHTML = esc(TEACHERS[i]);
+  $teacherSel.appendChild(o);
+}
+
+// 渲染函数
+function render(){
+  var kw = $q.value ? $q.value.replace(/^\s+|\s+$/g, '').toLowerCase() : '';
+  var listHtml = "";
+  var shown = 0;
+  
+  for (var i = 0; i < DORMS.length; i++) {
+    var d = DORMS[i];
+    if (state.building !== 'all' && d.b !== state.building) continue;
+    
+    var floorMap = {};
+    var floorOrder = [];
+    var buildingCount = 0;
+    
+    for (var j = 0; j < d.rooms.length; j++) {
+      var room = d.rooms[j][0];
+      var teacher = d.rooms[j][1];
+      
+      // 筛选辅导员
+      if (state.teacher !== 'all') {
+        var tArr = teacher.split('/');
+        var hasT = false;
+        for (var t = 0; t < tArr.length; t++) {
+          if (tArr[t] === state.teacher) { hasT = true; break; }
+        }
+        if (!hasT) continue;
+      }
+      
+      // 筛选搜索词
+      if (kw !== "") {
+        var target = (d.b + " " + room + " " + teacher).toLowerCase();
+        if (target.indexOf(kw) === -1) continue;
+      }
+      
+      // 楼层提取
+      var floor = room.charAt(0);
+      if (!floorMap[floor]) {
+        floorMap[floor] = [];
+        floorOrder.push(floor);
+      }
+      floorMap[floor].push({ room: room, teacher: teacher });
+      buildingCount++;
+    }
+    
+    if (buildingCount === 0) continue;
+    
+    // 楼层排序
+    floorOrder.sort(function(a, b) { return Number(a) - Number(b); });
+    
+    var floorsHtml = "";
+    for (var f = 0; f < floorOrder.length; f++) {
+      var fl = floorOrder[f];
+      var rms = floorMap[fl];
+      
+      rms.sort(function(a, b) { return Number(a.room) - Number(b.room); });
+      
+      var cardsHtml = "";
+      for (var r = 0; r < rms.length; r++) {
+        var rObj = rms[r];
+        var names = rObj.teacher.split('/');
+        var tagsHtml = "";
+        for (var n = 0; n < names.length; n++) {
+          var c = TEACHER_COLORS[names[n]] || '#6b7280';
+          tagsHtml += '<span class="tag" style="color:' + c + ';background:' + hexA(c, 0.11) + '">' + esc(names[n]) + '</span>';
+        }
+        
+        var displayRoom = esc(rObj.room);
+        if (kw !== "") {
+          var idx = displayRoom.toLowerCase().indexOf(kw);
+          if (idx > -1) {
+            displayRoom = displayRoom.slice(0, idx) + '<mark>' + displayRoom.slice(idx, idx + kw.length) + '</mark>' + displayRoom.slice(idx + kw.length);
+          }
+        }
+        
+        cardsHtml += '<div class="room"><span class="num">' + displayRoom + '</span><span class="t">' + tagsHtml + '</span></div>';
+      }
+      
+      floorsHtml += '<div class="floor-group">' +
+          '<div class="floor-head">' +
+            '<span class="floor-name">' + esc(fl) + '层</span>' +
+            '<span class="floor-count">' + rms.length + ' 间</span>' +
+          '</div>' +
+          '<div class="grid">' + cardsHtml + '</div>' +
+        '</div>';
+    }
+    
+    listHtml += '<section class="group">' +
+        '<div class="group-head">' +
+          '<h2>' + esc(d.b) + '</h2>' +
+          '<span class="badge">' + buildingCount + ' 间</span>' +
+        '</div>' +
+        floorsHtml +
+      '</section>';
+    shown += buildingCount;
+  }
+  
+  $summary.innerHTML = '共 <b>' + DORMS.length + '</b> 栋楼 · <b>' + TOTAL + '</b> 间宿舍 · 当前显示 <b>' + shown + '</b> 间';
+  
+  if (shown === 0) {
+    $list.innerHTML = '<div class="empty"><div class="ico">🔍</div><p>没有找到匹配的宿舍，换个关键词试试</p><button class="reset" id="resetBtn">重置全部筛选</button></div>';
+  } else {
+    $list.innerHTML = listHtml;
+  }
+}
+
+// ============ 事件绑定 ============
+$q.oninput = function(){
+  state.keyword = $q.value;
+  $clearBtn.style.display = $q.value ? 'block' : 'none';
+  render();
+};
+
+$clearBtn.onclick = function(){
+  $q.value = '';
+  state.keyword = '';
+  $clearBtn.style.display = 'none';
+  $q.focus();
+  render();
+};
+
+$tabs.onclick = function(e){
+  var target = e.target;
+  while (target && target !== $tabs && !target.getAttribute('data-b')) {
+    target = target.parentNode;
+  }
+  if (target && target !== $tabs) {
+    state.building = target.getAttribute('data-b');
+    for (var i = 0; i < $tabs.children.length; i++) {
+      var c = $tabs.children[i];
+      if (c === target) c.className = 'chip active';
+      else c.className = 'chip';
+    }
+    render();
+  }
+};
+
+$teacherSel.onchange = function(){
+  state.teacher = $teacherSel.value;
+  render();
+};
+
+$list.onclick = function(e){
+  var target = e.target;
+  while (target && target !== $list && target.id !== 'resetBtn') {
+    target = target.parentNode;
+  }
+  if (target && target.id === 'resetBtn') {
+    state.building = 'all';
+    state.teacher = 'all';
+    state.keyword = '';
+    $q.value = '';
+    $clearBtn.style.display = 'none';
+    $teacherSel.value = 'all';
+    for (var i = 0; i < $tabs.children.length; i++) {
+      var c = $tabs.children[i];
+      if (i === 0) c.className = 'chip active';
+      else c.className = 'chip';
+    }
+    render();
+  }
+};
+
+// 启动渲染，成功覆盖掉回退提示
+render();
+</script>
+</body>
+</html>
