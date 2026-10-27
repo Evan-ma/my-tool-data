@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>📋 教师上网账号</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 16px 12px;
+            color: #1d1d1f;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            padding: 20px 16px 24px;
+        }
+
+        /* ---- 顶部 ---- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .badge {
+            background: #e8ecf1;
+            color: #2c3e50;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge span {
+            background: #2a5298;
+            color: #fff;
+            border-radius: 20px;
+            padding: 0 8px;
+            font-size: 13px;
+            line-height: 20px;
+        }
+
+        /* ---- 表格容器 ---- */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #eef1f5;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 380px;
+        }
+
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #e4e7ed;
+        }
+
+        thead th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #4a5568;
+            white-space: nowrap;
+        }
+
+        thead th:first-child {
+            width: 40px;
+            text-align: center;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f0f2f5;
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: #fafbfc;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        .col-index {
+            text-align: center;
+            font-weight: 500;
+            color: #8e98a8;
+            font-size: 13px;
+        }
+
+        /* ---- 值单元格 ---- */
+        .value-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .value-text {
+            font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+
+        .value-text.card {
+            color: #1a3a6b;
+            background: #f0f4f8;
+        }
+
+        .value-text.pwd {
+            color: #5a6a7a;
+            background: #f8f9fa;
+        }
+
+        /* ---- 复制按钮 ---- */
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f0f2f5;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #5a6a7a;
+            font-size: 16px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            background: #e4e7ed;
+            color: #1d1d1f;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.9);
+            background: #d4d8df;
+        }
+
+        /* ---- 高亮行（当前选中 - 绿色） ---- */
+        .highlight-row {
+            background-color: #e8f5e9 !important;
+            border-left: 3px solid #4caf50;
+        }
+
+        .highlight-row .value-text.card,
+        .highlight-row .value-text.pwd {
+            color: #2e7d32 !important;
+            background: #c8e6c9;
+        }
+
+        .highlight-row .copy-btn {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        /* ---- 已访问行（黄色） ---- */
+        .visited-row {
+            background-color: #fff8e1 !important;
+            border-left: 3px solid #ffa726;
+        }
+
+        .visited-row .value-text.card,
+        .visited-row .value-text.pwd {
+            color: #e65100 !important;
+            background: #ffe0b2;
+        }
+
+        .visited-row .copy-btn {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        /* ---- Toast ---- */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 320px;
+            width: 90%;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: #1d1d1f;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast-icon {
+            font-size: 18px;
+        }
+
+        .toast-msg {
+            flex: 1;
+        }
+
+        .toast-msg strong {
+            color: #81c784;
+        }
+
+        /* ---- 空状态 ---- */
+        .empty-row td {
+            padding: 40px 20px;
+            text-align: center;
+            color: #8e98a8;
+            font-size: 14px;
+        }
+
+        /* ---- 响应式 ---- */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                padding: 16px 12px 20px;
+                border-radius: 12px;
+            }
+
+            .header h3 {
+                font-size: 18px;
+            }
+
+            .badge {
+                font-size: 12px;
+                padding: 3px 10px;
+            }
+
+            table {
+                font-size: 13px;
+                min-width: 340px;
+            }
+
+            thead th,
+            tbody td {
+                padding: 8px 6px;
+            }
+
+            .value-text {
+                font-size: 13px;
+                padding: 3px 6px;
+            }
+
+            .copy-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px 8px 16px;
+            }
+
+            .header h3 {
+                font-size: 16px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 300px;
+            }
+
+            thead th,
+            tbody td {
+                padding: 6px 4px;
+            }
+
+            .value-text {
+                font-size: 12px;
+                padding: 2px 4px;
+                letter-spacing: 0;
+            }
+
+            .copy-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+            }
+
+            .col-index {
+                font-size: 11px;
+            }
+        }
+
+        /* 滚动条美化 */
+        .table-wrap::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .table-wrap::-webkit-scrollbar-track {
+            background: #f0f2f5;
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: #cdd4df;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>📋 教师上网账号</h2>
+            <div class="badge">
+                📞 总数 <span id="totalCount">0</span>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>📱 卡号</th>
+                        <th>🔑 密码</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // 数据源
+        const DEFAULT_RAW_DATA = `15833901960,15833906825,15833924895,15833923346,18348870216,18348870211,15833928684,15833903025,15833924959,15833922464,18348870213,15833929364,15833924744,15833901030,15833906832,18348870215,18348870191,15833905832,15833905719,15833901750,18348870212,15833900131,15833906726,15833903970,15833219597,15833900127,18348870197,15833928946,18348870198,18348870217,19710335647,15833901833,15833906919,15833906616,19710335884,19710334785,19710313843,19710314152,19710334889,19710334887,19710334833,19710314036,19710335649,19710314087,19710335324,19710313643,19710314028,19710319140,19710334794,19710314092,19710314116,19710313848,19710334796,19710334798,19710334786,19710318649,19710314165,19710318640,19710334729,19710318496,19710314753,19710334739,19710314162,19710334584,19710334742,19710319043,19710319744,19710335642,19710314074,15833906579,18348870193,19710335402,19710314071,19710313649,19710313246,19710313486,19710313480,19710335419,19710335394,19710334832,19710313342,19710313647,19710319246,19710334784,19710313401,19710313469,19710312649,19710334891,19710335048,19710314044,19710313497,19710335314,19710335674,19710314083,19710334738,19710318490,19710334775,19710314180,19710335429,19710334780,19710335407,19710314918,19710314582,19710314811,19710314807,19710334728,19710314771,19710314790,19710334731,19710314550,19710334774,19710335426,19710334776,19710334779,19710318486,19710335643,19710334575,19710335644,19710314160,19710335425,`;
+
+        // 解析函数
+        function parsePhoneNumbers(text) {
+            return text.trim().split(/[\n\r\s,;]+/).filter(Boolean).map(card => ({
+                card: card,
+                pwd: "123000"
+            }));
+        }
+
+        // 状态
+        let ACCOUNTS = parsePhoneNumbers(DEFAULT_RAW_DATA);
+        let highlightedIndex = null;
+        let visitedIndexes = new Set();  // 记录已访问的行
+
+        // DOM
+        const tbody = document.getElementById('tableBody');
+        const totalCount = document.getElementById('totalCount');
+        const toastContainer = document.getElementById('toastContainer');
+
+        // 渲染
+        function render() {
+            if (ACCOUNTS.length === 0) {
+                tbody.innerHTML = `<tr class="empty-row"><td colspan="3">暂无数据</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            ACCOUNTS.forEach((item, index) => {
+                let rowClass = '';
+                if (index === highlightedIndex) {
+                    rowClass = 'highlight-row';  // 当前选中 - 绿色
+                } else if (visitedIndexes.has(index)) {
+                    rowClass = 'visited-row';    // 已访问 - 黄色
+                }
+                
+                html += `
+                    <tr class="${rowClass}">
+                        <td class="col-index">${index + 1}</td>
+                        <td>
+                            <div class="value-cell">
+                                <span class="value-text card">${item.card}</span>
+                                <button class="copy-btn" data-target="card" data-index="${index}" data-value="${item.card}">📋</button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="value-cell">
+                                <span class="value-text pwd">${item.pwd}</span>
+                                <button class="copy-btn" data-target="pwd" data-index="${index}" data-value="${item.pwd}">📋</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+            totalCount.textContent = ACCOUNTS.length;
+        }
+
+        // Toast
+        function showToast(message, icon = '✅') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-msg">${message}</span>`;
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => toast.classList.add('show'));
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // 复制
+        async function handleCopy(target, index, value) {
+            // 将当前行加入已访问集合
+            visitedIndexes.add(index);
+            // 更新当前选中行
+            highlightedIndex = index;
+            render();
+
+            const label = target === 'card' ? '卡号' : '密码';
+
+            try {
+                await navigator.clipboard.writeText(value);
+                showToast(`已复制${label}`, target === 'card' ? '📱' : '🔑');
+            } catch {
+                const textArea = document.createElement('textarea');
+                textArea.value = value;
+                textArea.style.cssText = 'position:fixed;left:-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+                showToast(`已复制${label}`, target === 'card' ? '📱' : '🔑');
+            }
+        }
+
+        // 事件
+        tbody.addEventListener('click', (e) => {
+            const btn = e.target.closest('.copy-btn');
+            if (!btn) return;
+            handleCopy(btn.dataset.target, parseInt(btn.dataset.index), btn.dataset.value);
+        });
+
+        // 初始化
+        render();
+    </script>
+
+</body>
+
+</html>
