@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2b5cff">
+<title>值班表</title>
+<style>
+:root{
+  --brand:#2b5cff;
+  --bg:#f4f6fb;
+  --card:#fff;
+  --line:#eaedf5;
+  --txt:#1e2430;
+  --muted:#7d879c;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--txt);
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.wrap{max-width:680px;margin:0 auto;padding:18px 14px 40px}
+
+/* ---------- 顶部标题 ---------- */
+.head{padding:4px 2px 16px}
+.head h1{
+  font-size:19px;font-weight:700;margin:0;letter-spacing:.3px;
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+}
+.head .count{
+  font-size:12px;font-weight:500;color:var(--muted);
+  background:#fff;border:1px solid var(--line);border-radius:20px;
+  padding:2px 10px;
+}
+
+/* ---------- 今日卡片 ---------- */
+.today{
+  background:linear-gradient(135deg,#2b5cff,#5f8bff);
+  color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;
+  box-shadow:0 8px 22px rgba(43,92,255,.25);
+}
+.today .lbl{
+  font-size:12.5px;opacity:.85;margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.today .lbl b{font-weight:600}
+.today .ppl{display:flex;flex-wrap:wrap;gap:8px}
+.today .p{
+  background:rgba(255,255,255,.22);border-radius:10px;
+  padding:7px 13px;font-size:15px;display:flex;align-items:baseline;gap:8px;
+}
+.today .p a{color:#fff;text-decoration:none;font-size:12.5px;opacity:.92}
+.today .p a:active{opacity:1}
+
+/* ---------- 搜索 ---------- */
+.search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:10px 14px;margin-bottom:14px;
+}
+.search svg{flex:0 0 16px;color:var(--muted)}
+.search input{
+  flex:1;border:0;outline:none;background:transparent;font:inherit;
+  font-size:14px;color:var(--txt);min-width:0;
+}
+.search input::placeholder{color:#aab2c4}
+.search .clear{
+  border:0;background:#eef1f8;color:var(--muted);border-radius:50%;
+  width:20px;height:20px;line-height:1;font-size:13px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;flex:0 0 20px;
+}
+.search .clear.show{display:flex}
+
+/* ---------- 日期列表 ---------- */
+.list{display:flex;flex-direction:column;gap:9px}
+.day{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border-radius:12px;padding:12px 14px;
+  border:1px solid transparent;
+  box-shadow:0 1px 2px rgba(20,30,60,.04);
+  transition:.15s;
+}
+.day.is-today{
+  border-color:#cfdcff;background:#f4f7ff;
+  box-shadow:0 4px 14px rgba(43,92,255,.13);
+}
+/* 昨天：灰色显示 */
+.day.is-past{
+  opacity:.55;
+  background:#f7f8fb;
+  box-shadow:none;
+}
+.day.is-past .dd{color:#9aa3b5}
+.day.is-past .person{background:#eef1f7}
+
+.day .date{
+  flex:0 0 62px;display:flex;flex-direction:column;
+}
+.day .dd{font-size:15px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.day .wk{font-size:11.5px;color:var(--muted);margin-top:1px}
+.day.is-today .dd{color:var(--brand)}
+.day .people{
+  flex:1;display:flex;flex-wrap:wrap;gap:6px 8px;min-width:0;
+}
+.person{
+  display:inline-flex;align-items:baseline;gap:6px;
+  background:#f3f6fd;border-radius:8px;padding:5px 10px;font-size:13.5px;
+}
+.person .nm{font-weight:600;white-space:nowrap}
+.person .tel{
+  color:var(--brand);text-decoration:none;font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+.person .tel:active{opacity:.6}
+.badge{
+  font-size:10.5px;font-weight:600;color:#fff;background:var(--brand);
+  border-radius:5px;padding:0 5px;line-height:16px;align-self:center;
+}
+
+/* ---------- 备注 ---------- */
+.note{
+  margin-top:16px;background:#fffdf5;border:1px solid #f3e4b5;
+  border-radius:12px;padding:12px 14px;font-size:12.5px;color:#7a5f1a;
+  line-height:1.8;white-space:pre-wrap;
+}
+.note b{color:#8a6a14}
+
+/* ---------- 空状态 ---------- */
+.empty{
+  text-align:center;color:var(--muted);font-size:14px;
+  padding:44px 16px;line-height:2;
+}
+.empty code{
+  background:#eef1f8;border-radius:5px;padding:2px 6px;font-size:12px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;color:#3a4a66;
+  word-break:break-all;
+}
+.empty .big{font-size:34px;margin-bottom:10px;opacity:.5}
+
+/* ---------- 复制提示 ---------- */
+#tip{
+  position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));
+  transform:translate(-50%,14px);
+  background:rgba(28,34,48,.92);color:#fff;padding:9px 18px;border-radius:9px;
+  font-size:13.5px;opacity:0;pointer-events:none;transition:.22s;z-index:99;
+  white-space:nowrap;max-width:90vw;
+}
+#tip.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:420px){
+  .wrap{padding:14px 11px 32px}
+  .head h1{font-size:17px}
+  .today{padding:14px 15px}
+  .today .p{padding:6px 11px;font-size:14px}
+  .day{padding:10px 12px;gap:10px}
+  .day .date{flex:0 0 56px}
+  .day .dd{font-size:14px}
+  .person{padding:4px 8px;font-size:12.5px}
+  .person .tel{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="head" id="head" hidden>
+    <h1><span id="title"></span><span class="count" id="count"></span></h1>
+  </div>
+
+  <div id="todayBox"></div>
+
+  <div class="search" id="searchBox" hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+    </svg>
+    <input id="search" type="search" placeholder="搜索姓名 / 电话 / 日期" autocomplete="off">
+    <button class="clear" id="clearBtn" type="button" aria-label="清空">×</button>
+  </div>
+
+  <div class="list" id="list"></div>
+  <div class="empty" id="empty" hidden></div>
+  <div class="note" id="note" hidden></div>
+</div>
+
+<div id="tip"></div>
+
+<!-- ============================================================
+     数据引用区：
+     把生成的 duty-data.js 放到与本文件同一目录，取消下一行注释即可。
+     也可以直接把 JSON 粘贴进下面的内联脚本。
+     ============================================================ -->
+<!-- <script src="duty-data.js"></script> -->
+
+<script>
+/* =========================================================
+ *  如果需要内嵌数据，在这里赋值（优先级低于外链脚本）：
+ *  window.DUTY_DATA = { v:1, ti:"...", y:2026, m:11, no:"...", ds:[...] };
+ * ========================================================= */
+window.DUTY_DATA ={"v":1,"ti":"人工智能学院2026年11月份值班表","y":2026,"m":11,"no":"备注：1、值班人员必须坚守值班岗位，因公事外出的将手机号码贴到办公室门口，处理完毕后立即返回2、值班人员于当晚21：00准时集合组织统一查宿舍3、值班人员须保持24小时开机，以便及时处理学生问题。","ds":[[1,"日",[["孟凤霞","18330356212"],["赵晟智","18631125087"]]],[2,"一",[["贾雨欣","18812038586"],["霍玉婷","15003210427"]]],[3,"二",[["刘泽坤","15511390585"],["赵坤杰","17333919941"]]],[4,"三",[["徐鼎","15511662157"],["武帆","19931130585"]]],[5,"四",[["王宇祺","17303218890"],["贾媛烨","18332339193"]]],[6,"五",[["赵艺菲","15176678801"],["宋佳莹","19933708932"]]],[7,"六",[["张玉宁","15137869385"],["刘腾飞","18333344470"]]],[8,"日",[["马敬涛","17633125719"],["杨晓东","15532115755"]]],[9,"一",[["赵琪","15227188338"],["李姝妤","15633896523"]]],[10,"二",[["纪少萌","15076106369"],["刘聪","17532118222"]]],[11,"三",[["王倩","15373030240"],["赵伯航","15681103663"]]],[12,"四",[["潘子怡","15803211408"],["张雨涵","18832177018"]]],[13,"五",[["祁佳轩","17332734882"],["雷利志","13932109494"]]],[14,"六",[["马文翠","13299112632"],["赵坤杰","17333919941"]]],[15,"日",[["张森","15631103929"],["霍玉婷","15003210427"]]],[16,"一",[["孟凤霞","18330356212"],["赵晟智","18631125087"]]],[17,"二",[["陈晓","15931153987"],["武帆","19931130585"]]],[18,"三",[["武晶晶","15127102377"],["贾媛烨","18332339193"]]],[19,"四",[["柳金铭","19943491214"],["宋佳莹","19933708932"]]],[20,"五",[["苏敬文","18532107520"],["杨晓东","15532115755"]]],[21,"六",[["李珊珊","15031263486"],["赵晟智","18631125087"]]],[22,"日",[["张乾","13383215107"],["李姝妤","15633896523"]]],[23,"一",[["赵艺菲","15176678801"],["刘聪","17532118222"]]],[24,"二",[["张巧娜","15931083975"],["赵伯航","15681103663"]]],[25,"三",[["贾雨欣","18812038586"],["张雨涵","18832177018"]]],[26,"四",[["刘泽坤","15511390585"],["赵坤杰","17333919941"]]],[27,"五",[["徐鼎","15511662157"],["雷利志","13932109494"]]],[28,"六",[["王宇祺","17303218890"],["刘腾飞","18333344470"]]],[29,"日",[["齐佳英","17831123033"],["霍玉婷","15003210427"]]],[30,"一",[["李珊珊","15031263486"],["武帆","19931130585"]]]]};
+(function () {
+  'use strict';
+
+  const $  = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const pad = n => String(n).padStart(2, '0');
+
+  let tipTimer;
+  function toast(msg){
+    const t = $('tip');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(tipTimer);
+    tipTimer = setTimeout(() => t.classList.remove('show'), 1500);
+  }
+
+  function copyText(text){
+    if (navigator.clipboard && window.isSecureContext)
+      return navigator.clipboard.writeText(text);
+    return new Promise((res, rej) => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy') ? res() : rej(); }
+      catch(e){ rej(e); }
+      document.body.removeChild(ta);
+    });
+  }
+
+  function valid(d){
+    return d && typeof d === 'object'
+        && Array.isArray(d.ds) && d.ds.length > 0
+        && d.ds.every(x => Array.isArray(x) && Array.isArray(x[2]));
+  }
+
+  /* =========================================================
+   *  渲染
+   * ========================================================= */
+  function render(data){
+    $('head').hidden = false;
+    $('searchBox').hidden = false;
+
+    $('title').textContent = data.ti || `${data.y}年${data.m}月份值班表`;
+    $('count').textContent = `${data.ds.length} 天`;
+
+    const now = new Date();
+    const tY = now.getFullYear(), tM = now.getMonth() + 1, tD = now.getDate();
+    const isThisMonth = (data.y === tY && data.m === tM);
+
+    /* --- 今日卡片 --- */
+    const todayBox = $('todayBox');
+    if (isThisMonth){
+      const t = data.ds.find(x => x[0] === tD);
+      if (t){
+        const ppl = t[2].map(([n, p]) =>
+          `<span class="p">${esc(n)}${p ? `<a href="tel:${esc(p)}">${esc(p)}</a>` : ''}</span>`
+        ).join('');
+        todayBox.innerHTML = `<div class="today">
+          <div class="lbl"><b>今日值班</b>· ${data.m}月${tD}日 周${esc(t[1])}</div>
+          <div class="ppl">${ppl}</div>
+        </div>`;
+      } else {
+        todayBox.innerHTML = `<div class="today">
+          <div class="lbl"><b>今日</b>· ${data.m}月${tD}日</div>
+          <div class="ppl"><span class="p" style="opacity:.85">无值班安排</span></div>
+        </div>`;
+      }
+    } else {
+      todayBox.innerHTML = '';
+    }
+
+    /* --- 日期列表 --- */
+    const list = $('list');
+    list.innerHTML = data.ds.map(([da, wk, ppl]) => {
+      const isToday     = isThisMonth && da === tD;
+      const isYesterday = isThisMonth && da === tD - 1;
+      /* 前天及更早：默认隐藏 */
+      const hidePast    = isThisMonth && da < tD - 1;
+
+      const people = ppl.map(([n, p]) =>
+        `<span class="person">
+           <span class="nm">${esc(n)}</span>
+           ${p ? `<a class="tel" href="tel:${esc(p)}" data-phone="${esc(p)}">${esc(p)}</a>` : ''}
+         </span>`
+      ).join('');
+
+      const searchStr = [`${data.m}月${da}日`, `${data.m}/${pad(da)}`,
+                          `周${wk}`, `星期${wk}`, ...ppl.flat()].join(' ').toLowerCase();
+
+      const cls = 'day'
+        + (isToday     ? ' is-today' : '')
+        + (isYesterday ? ' is-past'  : '');
+
+      return `<div class="${cls}"
+                   data-search="${esc(searchStr)}"
+                   ${hidePast ? 'data-hidden-past="1" style="display:none"' : ''}>
+        <div class="date">
+          <span class="dd">${data.m}/${pad(da)}</span>
+          <span class="wk">周${esc(wk)}</span>
+        </div>
+        <div class="people">${people}${isToday ? '<span class="badge">今天</span>' : ''}</div>
+      </div>`;
+    }).join('');
+
+    /* --- 备注 --- */
+    const noteEl = $('note');
+    if (data.no && data.no.trim()){
+      noteEl.hidden = false;
+      noteEl.innerHTML = '<b>备注</b><br>' + esc(data.no.replace(/^备注[:：]?\s*/, ''));
+    }
+
+    filter('');
+  }
+
+  /* =========================================================
+   *  搜索 & 过滤
+   *  规则：
+   *   - 无关键词：隐藏过去日期（前天及更早），昨天灰色显示
+   *   - 有关键词：全部日期参与匹配（含过去），匹配到的会显示出来，
+   *              方便查询历史值班记录
+   * ========================================================= */
+  const searchInput = $('search');
+  const clearBtn = $('clearBtn');
+  const emptyEl = $('empty');
+
+  function filter(q){
+    q = (q || '').trim().toLowerCase();
+    let shown = 0;
+
+    document.querySelectorAll('#list .day').forEach(el => {
+      const isPastHidden = el.dataset.hiddenPast === '1';
+
+      /* 无搜索词时，隐藏过去的日期 */
+      if (isPastHidden && !q){
+        el.style.display = 'none';
+        return;
+      }
+
+      const ok = !q || el.dataset.search.includes(q);
+      el.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+
+    clearBtn.classList.toggle('show', !!q);
+
+    if (shown === 0){
+      emptyEl.hidden = false;
+      if (q){
+        emptyEl.innerHTML = `<div class="big">🔍</div>没有找到与「${esc(q)}」匹配的值班记录`;
+      } else {
+        emptyEl.innerHTML = `<div class="big">✓</div>本月值班已结束，暂无后续安排`;
+      }
+    } else {
+      emptyEl.hidden = true;
+    }
+  }
+
+  searchInput.addEventListener('input', e => filter(e.target.value));
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    filter('');
+    searchInput.focus();
+  });
+
+  /* ---------- 电话点击：触屏拨号，桌面复制 ---------- */
+  const isTouch = window.matchMedia && window.matchMedia('(hover: none)').matches;
+  $('list').addEventListener('click', e => {
+    const a = e.target.closest('.tel');
+    if (!a || isTouch) return;
+    e.preventDefault();
+    copyText(a.dataset.phone)
+      .then(() => toast('已复制 ' + a.dataset.phone))
+      .catch(() => {});
+  });
+
+  /* ---------- 启动 ---------- */
+  function boot(){
+    const data = window.DUTY_DATA;
+    if (!valid(data)){
+      $('empty').hidden = false;
+      $('empty').innerHTML =
+        `<div class="big">📋</div>
+         暂未加载值班数据<br>
+         请在页面中引用 <code>duty-data.js</code>，<br>
+         或直接设置 <code>window.DUTY_DATA</code>。`;
+      return;
+    }
+    render(data);
+  }
+
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', boot);
+  else
+    boot();
+})();
+</script>
+</body>
+</html>
