@@ -96,6 +96,12 @@ body{
 .day.is-past .dd{color:#9aa3b5}
 .day.is-past .person{background:#eef1f7}
 
+/* 月份分隔条 */
+.month-sep{
+  font-size:12.5px;font-weight:600;color:var(--muted);
+  padding:10px 4px 2px;letter-spacing:.4px;
+}
+
 .day .date{
   flex:0 0 62px;display:flex;flex-direction:column;
 }
@@ -127,6 +133,8 @@ body{
   line-height:1.8;white-space:pre-wrap;
 }
 .note b{color:#8a6a14}
+.note-item + .note-item{margin-top:10px;padding-top:10px;border-top:1px dashed #ecd9a0}
+.note-tt{font-weight:700;margin-bottom:2px;color:#8a6a14}
 
 /* ---------- 空状态 ---------- */
 .empty{
@@ -188,18 +196,13 @@ body{
 <div id="tip"></div>
 
 <!-- ============================================================
-     数据引用区：
-     把生成的 duty-data.js 放到与本文件同一目录，取消下一行注释即可。
-     也可以直接把 JSON 粘贴进下面的内联脚本。
+     数据引用区：只引用 duty-data.js 一个文件。
+     以后增删改月份，只修改 duty-data.js，本文件不用再动。
+     如果改了数据页面没变化，给 ?v= 后面的数字加一即可。
      ============================================================ -->
-<!-- <script src="duty-data.js"></script> -->
+<script src="https://evan-ma.github.io/my-tool-data/duty-data.js?v=1"></script>
 
 <script>
-/* =========================================================
- *  如果需要内嵌数据，在这里赋值（优先级低于外链脚本）：
- *  window.DUTY_DATA = { v:1, ti:"...", y:2026, m:11, no:"...", ds:[...] };
- * ========================================================= */
-window.DUTY_DATA ={"v":1,"ti":"人工智能学院2026年11月份值班表","y":2026,"m":11,"no":"备注：1、值班人员必须坚守值班岗位，因公事外出的将手机号码贴到办公室门口，处理完毕后立即返回2、值班人员于当晚21：00准时集合组织统一查宿舍3、值班人员须保持24小时开机，以便及时处理学生问题。","ds":[[1,"日",[["孟凤霞","18330356212"],["赵晟智","18631125087"]]],[2,"一",[["贾雨欣","18812038586"],["霍玉婷","15003210427"]]],[3,"二",[["刘泽坤","15511390585"],["赵坤杰","17333919941"]]],[4,"三",[["徐鼎","15511662157"],["武帆","19931130585"]]],[5,"四",[["王宇祺","17303218890"],["贾媛烨","18332339193"]]],[6,"五",[["赵艺菲","15176678801"],["宋佳莹","19933708932"]]],[7,"六",[["张玉宁","15137869385"],["刘腾飞","18333344470"]]],[8,"日",[["马敬涛","17633125719"],["杨晓东","15532115755"]]],[9,"一",[["赵琪","15227188338"],["李姝妤","15633896523"]]],[10,"二",[["纪少萌","15076106369"],["刘聪","17532118222"]]],[11,"三",[["王倩","15373030240"],["赵伯航","15681103663"]]],[12,"四",[["潘子怡","15803211408"],["张雨涵","18832177018"]]],[13,"五",[["祁佳轩","17332734882"],["雷利志","13932109494"]]],[14,"六",[["马文翠","13299112632"],["赵坤杰","17333919941"]]],[15,"日",[["张森","15631103929"],["霍玉婷","15003210427"]]],[16,"一",[["孟凤霞","18330356212"],["赵晟智","18631125087"]]],[17,"二",[["陈晓","15931153987"],["武帆","19931130585"]]],[18,"三",[["武晶晶","15127102377"],["贾媛烨","18332339193"]]],[19,"四",[["柳金铭","19943491214"],["宋佳莹","19933708932"]]],[20,"五",[["苏敬文","18532107520"],["杨晓东","15532115755"]]],[21,"六",[["李珊珊","15031263486"],["赵晟智","18631125087"]]],[22,"日",[["张乾","13383215107"],["李姝妤","15633896523"]]],[23,"一",[["赵艺菲","15176678801"],["刘聪","17532118222"]]],[24,"二",[["张巧娜","15931083975"],["赵伯航","15681103663"]]],[25,"三",[["贾雨欣","18812038586"],["张雨涵","18832177018"]]],[26,"四",[["刘泽坤","15511390585"],["赵坤杰","17333919941"]]],[27,"五",[["徐鼎","15511662157"],["雷利志","13932109494"]]],[28,"六",[["王宇祺","17303218890"],["刘腾飞","18333344470"]]],[29,"日",[["齐佳英","17831123033"],["霍玉婷","15003210427"]]],[30,"一",[["李珊珊","15031263486"],["武帆","19931130585"]]]]};
 (function () {
   'use strict';
 
@@ -232,97 +235,167 @@ window.DUTY_DATA ={"v":1,"ti":"人工智能学院2026年11月份值班表","y":2
     });
   }
 
-  function valid(d){
-    return d && typeof d === 'object'
-        && Array.isArray(d.ds) && d.ds.length > 0
-        && d.ds.every(x => Array.isArray(x) && Array.isArray(x[2]));
+  /* =========================================================
+   *  数据规范化：把各种格式统一成「月份数组」
+   *  支持 { months:[...] } 新版，也兼容旧的单月结构
+   * ========================================================= */
+  function normalize(raw){
+    if (!raw || typeof raw !== 'object') return [];
+    let months;
+    if (Array.isArray(raw.months))    months = raw.months;
+    else if (Array.isArray(raw.ds))   months = [raw];   // 兼容旧版单月
+    else return [];
+
+    return months
+      .filter(mo => mo && Number.isInteger(mo.y) && Number.isInteger(mo.m)
+                    && Array.isArray(mo.ds))
+      .map(mo => ({
+        y : mo.y,
+        m : mo.m,
+        ti: mo.ti || '',
+        no: mo.no || '',
+        ds: mo.ds.filter(x => Array.isArray(x) && Array.isArray(x[2]))
+      }))
+      .filter(mo => mo.ds.length)
+      .sort((a, b) => (a.y - b.y) || (a.m - b.m));
+  }
+
+  /* =========================================================
+   *  展开成按真实日期排序的连续行
+   *  diff: 0=今天  -1=昨天  -2=前天 ...
+   * ========================================================= */
+  function flatten(months){
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const rows = [];
+
+    months.forEach(mo => {
+      mo.ds.forEach(([d, wk, ppl]) => {
+        if (!Number.isInteger(d)) return;
+        const date = new Date(mo.y, mo.m - 1, d);
+        date.setHours(0, 0, 0, 0);
+        rows.push({
+          date,
+          diff: Math.round((date - today) / 86400000),
+          y: mo.y, m: mo.m, d,
+          wk: String(wk || ''),
+          ppl: ppl.filter(p => Array.isArray(p) && p[0]),
+        });
+      });
+    });
+
+    rows.sort((a, b) => a.date - b.date);
+    return rows;
   }
 
   /* =========================================================
    *  渲染
    * ========================================================= */
-  function render(data){
+  function peopleList(ppl){
+    return ppl.map(([n, p]) => `<span class="person">
+        <span class="nm">${esc(n)}</span>
+        ${p ? `<a class="tel" href="tel:${esc(p)}" data-phone="${esc(p)}">${esc(p)}</a>` : ''}
+      </span>`).join('');
+  }
+  function peopleToday(ppl){
+    return ppl.map(([n, p]) =>
+      `<span class="p">${esc(n)}${p ? `<a href="tel:${esc(p)}">${esc(p)}</a>` : ''}</span>`
+    ).join('');
+  }
+
+  function render(months){
+    const rows = flatten(months);
+
     $('head').hidden = false;
     $('searchBox').hidden = false;
 
-    $('title').textContent = data.ti || `${data.y}年${data.m}月份值班表`;
-    $('count').textContent = `${data.ds.length} 天`;
+    /* ---- 标题 ---- */
+    const a = months[0], b = months[months.length - 1];
+    let title;
+    if (months.length === 1) title = a.ti || `${a.y}年${a.m}月值班表`;
+    else if (a.y === b.y)    title = `${a.y}年${a.m}月—${b.m}月值班表`;
+    else                     title = `${a.y}年${a.m}月—${b.y}年${b.m}月值班表`;
 
-    const now = new Date();
-    const tY = now.getFullYear(), tM = now.getMonth() + 1, tD = now.getDate();
-    const isThisMonth = (data.y === tY && data.m === tM);
+    $('title').textContent = title;
+    $('count').textContent = months.length > 1
+      ? `${months.length} 个月 · ${rows.length} 天`
+      : `${rows.length} 天`;
 
-    /* --- 今日卡片 --- */
+    /* ---- 今日卡片 ---- */
     const todayBox = $('todayBox');
-    if (isThisMonth){
-      const t = data.ds.find(x => x[0] === tD);
-      if (t){
-        const ppl = t[2].map(([n, p]) =>
-          `<span class="p">${esc(n)}${p ? `<a href="tel:${esc(p)}">${esc(p)}</a>` : ''}</span>`
-        ).join('');
-        todayBox.innerHTML = `<div class="today">
-          <div class="lbl"><b>今日值班</b>· ${data.m}月${tD}日 周${esc(t[1])}</div>
-          <div class="ppl">${ppl}</div>
-        </div>`;
-      } else {
-        todayBox.innerHTML = `<div class="today">
-          <div class="lbl"><b>今日</b>· ${data.m}月${tD}日</div>
-          <div class="ppl"><span class="p" style="opacity:.85">无值班安排</span></div>
-        </div>`;
-      }
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const t = rows.find(r => r.diff === 0);
+
+    if (t){
+      todayBox.innerHTML = `<div class="today">
+        <div class="lbl"><b>今日值班</b>· ${t.y}年${t.m}月${t.d}日 周${esc(t.wk)}</div>
+        <div class="ppl">${peopleToday(t.ppl)}</div>
+      </div>`;
+    } else if (rows.length && rows[0].date <= now && now <= rows[rows.length - 1].date){
+      todayBox.innerHTML = `<div class="today">
+        <div class="lbl"><b>今日</b>· ${now.getMonth() + 1}月${now.getDate()}日</div>
+        <div class="ppl"><span class="p" style="opacity:.85">无值班安排</span></div>
+      </div>`;
     } else {
       todayBox.innerHTML = '';
     }
 
-    /* --- 日期列表 --- */
-    const list = $('list');
-    list.innerHTML = data.ds.map(([da, wk, ppl]) => {
-      const isToday     = isThisMonth && da === tD;
-      const isYesterday = isThisMonth && da === tD - 1;
-      /* 前天及更早：默认隐藏 */
-      const hidePast    = isThisMonth && da < tD - 1;
+    /* ---- 日期列表（跨月连续 + 月份分隔条） ---- */
+    const parts = [];
+    let lastYM = -1;
 
-      const people = ppl.map(([n, p]) =>
-        `<span class="person">
-           <span class="nm">${esc(n)}</span>
-           ${p ? `<a class="tel" href="tel:${esc(p)}" data-phone="${esc(p)}">${esc(p)}</a>` : ''}
-         </span>`
-      ).join('');
+    rows.forEach(r => {
+      const ym = r.y * 100 + r.m;
 
-      const searchStr = [`${data.m}月${da}日`, `${data.m}/${pad(da)}`,
-                          `周${wk}`, `星期${wk}`, ...ppl.flat()].join(' ').toLowerCase();
+      if (ym !== lastYM){
+        lastYM = ym;
+        parts.push(`<div class="month-sep" data-ym="${ym}">${r.y}年${r.m}月</div>`);
+      }
 
-      const cls = 'day'
-        + (isToday     ? ' is-today' : '')
-        + (isYesterday ? ' is-past'  : '');
+      const isToday = r.diff === 0;
+      const isPast  = r.diff === -1;
+      const hidden  = r.diff < -1;      // 前天及更早：默认隐藏
 
-      return `<div class="${cls}"
-                   data-search="${esc(searchStr)}"
-                   ${hidePast ? 'data-hidden-past="1" style="display:none"' : ''}>
+      const searchStr = [
+        `${r.y}年${r.m}月${r.d}日`, `${r.m}/${pad(r.d)}`, `${r.m}-${pad(r.d)}`,
+        `周${r.wk}`, `星期${r.wk}`, ...r.ppl.flat()
+      ].join(' ').toLowerCase();
+
+      parts.push(`<div class="day${isToday ? ' is-today' : ''}${isPast ? ' is-past' : ''}"
+          data-ym="${ym}"
+          data-hidden="${hidden ? 1 : 0}"
+          data-search="${esc(searchStr)}"
+          ${hidden ? 'style="display:none"' : ''}>
         <div class="date">
-          <span class="dd">${data.m}/${pad(da)}</span>
-          <span class="wk">周${esc(wk)}</span>
+          <span class="dd">${r.m}/${pad(r.d)}</span>
+          <span class="wk">周${esc(r.wk)}</span>
         </div>
-        <div class="people">${people}${isToday ? '<span class="badge">今天</span>' : ''}</div>
-      </div>`;
-    }).join('');
+        <div class="people">${peopleList(r.ppl)}${isToday ? '<span class="badge">今天</span>' : ''}</div>
+      </div>`);
+    });
 
-    /* --- 备注 --- */
+    $('list').innerHTML = parts.join('');
+
+    /* ---- 备注（按月份分组） ---- */
     const noteEl = $('note');
-    if (data.no && data.no.trim()){
+    const notes = months.filter(m => (m.no || '').trim());
+    if (notes.length){
       noteEl.hidden = false;
-      noteEl.innerHTML = '<b>备注</b><br>' + esc(data.no.replace(/^备注[:：]?\s*/, ''));
+      noteEl.innerHTML = notes.map(m => `
+        <div class="note-item">
+          ${notes.length > 1 ? `<div class="note-tt">${m.y}年${m.m}月</div>` : ''}
+          <b>备注</b><br>${esc(m.no.replace(/^备注[:：]?\s*/, ''))}
+        </div>`).join('');
+    } else {
+      noteEl.hidden = true;
     }
 
     filter('');
   }
 
   /* =========================================================
-   *  搜索 & 过滤
-   *  规则：
-   *   - 无关键词：隐藏过去日期（前天及更早），昨天灰色显示
-   *   - 有关键词：全部日期参与匹配（含过去），匹配到的会显示出来，
-   *              方便查询历史值班记录
+   *  搜索过滤
+   *   - 无关键词：隐藏「前天及更早」，昨天灰显
+   *   - 有关键词：所有日期都参与匹配（可查历史）
    * ========================================================= */
   const searchInput = $('search');
   const clearBtn = $('clearBtn');
@@ -330,31 +403,28 @@ window.DUTY_DATA ={"v":1,"ti":"人工智能学院2026年11月份值班表","y":2
 
   function filter(q){
     q = (q || '').trim().toLowerCase();
+    const visibleYM = new Set();
     let shown = 0;
 
     document.querySelectorAll('#list .day').forEach(el => {
-      const isPastHidden = el.dataset.hiddenPast === '1';
-
-      /* 无搜索词时，隐藏过去的日期 */
-      if (isPastHidden && !q){
-        el.style.display = 'none';
-        return;
-      }
-
-      const ok = !q || el.dataset.search.includes(q);
+      const pastHidden = el.dataset.hidden === '1';
+      const ok = q ? el.dataset.search.includes(q) : !pastHidden;
       el.style.display = ok ? '' : 'none';
-      if (ok) shown++;
+      if (ok){ shown++; visibleYM.add(el.dataset.ym); }
+    });
+
+    /* 月份分隔条跟随其下日期显隐 */
+    document.querySelectorAll('#list .month-sep').forEach(el => {
+      el.style.display = visibleYM.has(el.dataset.ym) ? '' : 'none';
     });
 
     clearBtn.classList.toggle('show', !!q);
 
     if (shown === 0){
       emptyEl.hidden = false;
-      if (q){
-        emptyEl.innerHTML = `<div class="big">🔍</div>没有找到与「${esc(q)}」匹配的值班记录`;
-      } else {
-        emptyEl.innerHTML = `<div class="big">✓</div>本月值班已结束，暂无后续安排`;
-      }
+      emptyEl.innerHTML = q
+        ? `<div class="big">🔍</div>没有找到与「${esc(q)}」匹配的值班记录`
+        : `<div class="big">✓</div>暂无后续值班安排`;
     } else {
       emptyEl.hidden = true;
     }
@@ -380,17 +450,23 @@ window.DUTY_DATA ={"v":1,"ti":"人工智能学院2026年11月份值班表","y":2
 
   /* ---------- 启动 ---------- */
   function boot(){
-    const data = window.DUTY_DATA;
-    if (!valid(data)){
+    const raw = (window.DUTY_DATA && (window.DUTY_DATA.months || window.DUTY_DATA.ds))
+      ? window.DUTY_DATA
+      : null;
+
+    const months = normalize(raw);
+
+    if (!months.length){
       $('empty').hidden = false;
       $('empty').innerHTML =
         `<div class="big">📋</div>
          暂未加载值班数据<br>
-         请在页面中引用 <code>duty-data.js</code>，<br>
-         或直接设置 <code>window.DUTY_DATA</code>。`;
+         请确保 <code>duty-data.js</code> 与本文件在同一目录，<br>
+         并且已正确设置 <code>window.DUTY_DATA</code>。`;
       return;
     }
-    render(data);
+
+    render(months);
   }
 
   if (document.readyState === 'loading')
