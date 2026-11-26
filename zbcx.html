@@ -115,7 +115,12 @@ body{
   display:inline-flex;align-items:baseline;gap:6px;
   background:#f3f6fd;border-radius:8px;padding:5px 10px;font-size:13.5px;
 }
-.person .nm{font-weight:600;white-space:nowrap}
+.person .nm{
+  font-weight:600;white-space:nowrap;
+  display:inline-block;
+  min-width:3em;       /* 两字名、三字名都占 3 个字宽，电话对齐 */
+  text-align:center;
+}
 .person .tel{
   color:var(--brand);text-decoration:none;font-size:12px;
   font-variant-numeric:tabular-nums;
@@ -126,15 +131,13 @@ body{
   border-radius:5px;padding:0 5px;line-height:16px;align-self:center;
 }
 
-/* ---------- 备注 ---------- */
+/* ---------- 备注（固定内容） ---------- */
 .note{
   margin-top:16px;background:#fffdf5;border:1px solid #f3e4b5;
   border-radius:12px;padding:12px 14px;font-size:12.5px;color:#7a5f1a;
   line-height:1.8;white-space:pre-wrap;
 }
 .note b{color:#8a6a14}
-.note-item + .note-item{margin-top:10px;padding-top:10px;border-top:1px dashed #ecd9a0}
-.note-tt{font-weight:700;margin-bottom:2px;color:#8a6a14}
 
 /* ---------- 空状态 ---------- */
 .empty{
@@ -190,7 +193,11 @@ body{
 
   <div class="list" id="list"></div>
   <div class="empty" id="empty" hidden></div>
-  <div class="note" id="note" hidden></div>
+
+  <!-- ====== 固定备注：以后修改备注只改这里 ====== -->
+  <div class="note">
+    <b>备注</b><br>1、值班人员必须坚守值班岗位，因公事外出的将手机号码贴到办公室门口，处理完毕后立即返回2、值班人员于当晚21：00准时集合组织统一查宿舍3、值班人员须保持24小时开机，以便及时处理学生问题。
+  </div>
 </div>
 
 <div id="tip"></div>
@@ -200,7 +207,7 @@ body{
      以后增删改月份，只修改 duty-data.js，本文件不用再动。
      如果改了数据页面没变化，给 ?v= 后面的数字加一即可。
      ============================================================ -->
-<script src="https://evan-ma.github.io/my-tool-data/duty-data.js?v=1"></script>
+<script src="duty-data.js?v=1"></script>
 
 <script>
 (function () {
@@ -236,8 +243,8 @@ body{
   }
 
   /* =========================================================
-   *  数据规范化：把各种格式统一成「月份数组」
-   *  支持 { months:[...] } 新版，也兼容旧的单月结构
+   *  数据规范化：只保留 y / m / ds
+   *  兼容旧数据里的 ti / no 字段（读取时忽略）
    * ========================================================= */
   function normalize(raw){
     if (!raw || typeof raw !== 'object') return [];
@@ -252,8 +259,6 @@ body{
       .map(mo => ({
         y : mo.y,
         m : mo.m,
-        ti: mo.ti || '',
-        no: mo.no || '',
         ds: mo.ds.filter(x => Array.isArray(x) && Array.isArray(x[2]))
       }))
       .filter(mo => mo.ds.length)
@@ -308,17 +313,15 @@ body{
     $('head').hidden = false;
     $('searchBox').hidden = false;
 
-    /* ---- 标题 ---- */
+    /* ---- 标题：完全自动生成，不依赖 ti ---- */
     const a = months[0], b = months[months.length - 1];
     let title;
-    if (months.length === 1) title = a.ti || `${a.y}年${a.m}月值班表`;
+    if (months.length === 1) title = `${a.y}年${a.m}月值班表`;
     else if (a.y === b.y)    title = `${a.y}年${a.m}月—${b.m}月值班表`;
     else                     title = `${a.y}年${a.m}月—${b.y}年${b.m}月值班表`;
 
     $('title').textContent = title;
-    $('count').textContent = months.length > 1
-      ? `${months.length} 个月 · ${rows.length} 天`
-      : `${rows.length} 天`;
+  
 
     /* ---- 今日卡片 ---- */
     const todayBox = $('todayBox');
@@ -353,7 +356,7 @@ body{
 
       const isToday = r.diff === 0;
       const isPast  = r.diff === -1;
-      const hidden  = r.diff < -1;      // 前天及更早：默认隐藏
+      const hidden  = r.diff < -1;
 
       const searchStr = [
         `${r.y}年${r.m}月${r.d}日`, `${r.m}/${pad(r.d)}`, `${r.m}-${pad(r.d)}`,
@@ -374,20 +377,6 @@ body{
     });
 
     $('list').innerHTML = parts.join('');
-
-    /* ---- 备注（按月份分组） ---- */
-    // const noteEl = $('note');
-    // const notes = months.filter(m => (m.no || '').trim());
-    // if (notes.length){
-    //   noteEl.hidden = false;
-    //   noteEl.innerHTML = notes.map(m => `
-    //     <div class="note-item">
-    //       ${notes.length > 1 ? `<div class="note-tt">${m.y}年${m.m}月</div>` : ''}
-    //       <b>备注</b><br>${esc(m.no.replace(/^备注[:：]?\s*/, ''))}
-    //     </div>`).join('');
-    // } else {
-    //   noteEl.hidden = true;
-    // }
 
     filter('');
   }
@@ -413,7 +402,6 @@ body{
       if (ok){ shown++; visibleYM.add(el.dataset.ym); }
     });
 
-    /* 月份分隔条跟随其下日期显隐 */
     document.querySelectorAll('#list .month-sep').forEach(el => {
       el.style.display = visibleYM.has(el.dataset.ym) ? '' : 'none';
     });

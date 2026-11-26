@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>值班表 · 生成数据文件</title>
+<title>值班表 · 数据生成</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
 :root{
@@ -39,23 +39,17 @@ h1{font-size:18px;margin:0 0 5px;font-weight:600;}
 .muted{color:var(--muted);font-size:12.5px;}
 .grow{flex:1;}
 textarea{
-  width:100%;height:180px;border:1px solid var(--line);border-radius:10px;padding:12px;
-  font:12.5px/1.6 ui-monospace,Menlo,Consolas,monospace;resize:vertical;
-  background:#fbfcff;color:#334;outline:none;
+  width:100%;height:460px;border:1px solid var(--line);border-radius:10px;padding:14px;
+  font:12.5px/1.7 ui-monospace,Menlo,Consolas,monospace;resize:vertical;
+  background:#fbfcff;color:#334;outline:none;white-space:pre;
 }
 textarea:focus{border-color:var(--brand);}
-.pv{max-height:400px;overflow:auto;border:1px solid var(--line);border-radius:10px;}
+.pv{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:10px;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
 th{background:#f7f9ff;color:#5b657a;font-size:12.5px;position:sticky;top:0;z-index:1;}
-.tip{
-  background:#fff8e6;border:1px solid #ffe3a3;border-radius:10px;
-  padding:12px 14px;font-size:12.5px;color:#7a5a12;line-height:1.8;margin-top:12px;
-}
-code{
-  background:#eef1f8;border-radius:4px;padding:1px 5px;font-size:12px;
-  font-family:ui-monospace,Menlo,Consolas,monospace;
-}
+code{background:#eef1f8;border-radius:4px;padding:1px 5px;font-size:12px;
+     font-family:ui-monospace,Menlo,Consolas,monospace;}
 #toast{
   position:fixed;left:50%;bottom:32px;transform:translate(-50%,16px);
   background:rgba(28,34,48,.92);color:#fff;padding:9px 18px;border-radius:9px;
@@ -66,7 +60,7 @@ code{
   .wrap{padding:16px 12px 50px;}
   h1{font-size:16.5px;}
   .card{padding:14px;}
-  textarea{height:150px;}
+  textarea{height:340px;font-size:12px;}
   .btn{padding:8px 13px;font-size:13px;}
 }
 </style>
@@ -74,8 +68,8 @@ code{
 <body>
 
 <div class="wrap">
-  <h1>值班表 · 生成数据文件</h1>
-  <p class="lead">导入 Excel，生成值班查看页可直接引用的压缩 JSON。</p>
+  <h1>值班表 · 数据生成</h1>
+  <p class="lead">导入 Excel，生成 zbcx.html 可直接引用的 duty-data.js</p>
 
   <section class="card">
     <div class="drop" id="drop">
@@ -85,11 +79,12 @@ code{
     </div>
     <p class="muted" style="margin:12px 0 0">
       支持 .xlsx / .xls / .csv；需含「日期 / 星期 / 值班人」表头，姓名与手机号放在同一单元格（换行分隔）会自动拆分。
+      每次导入会替换当前数据。
     </p>
   </section>
 
   <section class="card" id="cardPreview" hidden>
-    <h2>解析预览</h2>
+    <h2>数据预览</h2>
     <div class="pv">
       <table>
         <thead><tr><th>日期</th><th>星期</th><th>值班人</th></tr></thead>
@@ -98,34 +93,28 @@ code{
     </div>
   </section>
 
-  <section class="card" id="cardJson" hidden>
-    <h2>压缩 JSON</h2>
+  <section class="card" id="cardOut" hidden>
+    <h2>生成 duty-data.js</h2>
     <div class="row">
       <span class="muted grow" id="size"></span>
-      <button class="btn ghost" type="button" id="btnCopy">复制 JSON</button>
-      <button class="btn ghost" type="button" id="btnJson">下载 .json</button>
-      <button class="btn" type="button" id="btnJs">下载 duty-data.js</button>
+      <button class="btn ghost" id="btnCopy">复制内容</button>
+      <button class="btn" id="btnDownload">下载 duty-data.js</button>
     </div>
     <textarea id="out" readonly spellcheck="false"></textarea>
-    <div class="tip">
-      <b>如何使用：</b>把 <code>duty-data.js</code> 与 <code>duty-view.html</code> 放在同一目录，
-      然后在查看页中启用 <code>&lt;script src="duty-data.js"&gt;&lt;/script&gt;</code> 即可；
-      也可以直接把上面的 JSON 粘贴到查看页的 <code>window.DUTY_DATA</code> 中。
-    </div>
+    <p class="muted" style="margin:12px 0 0">
+      把下载的 <code>duty-data.js</code> 与 <code>zbcx.html</code> 放在同一目录即可。
+      备注和标题已固定在 <code>zbcx.html</code> 中，无需在此填写。
+    </p>
   </section>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* =========================================================
- *  基础工具
- * ========================================================= */
-const $  = (s, r = document) => r.querySelector(s);
+/* ===================== 工具 ===================== */
+const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-const state = { data: null, json: '' };
 
 let toastTimer;
 function toast(msg){
@@ -133,13 +122,11 @@ function toast(msg){
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
 }
 
 function copyText(text){
-  if (navigator.clipboard && window.isSecureContext){
-    return navigator.clipboard.writeText(text);
-  }
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
   return new Promise((resolve, reject) => {
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -163,13 +150,14 @@ function download(filename, text, mime){
   setTimeout(() => URL.revokeObjectURL(a.href), 3000);
 }
 
-/* =========================================================
- *  Excel 解析
- * ========================================================= */
+/* ===================== 状态 ===================== */
+const state = { months: [], out: '' };
+
+/* ===================== 解析 ===================== */
 function parsePerson(raw){
   let s = String(raw).replace(/\s+/g, ' ').trim();
   if (!s) return null;
-  const m = s.match(/1[3-9]\d{9}/);            // 中国大陆手机号
+  const m = s.match(/1[3-9]\d{9}/);
   if (m){
     const name = (s.slice(0, m.index) + ' ' + s.slice(m.index + m[0].length))
                    .replace(/[^\u4e00-\u9fa5A-Za-z·]/g, '');
@@ -188,13 +176,13 @@ function splitPeople(raw){
     .filter(Boolean);
 }
 
-function aoaToData(rows){
+function aoaToMonths(rows){
   const clean = (rows || []).map(r =>
     (r || []).map(c => String(c ?? '').replace(/\r/g, '').trim()));
 
   let hIdx = clean.findIndex(r => r.some(c => c.includes('日期')));
   if (hIdx < 0) hIdx = clean.findIndex(r => r.some(c => c.includes('值班')));
-  if (hIdx < 0) throw new Error('没有找到表头（需包含“日期”“值班人”等列）');
+  if (hIdx < 0) throw new Error('没有找到表头（需包含"日期""值班人"等列）');
 
   const hdr = clean[hIdx];
   const idxOf = (...keys) => hdr.findIndex(c => keys.some(k => c.includes(k)));
@@ -203,26 +191,21 @@ function aoaToData(rows){
     date:   Math.max(idxOf('日期'), 0),
     week:   idxOf('星期', '周'),
     people: hdr.findIndex(c => c.includes('值班') && !c.includes('日期')),
-    note:   idxOf('备注')
   };
   if (ci.week < 0)   ci.week   = ci.date + 1;
   if (ci.people < 0) ci.people = ci.date + 2;
   if (ci.people === ci.date) ci.people = ci.date + 2;
 
-  /* 标题行 */
-  let title = '';
+  /* 年份：从标题行提取 */
+  let year = new Date().getFullYear();
   for (let i = 0; i < hIdx; i++){
-    const t = clean[i].filter(Boolean).join(' ').trim();
-    if (t){ title = t; break; }
+    const t = clean[i].filter(Boolean).join(' ');
+    const ym = t.match(/(20\d{2})\s*年/);
+    if (ym){ year = +ym[1]; break; }
   }
-  let year = null;
-  const ym = title.match(/(20\d{2})\s*年/);
-  if (ym) year = +ym[1];
-  if (!year) year = new Date().getFullYear();
 
-  /* 逐行解析 */
-  let month = null, note = '';
-  const days = [];
+  /* 按月份分组 */
+  const map = new Map();  // 月份 → { y, m, ds: [] }
 
   for (let i = hIdx + 1; i < clean.length; i++){
     const r = clean[i];
@@ -231,35 +214,27 @@ function aoaToData(rows){
     if (!all) continue;
 
     const first = r[ci.date] || '';
-    if (first.includes('备注') || all.startsWith('备注')){
-      note = all;
-      break;
-    }
+    if (first.includes('备注') || all.startsWith('备注')) break;
+
     const dm = first.match(/(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
     if (!dm) continue;
 
     const mo = +dm[1], da = +dm[2];
-    if (month === null) month = mo;
-
     const week = (r[ci.week] || '').replace(/^星期/, '').replace(/^周/, '').trim();
     const people = splitPeople(r[ci.people] || '');
     if (!people.length) continue;
 
-    days.push([da, week, people]);
+    if (!map.has(mo)) map.set(mo, { y: year, m: mo, ds: [] });
+    map.get(mo).ds.push([da, week, people]);
   }
 
-  if (!days.length) throw new Error('没有解析到任何值班数据，请检查表格格式');
-  days.sort((a, b) => a[0] - b[0]);
+  if (!map.size) throw new Error('没有解析到任何值班数据，请检查表格格式');
 
-  /* 紧凑结构：短键名 + 数组，JSON.stringify 后无空格 */
-  return {
-    v : 1,
-    ti: title || `${year}年${month || ''}月份值班表`,
-    y : year,
-    m : month || 1,
-    no: note,
-    ds: days                 // [[日, 星期, [[姓名, 电话], ...]], ...]
-  };
+  const months = Array.from(map.values());
+  months.sort((a, b) => (a.y - b.y) || (a.m - b.m));
+  months.forEach(mo => mo.ds.sort((a, b) => a[0] - b[0]));
+
+  return months;
 }
 
 function parseExcel(buf){
@@ -277,12 +252,51 @@ function parseExcel(buf){
     const name = wb.SheetNames[0];
     aoa = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: false, defval: '' });
   }
-  return aoaToData(aoa);
+  return aoaToMonths(aoa);
 }
 
-/* =========================================================
- *  页面交互
- * ========================================================= */
+/* ===================== 生成 duty-data.js（与手工排版一致） ===================== */
+function fmtStr(s){
+  return JSON.stringify(String(s));
+}
+
+function formatMonth(mo, isLast){
+  const lines = [];
+  lines.push(`    /* ==================== ${mo.y}年${mo.m}月 ==================== */`);
+  lines.push(`    {`);
+  lines.push(`      y: ${mo.y},`);
+  lines.push(`      m: ${mo.m},`);
+  lines.push(`      ds: [`);
+
+  mo.ds.forEach(([da, wk, ppl], i) => {
+    const pplStr = ppl.map(([n, p]) => `[${fmtStr(n)},${fmtStr(p)}]`).join(',');
+    const comma  = i < mo.ds.length - 1 ? ',' : '';
+    const daStr  = String(da);
+    /* 日号 1 位时多补一个空格，与两位数对齐 */
+    const pad    = daStr.length < 2 ? '  ' : ' ';
+    lines.push(`        [${daStr},${pad}${fmtStr(wk)}, [${pplStr}]]${comma}`);
+  });
+
+  lines.push(`      ]`);
+  lines.push(`    }${isLast ? '' : ','}`);
+  return lines.join('\n');
+}
+
+function buildDutyJs(months){
+  const blocks = months.map((mo, i) => formatMonth(mo, i === months.length - 1));
+  return (
+    `/* 值班数据 —— 由值班表生成工具导出\n` +
+    ` * 共 ${months.length} 个月份，直接保存即可，zbcx.html 会自动读取\n` +
+    ` */\n` +
+    `window.DUTY_DATA = {\n` +
+    `  months: [\n\n` +
+    blocks.join('\n\n') +
+    `\n\n  ]\n` +
+    `};\n`
+  );
+}
+
+/* ===================== 文件交互 ===================== */
 const drop = $('#drop');
 const fileInput = $('#file');
 
@@ -307,11 +321,10 @@ function handleFile(file){
   const fr = new FileReader();
   fr.onload = () => {
     try{
-      const data = parseExcel(fr.result);
-      state.data = data;
-      state.json = JSON.stringify(data);       // 压缩（无空格）
-      render(data);
-      toast('解析成功');
+      const months = parseExcel(fr.result);
+      state.months = months;               // 直接替换，不累积
+      render();
+      toast('已解析 ' + months.map(m => m.y + '年' + m.m + '月').join('、'));
     }catch(err){
       alert('解析失败：' + err.message);
     }
@@ -320,48 +333,54 @@ function handleFile(file){
   fr.readAsArrayBuffer(file);
 }
 
-function render(data){
+/* ===================== 渲染 ===================== */
+function render(){
+  const { months } = state;
+
+  if (!months.length){
+    $('#cardPreview').hidden = true;
+    $('#cardOut').hidden = true;
+    return;
+  }
+
+  /* 表格预览 */
   $('#cardPreview').hidden = false;
-  $('#cardJson').hidden = false;
+  const rows = [];
+  months.forEach(mo => {
+    mo.ds.forEach(([da, wk, ppl]) => {
+      rows.push(`<tr>
+        <td>${mo.m}/${String(da).padStart(2, '0')}</td>
+        <td>周${esc(wk)}</td>
+        <td>${ppl.map(p =>
+          `<span style="font-weight:600">${esc(p[0])}</span>
+           <span class="muted">${esc(p[1])}</span>`).join('<br>')}</td>
+      </tr>`);
+    });
+  });
+  $('#tbody').innerHTML = rows.join('');
 
-  $('#tbody').innerHTML = data.ds.map(([da, wk, ppl]) => `
-    <tr>
-      <td>${data.m}月${da}日</td>
-      <td>周${esc(wk)}</td>
-      <td>${ppl.map(p =>
-        `<span style="font-weight:600">${esc(p[0])}</span>
-         <span class="muted">${esc(p[1])}</span>`).join('<br>')}</td>
-    </tr>`).join('');
+  /* 生成与 duty-data.js 排版一致的文本 */
+  state.out = buildDutyJs(months);
+  $('#cardOut').hidden = false;
+  $('#out').value = state.out;
 
-  $('#out').value = state.json;
-
-  const bytes = new Blob([state.json]).size;
-  $('#size').textContent = `${data.ds.length} 天 · 压缩后 ${bytes} 字节`;
+  const totalDays = months.reduce((s, m) => s + m.ds.length, 0);
+  const bytes = new Blob([state.out]).size;
+  $('#size').textContent = `${months.length} 个月 · 共 ${totalDays} 天 · ${bytes} 字节`;
 }
 
-/* 复制 JSON */
+/* 复制完整内容 */
 $('#btnCopy').addEventListener('click', () => {
-  if (!state.json) return;
-  copyText(state.json)
-    .then(() => toast('已复制 JSON'))
+  if (!state.out) return;
+  copyText(state.out)
+    .then(() => toast('已复制 duty-data.js 内容'))
     .catch(() => toast('复制失败，请手动全选复制'));
 });
 
-/* 下载 .json */
-$('#btnJson').addEventListener('click', () => {
-  if (!state.json || !state.data) return;
-  const { y, m } = state.data;
-  download(`值班表-${y}-${String(m).padStart(2, '0')}.json`,
-           state.json, 'application/json;charset=utf-8');
-  toast('已下载 JSON');
-});
-
 /* 下载 duty-data.js */
-$('#btnJs').addEventListener('click', () => {
-  if (!state.json || !state.data) return;
-  const title = String(state.data.ti || '').replace(/\s+/g, ' ').trim();
-  const text = `// ${title}\n// 由值班表生成工具导出，可直接被 duty-view.html 引用\nwindow.DUTY_DATA = ${state.json};\n`;
-  download('duty-data.js', text, 'text/javascript;charset=utf-8');
+$('#btnDownload').addEventListener('click', () => {
+  if (!state.out) return;
+  download('duty-data.js', state.out, 'text/javascript;charset=utf-8');
   toast('已下载 duty-data.js');
 });
 </script>
