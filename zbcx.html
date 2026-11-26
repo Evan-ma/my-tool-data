@@ -376,18 +376,18 @@ body{
     $('list').innerHTML = parts.join('');
 
     /* ---- 备注（按月份分组） ---- */
-    const noteEl = $('note');
-    const notes = months.filter(m => (m.no || '').trim());
-    if (notes.length){
-      noteEl.hidden = false;
-      noteEl.innerHTML = notes.map(m => `
-        <div class="note-item">
-          ${notes.length > 1 ? `<div class="note-tt">${m.y}年${m.m}月</div>` : ''}
-          <b>备注</b><br>${esc(m.no.replace(/^备注[:：]?\s*/, ''))}
-        </div>`).join('');
-    } else {
-      noteEl.hidden = true;
-    }
+    // const noteEl = $('note');
+    // const notes = months.filter(m => (m.no || '').trim());
+    // if (notes.length){
+    //   noteEl.hidden = false;
+    //   noteEl.innerHTML = notes.map(m => `
+    //     <div class="note-item">
+    //       ${notes.length > 1 ? `<div class="note-tt">${m.y}年${m.m}月</div>` : ''}
+    //       <b>备注</b><br>${esc(m.no.replace(/^备注[:：]?\s*/, ''))}
+    //     </div>`).join('');
+    // } else {
+    //   noteEl.hidden = true;
+    // }
 
     filter('');
   }
